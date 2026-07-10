@@ -1,0 +1,7 @@
+{
+  "attachmentFolderPath": "raw/assets",
+  "alwaysUpdateLinks": true,
+  "newLinkFormat": "shortest",
+  "useMarkdownLinks": false,
+  "userIgnoreFilters": ["raw/repo/node_modules/", "raw/repo/__pycache__/"]
+}
