@@ -1,33 +1,60 @@
 ---
 tipo: sintesis
 creado: 2026-07-09
-actualizado: 2026-07-10
-commit_ref: 6f584b7
+actualizado: 2026-07-30
+commit_ref: 0085c31
 ---
 
 # Tartarus — estado actual
 
-> [!warning] 1 fuente ingerida
-> Solo se procesó `Docs/adr/ADR-001`. El historial de git, el CHANGELOG y el resto de `Docs/` siguen sin ingerir. Lo que sigue es parcial.
+> [!info] Fuentes ingeridas
+> ADR-001 (sensores) + bitácora `6f584b7`..`0085c31` (24 commits, v0.5.0→v0.6.2) +
+> memoria del agente. Pendiente: destilar `raw/vault-legacy/` (23 notas de marzo).
 
 ## Dónde está el proyecto
 
-Un cluster de cuatro bugs arquitectónicos sobre el ciclo de vida del sensor está **decidido pero congelado**. [[0001-arquitectura-de-sensores]] eligió la Opción A y acto seguido se prohibió a sí misma ejecutarla hasta pasar 6 criterios de validación en hardware RPi 5 16GB.
+Tartarus acaba de dar su **salto a MSSP**: en una sola integración (#8, mergeada a
+`main` el 2026-07-30) entró la multi-tenancy completa. La plataforma pasó de mono-tenant
+a servir varios clientes aislados desde una consola de dos niveles. Es el trabajo más
+grande del periodo y está **hecho y verificado E2E**, no en curso.
 
-Dos meses después (`6f584b7`, 2026-07-10) no hay evidencia de esa validación, y ninguno de los ocho cambios prescritos existe en el código. El desarrollo siguió por otro lado: visualización, deception, tokens por perfil.
+Lo entregado, cada uno con su ADR:
+
+- **Flocks** — aislamiento por `flock_id` (`NULL=Default`). [[0002-multi-tenancy-flocks]]
+- **RBAC** — 3 roles, fail-closed. [[0003-rbac-tres-roles]]
+- **Acknowledge** — limpieza de ruido, ocultar-no-borrar. [[0004-acknowledge-limpieza-de-ruido]]
+- **Attack Map** — interno/externo, MITRE, host:puerto. [[0005-attack-map-contexto-de-despliegue]]
+- **Consola de dos niveles** — madre vs workspace. [[0006-consola-dos-niveles]]
+
+En paralelo se preparó el despliegue: se fijó Beelzebub a `v3.8.0` (`965c65c`, antes
+era `:latest` no reproducible) y se sumó un colaborador (`loaaan`) para el despliegue.
 
 ## La tensión central
 
-El stack vive en un bridge de Docker. El bridge da DNS interno gratis (`postgres`, `redis`, `broker` resuelven solos) y a cambio ciega a los dos sensores que necesitan ver la red real: el scanner ve la subred de docker en vez de la LAN, y el icmp-canary nunca recibe un paquete dirigido a sus ghost IPs.
+**El chasis es sólido; falta demostrar que el motor enciende de forma fiable.**
 
-Salir del bridge arregla los sensores y rompe el DNS. La ADR resuelve el nudo sacando **solo** el scanner del compose y dejando el resto adentro. Es la decisión correcta y también la más cara de implementar.
+La arquitectura multi-tenant es coherente, limpia y bien probada *estructuralmente*.
+Pero los 835 tests son unit con pool mockeado: el aislamiento entre flocks —lo recién
+construido— **nunca se prueba contra una DB real**. Y la eficacia de detección descansa
+sobre un catálogo inflado: de 424 reglas Sigma, solo 89 son honeypot-nativas; un ataque
+real dispara ~38 (43% de las aplicables). El número "424 cargadas" no resiste una
+pregunta técnica.
 
-## Riesgo abierto
+## Riesgo abierto — crítico
 
-`docs/generate_report.py:553` lee `remote_sensors`, la tabla que la ADR manda borrar. El audit de §2 no lo detectó. El ticket de Sprint 6+ está subestimado hasta que se corrija esa lista.
+> [!danger] La ingesta se cae en silencio (issue `#10`)
+> El canal AMQP de Beelzebub muere por inactividad: los honeypots **capturan** ataques
+> pero dejan de reportar, y el dashboard muestra 0 —indistinguible de "no me atacan".
+> Confirmado en dos sesiones. `docker restart tartarus-beelzebub` lo revive.
+> **Es la condición de "desplegable": sin healthcheck de ingesta, un cliente podría
+> quedar ciego sin saberlo.** Actualizar Beelzebub NO lo arregla (sin cambios AMQP upstream).
+
+Segundo hilo, congelado: el cluster de sensores ([[0001-arquitectura-de-sensores]])
+sigue `PROPOSED` sin validar en RPi 5. Ver [[roadmap]].
 
 ## Preguntas sin responder
 
-1. ¿Por qué se paró la validación en RPi? ¿Falta de hardware, o se despriorizó?
-2. Si el cluster lleva dos meses congelado, ¿sigue siendo la Opción A la correcta, o el trabajo de visualización/deception cambió los supuestos?
-3. ¿Cuántas ADRs más hay implícitas en `Fixes/` y `Docs/audits/` que nunca se escribieron?
+1. ¿Cuándo se hace el healthcheck de ingesta (#10)? Es lo primero antes de desplegar.
+2. `events.honeypot_id` siempre NULL (`#11`): ¿se estampa una clave estable de sensor,
+   cerrando el mapeo real, o se vive con el fallback por protocolo?
+3. El aislamiento entre flocks: ¿un test de integración con Postgres real, o se confía?

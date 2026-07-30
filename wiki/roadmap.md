@@ -1,14 +1,33 @@
 ---
 tipo: roadmap
 creado: 2026-07-09
-actualizado: 2026-07-10
-commit_ref: 6f584b7
+actualizado: 2026-07-30
+commit_ref: 0085c31
 ---
 
 # Roadmap — Tartarus
 
 Estados: `idea` → `decidido` (tiene ADR) → `en curso` (tiene issue) → `hecho` (tiene release) → `descartado` (con razón)
 **Nada se borra.** Lo descartado es tan informativo como lo hecho.
+
+## Hecho — MSSP / multi-tenancy (v0.5.0 → v0.6.2, PR #8)
+
+| Ítem | Estado | ADR | Commit |
+|---|---|---|---|
+| Multi-tenancy "Flocks" (aislamiento por flock_id) | hecho | [[0002-multi-tenancy-flocks]] | `78b4263` |
+| RBAC 3 roles | hecho | [[0003-rbac-tres-roles]] | `3f83f1c` |
+| Acknowledge + consistencia de ventana | hecho | [[0004-acknowledge-limpieza-de-ruido]] | `665cd09` |
+| Attack Map contexto de despliegue | hecho | [[0005-attack-map-contexto-de-despliegue]] | `5891465` |
+| Consola de dos niveles (madre/workspace) | hecho | [[0006-consola-dos-niveles]] | `4b707ed` |
+| Fijar Beelzebub a v3.8.0 (reproducibilidad) | hecho | — | `965c65c` |
+
+## En curso — bloqueantes de despliegue (issues abiertos)
+
+| Ítem | Estado | Issue | Nota |
+|---|---|---|---|
+| Ingesta muerta (canal AMQP se cae) | en curso | `#10` | **crítico — condición de "desplegable"**. Healthcheck de ingesta + reconexión. |
+| `events.honeypot_id` siempre NULL | en curso | `#11` | Bloquea el join real events→sensor. Clave estable de sensor en `events`. |
+| Test de integración con Postgres real | idea | — | El aislamiento entre flocks solo se prueba con pool mockeado. |
 
 ## Bloqueante: validación en hardware RPi 5 16GB
 
