@@ -24,6 +24,10 @@ El agente lee este archivo **antes** de cualquier query.
 | [[0004-acknowledge-limpieza-de-ruido]] | Ocultar-no-borrar + consistencia de ventana | **aceptada** — #8 |
 | [[0005-attack-map-contexto-de-despliegue]] | Interno/externo, MITRE, host:puerto | **aceptada** — #8 |
 | [[0006-consola-dos-niveles]] | Madre (global) vs workspace de flock | **aceptada** — #8 |
+| [[0007-canvas-puro-sin-frameworks]] | Canvas + vanilla JS (C3) | **aceptada** — legacy, vigente |
+| [[0008-rabbitmq-event-bus]] | RabbitMQ entre honeypot y consumer | **aceptada** — legacy; "never lost" contradicho (`#10`) |
+| [[0009-risk-scoring-aditivo]] | Score 0–100 determinista, sin ML | **aceptada** — legacy, vigente |
+| [[0010-websocket-real-time]] | `/ws/events` push post-INSERT | **aceptada** — legacy; huérfana (Neural Graph retirado) |
 
 ## Postmortems
 
@@ -43,9 +47,10 @@ El agente lee este archivo **antes** de cualquier query.
 
 | Fuente | Ruta | Estado |
 |---|---|---|
-| Vault legacy (marzo, v0.5.0) — 23 notas | `raw/vault-legacy/` | **pendiente** — prioridad alta, siguiente operación |
-| `CHANGELOG.md` | `raw/repo/CHANGELOG.md` | **pendiente** |
-| `Docs/architecture/`, `Docs/audits/`, `Docs/api/` | `raw/docs/` | **pendiente** |
-| `Fixes/`, `Plan_despliegue/` | `raw/repo/` | **pendiente** |
+| Vault legacy — 4 Decisions | `raw/vault-legacy/…/Decisions/` | **ingerido** → ADRs 0007–0010 |
+| Vault legacy — Components (Consumer, InfraMap, Risk Engine, ws_manager) | `raw/vault-legacy/…/Components/` | **pendiente** — candidatos a [[modulos]] (los god-nodes del grafo mandan el orden) |
+| Vault legacy — NeuralGraph + "Fase 4 Neural Graph" | idem | **obsoleto** — `graph.js` retirado (ver [[0010-websocket-real-time]]) |
+| Vault legacy — Runbooks, Glossary, Sprints, canvas | idem | **no se importa** — how-to/estado, no "por qué"; vive en el repo |
+| `CHANGELOG.md`, `Docs/*`, `Fixes/`, `Plan_despliegue/` | `raw/repo`, `raw/docs` | **pendiente** |
 
 > Historial de git v0.5.0→v0.6.2 (`6f584b7`..`0085c31`): **ingerido** — ver ADRs 0002–0006 y [[roadmap]].
