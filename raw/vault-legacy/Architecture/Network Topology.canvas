@@ -1,0 +1,25 @@
+{
+	"nodes":[
+		{"id":"nt01a2b3c4d5e6f7","type":"text","x":300,"y":-100,"width":300,"height":80,"color":"1","text":"# External Network\n\nAttackers connect from internet"},
+		{"id":"nt02a2b3c4d5e6f7","type":"text","x":0,"y":80,"width":220,"height":80,"color":"2","text":"# SSH Trap\n\nPort 2222\nBeelzebub SSH"},
+		{"id":"nt03a2b3c4d5e6f7","type":"text","x":280,"y":80,"width":220,"height":80,"color":"2","text":"# HTTP Trap\n\nPort 8880\nBeelzebub HTTP"},
+		{"id":"nt04a2b3c4d5e6f7","type":"text","x":560,"y":80,"width":220,"height":80,"color":"2","text":"# TCP Trap\n\nPort 8080\nBeelzebub TCP"},
+		{"id":"nt05a2b3c4d5e6f7","type":"text","x":0,"y":250,"width":220,"height":80,"color":"3","text":"# RabbitMQ\n\nPort 5672\nMgmt: 15672"},
+		{"id":"nt06a2b3c4d5e6f7","type":"text","x":280,"y":250,"width":220,"height":80,"color":"4","text":"# Engine API\n\nPort 9000\nFastAPI + uvicorn"},
+		{"id":"nt07a2b3c4d5e6f7","type":"text","x":560,"y":250,"width":220,"height":80,"color":"6","text":"# PostgreSQL\n\nPort 5432\nDB: tartarus"},
+		{"id":"nt08a2b3c4d5e6f7","type":"text","x":0,"y":400,"width":220,"height":80,"color":"1","text":"# Redis\n\nPort 6379\nCache + pub/sub"},
+		{"id":"nt09a2b3c4d5e6f7","type":"text","x":280,"y":400,"width":220,"height":80,"color":"5","text":"# UI (nginx)\n\nPort 8888\nHTML5 Canvas"},
+		{"id":"nt10a2b3c4d5e6f7","type":"text","x":560,"y":400,"width":220,"height":80,"color":"4","text":"# Scanner\n\nnmap worker\nNo exposed port"},
+		{"id":"nt11a2b3c4d5e6f7","type":"group","x":-50,"y":30,"width":780,"height":500,"label":"Docker Network (tartarus_default)","color":"4"}
+	],
+	"edges":[
+		{"id":"ent01a2b3c4d5e6f","fromNode":"nt01a2b3c4d5e6f7","fromSide":"bottom","toNode":"nt02a2b3c4d5e6f7","toSide":"top","toEnd":"arrow"},
+		{"id":"ent02a2b3c4d5e6f","fromNode":"nt01a2b3c4d5e6f7","fromSide":"bottom","toNode":"nt03a2b3c4d5e6f7","toSide":"top","toEnd":"arrow"},
+		{"id":"ent03a2b3c4d5e6f","fromNode":"nt01a2b3c4d5e6f7","fromSide":"bottom","toNode":"nt04a2b3c4d5e6f7","toSide":"top","toEnd":"arrow"},
+		{"id":"ent04a2b3c4d5e6f","fromNode":"nt02a2b3c4d5e6f7","fromSide":"bottom","toNode":"nt05a2b3c4d5e6f7","toSide":"top","toEnd":"arrow","label":"events"},
+		{"id":"ent05a2b3c4d5e6f","fromNode":"nt05a2b3c4d5e6f7","fromSide":"right","toNode":"nt06a2b3c4d5e6f7","toSide":"left","toEnd":"arrow"},
+		{"id":"ent06a2b3c4d5e6f","fromNode":"nt06a2b3c4d5e6f7","fromSide":"right","toNode":"nt07a2b3c4d5e6f7","toSide":"left","toEnd":"arrow"},
+		{"id":"ent07a2b3c4d5e6f","fromNode":"nt06a2b3c4d5e6f7","fromSide":"bottom","toNode":"nt09a2b3c4d5e6f7","toSide":"top","toEnd":"arrow"},
+		{"id":"ent08a2b3c4d5e6f","fromNode":"nt06a2b3c4d5e6f7","fromSide":"bottom","toNode":"nt08a2b3c4d5e6f7","toSide":"top","toEnd":"arrow"}
+	]
+}

@@ -1,0 +1,38 @@
+filters:
+  and:
+    - file.hasTag("bug")
+    - file.ext == "md"
+formulas:
+  days_open: if(opened, (now() - date(opened)).days, "")
+  severity_icon: if(severity == "critical", "🔴", if(severity == "high", "🟠", if(severity == "medium", "🟡", "🟢")))
+properties:
+  severity:
+    displayName: Severity
+  formula.days_open:
+    displayName: Days Open
+  service:
+    displayName: Service
+views:
+  - type: table
+    name: Open Bugs
+    filters:
+      and:
+        - status == "open"
+    groupBy:
+      property: severity
+      direction: ASC
+    order:
+      - formula.severity_icon
+      - file.name
+      - severity
+      - service
+      - formula.days_open
+  - type: table
+    name: All Bugs
+    order:
+      - formula.severity_icon
+      - file.name
+      - severity
+      - status
+      - service
+      - formula.days_open

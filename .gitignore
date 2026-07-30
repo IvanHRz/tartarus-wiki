@@ -2,3 +2,10 @@
 .obsidian/cache
 .DS_Store
 raw/assets/
+
+# Grafo: regenerable en segundos, 7 MB de JSON. Solo se versiona el reporte.
+graph/graphify-out/graph.json
+graph/graphify-out/cache/
+graph/graphify-out/manifest.json
+graph/graphify-out/.graphify_*
+graph/graphify-out/*.html

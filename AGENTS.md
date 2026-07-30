@@ -105,6 +105,7 @@ El repo ya tiene `raw/docs/adr/`. **No las dupliques.** En el primer `ingest`, l
 - Nota: cambia el docker-compose de producción
 ```
 Tipos: `ingest`, `bitacora`, `release`, `query`, `lint`, `refactor`.
+
 ## Múltiples agentes (Claude, Antigravity, Codex)
 
 Este archivo es `AGENTS.md`. `CLAUDE.md` es un symlink a él. Cualquier agente lee el mismo schema — no hay dos verdades.
@@ -116,3 +117,38 @@ Reglas al operar con más de un agente:
 3. **Firma tu trabajo.** Cada entrada de `log.md` termina con `— <agente>` (`— claude`, `— antigravity`). Así `git blame` y el log cuentan la misma historia.
 4. **Si Antigravity necesita reglas propias**, van en `GEMINI.md`, no aquí. `GEMINI.md` tiene precedencia sobre `AGENTS.md` en Antigravity y es invisible para los demás — úsalo solo para cosas específicas del IDE, nunca para reglas de contenido.
 5. **Presupuesto de contexto:** este schema debe mantenerse por debajo de ~200 líneas. Si crece, extrae el detalle a una página de la wiki y déjalo enlazado.
+## Graphify — la capa estructural
+
+Hay **dos** fuentes de contexto y no se pisan:
+
+| | Responde | Quién la escribe |
+|---|---|---|
+| **El grafo** (`graph/graphify-out/`) | *qué llama a qué*, quién depende de quién, dónde está `X` | Tree-sitter, determinista |
+| **La wiki** (`wiki/`) | *por qué* está así, qué se descartó, qué dolió | tú, con Iván |
+
+Regla: **si la pregunta es estructural, consulta el grafo antes de leer código.** Nunca hagas `grep` a ciegas sobre `raw/repo`.
+
+```bash
+bash tools/graph_query.sh "cómo se genera el reporte forense"   # BFS, sin LLM
+graphify explain "EnrichmentCache" --graph graph/graphify-out/graph.json
+graphify affected "get_conn()" --graph graph/graphify-out/graph.json   # qué rompo si toco esto
+bash tools/graph_rebuild.sh                                      # tras cambios grandes
+```
+
+`graph/graphify-out/GRAPH_REPORT.md` está en la bóveda: god nodes, comunidades y "surprising connections". **Léelo antes de escribir una página de módulo.** Los god nodes son, casi siempre, las páginas de módulo que faltan.
+
+### Reglas del grafo
+
+1. **Local por defecto.** `graph_rebuild.sh` corre `--code-only` + `cluster-only --no-label`: Tree-sitter y Leiden, cero llamadas al modelo. `--semantic` sí llama al LLM — úsalo solo con consentimiento explícito de Iván.
+2. **`graph.json` no se versiona.** Se regenera en ~5 s. Solo `GRAPH_REPORT.md` va a git.
+3. **`.graphifyignore` vive en el repo, no en la bóveda.** Es la única excepción a la inmutabilidad de `raw/repo`: es configuración, como `.gitignore`. Si el grafo produce god nodes con nombres de una letra (`t`, `p`, `s()`), estás indexando código minificado — arregla el ignore, no el grafo.
+4. **El grafo no sustituye a la wiki.** Sabe que `A` llama a `B`. No sabe por qué se rechazó la Opción B. Eso solo vive en las ADRs.
+
+## Convenciones (kepano)
+
+- **El nombre del archivo es el título.** Sin prefijos numéricos ni fechas, salvo donde el orden temporal *es* la identidad (postmortems, releases, casos).
+- **Una nota, una idea.** Si una página necesita dos encabezados de nivel 1, son dos páginas.
+- **Enlaces, no rutas.** `[[EnrichmentCache]]`, nunca `wiki/modulos/enrichment.md`.
+- **Bottom-up.** No inventes taxonomías vacías. Una carpeta nace cuando ya hay 3 páginas que la piden.
+- **Las propiedades viven en el frontmatter**, no en el cuerpo. Si un dato se va a filtrar o consultar, es una propiedad.
+- **Plantillas en `Templates/`.** Úsalas al crear páginas; no improvises la estructura.

@@ -1,0 +1,37 @@
+filters:
+  and:
+    - file.hasTag("roadmap")
+    - file.ext == "md"
+formulas:
+  days_open: if(date, (now() - date(date)).days, "")
+  status_icon: if(status == "completed", "✅", if(status == "in-progress", "🔄", "📋"))
+  priority_label: if(priority == 1, "🔴 Critical", if(priority == 2, "🟠 High", if(priority == 3, "🟡 Medium", "🟢 Low")))
+properties:
+  status:
+    displayName: Status
+  formula.priority_label:
+    displayName: Priority
+views:
+  - type: table
+    name: Active Phases
+    filters:
+      not:
+        - status == "completed"
+    groupBy:
+      property: status
+      direction: ASC
+    order:
+      - formula.status_icon
+      - file.name
+      - status
+      - formula.priority_label
+      - description
+      - target_date
+  - type: table
+    name: All Phases
+    order:
+      - formula.status_icon
+      - file.name
+      - status
+      - formula.priority_label
+      - description
