@@ -1,7 +1,12 @@
 {
-  "attachmentFolderPath": "raw/assets",
+  "attachmentFolderPath": "wiki/assets",
   "alwaysUpdateLinks": true,
   "newLinkFormat": "shortest",
   "useMarkdownLinks": false,
-  "userIgnoreFilters": ["graph/graphify-out/cache/", "raw/repo/node_modules/", "raw/repo/venv/", "raw/repo/__pycache__/"]
+  "userIgnoreFilters": [
+    "raw/",
+    "graph/",
+    "tools/"
+  ],
+  "showUnsupportedFiles": false
 }
