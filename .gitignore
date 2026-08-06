@@ -9,3 +9,4 @@ graph/graphify-out/cache/
 graph/graphify-out/manifest.json
 graph/graphify-out/.graphify_*
 graph/graphify-out/*.html
+graph/graphify-out/20*/
