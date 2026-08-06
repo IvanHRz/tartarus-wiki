@@ -35,7 +35,12 @@ El agente lee este archivo **antes** de cualquier query.
 
 ## Módulos
 
-- [[sensores]] — registro, bootstrap y telemetría. `commit_ref: 6f584b7`
+- [[consumer]] — pipeline de ingesta (RabbitMQ→parse→flock→Sigma). `god: _parse_event`
+- [[risk-engine]] — score 0–100 aditivo + MITRE. `god: calculate_risk (67)`
+- [[sigma-eval]] — evaluación Sigma inline, AST sin `eval`. `god: _safe_eval_condition`
+- [[reporting]] — reporte de engagement (VRA, 100% forense). `god: _generate_engagement_report_impl`
+- [[sensores]] — registro, bootstrap, binding a flock (Fase 5). `god: HmacVerifier (50)`
+- Todas `commit_ref: 0085c31` salvo donde se indique.
 
 ## Releases
 

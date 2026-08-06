@@ -1,19 +1,28 @@
 ---
 tipo: modulo
 creado: 2026-07-10
-actualizado: 2026-07-10
-commit_ref: 6f584b7
-tags: [sensores, networking, schema]
+actualizado: 2026-08-06
+commit_ref: 0085c31
+tags: [sensores, networking, schema, flocks, hmac]
 ---
 
 # Módulo: sensores
 
-> Verificado contra `6f584b7` el 2026-07-10. Si el HEAD actual difiere mucho, esta página miente.
+> Verificado contra `0085c31` el 2026-08-06. Si el HEAD actual difiere mucho, esta página miente.
 > Comprobar: `bash tools/stale_modules.sh`
 
 ## Responsabilidad
 
 Registro, bootstrap y telemetría de los nodos que emiten eventos: Beelzebub (×5), OpenCanary, icmp-canary, scanner.
+
+## Binding a flock (Fase 5, nuevo desde `6f584b7`)
+
+`sensor_registry` y `remote_sensors` tienen ahora `flock_id` (un honeypot se despliega
+PARA un cliente). `POST /sensors/{id}/flock` asigna/desasigna (RBAC `can_mutate`);
+`GET /sensors/status?flock_id=` filtra. God-node `HmacVerifier` (50 edges) sigue siendo el
+verificador del heartbeat push. Es la mitad "binding explícito" del vínculo honeypot→flock
+— la otra mitad son las reglas de asignación. Ver [[0002-multi-tenancy-flocks]] y
+[[0005-attack-map-contexto-de-despliegue]] (el attack-map resuelve host:port desde este registro).
 
 ## Estado del schema — dos tablas, una viva
 
