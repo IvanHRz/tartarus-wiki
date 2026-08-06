@@ -65,3 +65,11 @@ Bitácora de actualizaciones. Append-only.
 - **Trampa (reporting):** `_generate_engagement_report_impl` + `generate_report.py:553` leen `remote_sensors` (tabla muerta) — el `DROP` de [[0001-arquitectura-de-sensores]] rompería reportes.
 - Pendiente: `lint` — borrar `graph.js` (dead-code, god-node #4); postmortem de `#10` al arreglarse.
 — claude
+
+## [2026-08-06] refactor | raw/ y graph/ → dotfolders (.raw/.graph)
+- Motivo: Obsidian seguía el symlink `raw/repo` e indexaba TODO el repo como notas (205 notas visibles, grafo ilegible). Su "excluded files" solo atenúa, no oculta. Los dotfolders sí se ocultan.
+- `git mv raw .raw` + `git mv graph .graph`. Ahora Obsidian solo ve: wiki/, index.md, log.md, Templates/, AGENTS.md (20 notas).
+- Refs actualizadas a `.raw/`/`.graph/` en: tools/*.sh (funcional), .gitignore, AGENTS.md (el schema), index.md, sintesis.md, adr_original de 0001/0007-0010. Entradas históricas de este log se dejan como estaban (append-only).
+- Smoke-test OK: `git_digest.sh` y `stale_modules.sh` resuelven `.raw/repo`.
+- Nota zsh: el word-splitting no aplica a `$VAR` sin comillas — `for f in $FILES` iteraba una sola vez. Usar lista explícita o `${=FILES}`.
+— claude

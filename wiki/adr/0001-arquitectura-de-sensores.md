@@ -4,7 +4,7 @@ estado: propuesta
 creado: 2026-07-10
 actualizado: 2026-07-10
 commit_ref: 6f584b7
-adr_original: raw/docs/adr/ADR-001-sensor-architecture.md
+adr_original: .raw/docs/adr/ADR-001-sensor-architecture.md
 bugs: [BUG-031b, BUG-032, BUG-041, BUG-043]
 tags: [sensores, networking, schema, bootstrap]
 ---
@@ -12,7 +12,7 @@ tags: [sensores, networking, schema, bootstrap]
 # ADR-0001 — Arquitectura de sensores: networking, schema, bootstrap
 
 > [!info] Documento fuente
-> La ADR completa (459 líneas) vive en `raw/docs/adr/ADR-001-sensor-architecture.md`, fechada 2026-05-06.
+> La ADR completa (459 líneas) vive en `.raw/docs/adr/ADR-001-sensor-architecture.md`, fechada 2026-05-06.
 > **No se duplica aquí.** Esta página añade lo que la ADR no puede saber sobre sí misma: su estado real dos meses después.
 
 ## Qué decide

@@ -3,8 +3,8 @@
 #   --semantic  añade extracción semántica de prosa (SÍ llama al modelo configurado)
 set -euo pipefail
 cd "$(dirname "$0")/.."
-REPO="$(cd raw/repo && pwd -P)"
-OUT="$PWD/graph"
+REPO="$(cd .raw/repo && pwd -P)"
+OUT="$PWD/.graph"
 
 command -v graphify >/dev/null || { echo "falta graphify: pip install graphifyy"; exit 1; }
 

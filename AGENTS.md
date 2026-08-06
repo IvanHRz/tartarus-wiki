@@ -10,7 +10,7 @@ Nunca documentes aquí lo que un `grep` en el repo responde mejor. Si una págin
 
 ## Reglas duras
 
-1. **`raw/repo` es inmutable desde esta wiki.** Es un symlink a `~/Documents/Tartarus`. Lees; nunca editas código desde aquí. Para tocar código, se abre el repo directamente (que tiene su propio `CLAUDE.md`).
+1. **`.raw/repo` es inmutable desde esta wiki.** Es un symlink a `~/Documents/Tartarus`. Lees; nunca editas código desde aquí. Para tocar código, se abre el repo directamente (que tiene su propio `CLAUDE.md`).
 2. **`wiki/`, `index.md`, `log.md` son tuyos.**
 3. Toda afirmación técnica se ancla a un commit, PR, archivo o issue. Formato: `` `a1b2c3d` `` o `engine/parser.py:L88`.
 4. Lee `index.md` antes de cualquier query.
@@ -18,8 +18,8 @@ Nunca documentes aquí lo que un `grep` en el repo responde mejor. Si una págin
 ## Estructura
 
 ```
-raw/repo/       symlink al repo Tartarus (git)
-raw/docs/       symlink a Tartarus/Docs
+.raw/repo/       symlink al repo Tartarus (git)
+.raw/docs/       symlink a Tartarus/Docs
 wiki/
   adr/          decisiones de arquitectura — el corazón de esta wiki
   postmortems/  incidentes y bugs no triviales, con causa raíz
@@ -61,7 +61,7 @@ Contenido: responsabilidad, entradas/salidas, invariantes, trampas conocidas. **
 ## Operaciones
 
 ### `ingest`
-Fuentes válidas: un commit range, un PR, un documento de `raw/docs/`, una sesión de debugging, una conversación de diseño.
+Fuentes válidas: un commit range, un PR, un documento de `.raw/docs/`, una sesión de debugging, una conversación de diseño.
 Flujo: leer → discutir hallazgos conmigo → escribir/actualizar páginas → actualizar `index.md` → `log.md`.
 
 ### `bitacora` (bitácora de actualizaciones)
@@ -87,7 +87,7 @@ Genera `wiki/releases/<version>.md` desde el rango de commits del tag anterior a
 
 ## Nota: ADRs preexistentes
 
-El repo ya tiene `raw/docs/adr/`. **No las dupliques.** En el primer `ingest`, léelas, y para cada una crea en `wiki/adr/` una página que la referencie por ruta y añada lo que falte (alternativas descartadas, consecuencias observadas después). Si una ADR del repo quedó obsoleta, dilo aquí, no la edites allá.
+El repo ya tiene `.raw/docs/adr/`. **No las dupliques.** En el primer `ingest`, léelas, y para cada una crea en `wiki/adr/` una página que la referencie por ruta y añada lo que falte (alternativas descartadas, consecuencias observadas después). Si una ADR del repo quedó obsoleta, dilo aquí, no la edites allá.
 
 ## GitHub
 
@@ -123,25 +123,25 @@ Hay **dos** fuentes de contexto y no se pisan:
 
 | | Responde | Quién la escribe |
 |---|---|---|
-| **El grafo** (`graph/graphify-out/`) | *qué llama a qué*, quién depende de quién, dónde está `X` | Tree-sitter, determinista |
+| **El grafo** (`.graph/graphify-out/`) | *qué llama a qué*, quién depende de quién, dónde está `X` | Tree-sitter, determinista |
 | **La wiki** (`wiki/`) | *por qué* está así, qué se descartó, qué dolió | tú, con Iván |
 
-Regla: **si la pregunta es estructural, consulta el grafo antes de leer código.** Nunca hagas `grep` a ciegas sobre `raw/repo`.
+Regla: **si la pregunta es estructural, consulta el grafo antes de leer código.** Nunca hagas `grep` a ciegas sobre `.raw/repo`.
 
 ```bash
 bash tools/graph_query.sh "cómo se genera el reporte forense"   # BFS, sin LLM
-graphify explain "EnrichmentCache" --graph graph/graphify-out/graph.json
-graphify affected "get_conn()" --graph graph/graphify-out/graph.json   # qué rompo si toco esto
+graphify explain "EnrichmentCache" --graph .graph/graphify-out/graph.json
+graphify affected "get_conn()" --graph .graph/graphify-out/graph.json   # qué rompo si toco esto
 bash tools/graph_rebuild.sh                                      # tras cambios grandes
 ```
 
-`graph/graphify-out/GRAPH_REPORT.md` está en la bóveda: god nodes, comunidades y "surprising connections". **Léelo antes de escribir una página de módulo.** Los god nodes son, casi siempre, las páginas de módulo que faltan.
+`.graph/graphify-out/GRAPH_REPORT.md` está en la bóveda: god nodes, comunidades y "surprising connections". **Léelo antes de escribir una página de módulo.** Los god nodes son, casi siempre, las páginas de módulo que faltan.
 
 ### Reglas del grafo
 
 1. **Local por defecto.** `graph_rebuild.sh` corre `--code-only` + `cluster-only --no-label`: Tree-sitter y Leiden, cero llamadas al modelo. `--semantic` sí llama al LLM — úsalo solo con consentimiento explícito de Iván.
 2. **`graph.json` no se versiona.** Se regenera en ~5 s. Solo `GRAPH_REPORT.md` va a git.
-3. **`.graphifyignore` vive en el repo, no en la bóveda.** Es la única excepción a la inmutabilidad de `raw/repo`: es configuración, como `.gitignore`. Si el grafo produce god nodes con nombres de una letra (`t`, `p`, `s()`), estás indexando código minificado — arregla el ignore, no el grafo.
+3. **`.graphifyignore` vive en el repo, no en la bóveda.** Es la única excepción a la inmutabilidad de `.raw/repo`: es configuración, como `.gitignore`. Si el grafo produce god nodes con nombres de una letra (`t`, `p`, `s()`), estás indexando código minificado — arregla el ignore, no el grafo.
 4. **El grafo no sustituye a la wiki.** Sabe que `A` llama a `B`. No sabe por qué se rechazó la Opción B. Eso solo vive en las ADRs.
 
 ## Convenciones (kepano)

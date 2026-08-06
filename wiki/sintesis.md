@@ -9,7 +9,7 @@ commit_ref: 0085c31
 
 > [!info] Fuentes ingeridas
 > ADR-001 (sensores) + bitácora `6f584b7`..`0085c31` (24 commits, v0.5.0→v0.6.2) +
-> memoria del agente. Pendiente: destilar `raw/vault-legacy/` (23 notas de marzo).
+> memoria del agente. Pendiente: destilar `.raw/vault-legacy/` (23 notas de marzo).
 
 ## Dónde está el proyecto
 

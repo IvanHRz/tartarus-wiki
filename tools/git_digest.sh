@@ -3,7 +3,7 @@
 # Uso: bash tools/git_digest.sh [ref_inicial]
 set -euo pipefail
 cd "$(dirname "$0")/.."
-REPO="${REPO:-raw/repo}"
+REPO="${REPO:-.raw/repo}"
 
 LAST="${1:-}"
 if [[ -z "$LAST" ]]; then

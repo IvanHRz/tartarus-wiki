@@ -4,7 +4,7 @@ estado: aceptada
 creado: 2026-03-12
 actualizado: 2026-07-30
 commit_ref: 0085c31
-adr_original: raw/vault-legacy/Knowledge Base/Decisions/ADR-004 WebSocket Real-Time.md
+adr_original: .raw/vault-legacy/Knowledge Base/Decisions/ADR-004 WebSocket Real-Time.md
 tags: [websocket, real-time, ws_manager, obsolescencia]
 ---
 

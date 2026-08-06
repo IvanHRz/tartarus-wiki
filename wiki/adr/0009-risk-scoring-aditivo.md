@@ -4,7 +4,7 @@ estado: aceptada
 creado: 2026-03-10
 actualizado: 2026-07-30
 commit_ref: 0085c31
-adr_original: raw/vault-legacy/Knowledge Base/Decisions/ADR-003 Risk Scoring Algorithm.md
+adr_original: .raw/vault-legacy/Knowledge Base/Decisions/ADR-003 Risk Scoring Algorithm.md
 tags: [riesgo, scoring, detection, mitre]
 ---
 

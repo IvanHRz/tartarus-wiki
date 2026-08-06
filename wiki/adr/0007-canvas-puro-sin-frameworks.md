@@ -4,7 +4,7 @@ estado: aceptada
 creado: 2026-03-10
 actualizado: 2026-07-30
 commit_ref: 0085c31
-adr_original: raw/vault-legacy/Knowledge Base/Decisions/ADR-001 Canvas Only UI.md
+adr_original: .raw/vault-legacy/Knowledge Base/Decisions/ADR-001 Canvas Only UI.md
 tags: [ui, canvas, frontend, c3]
 ---
 
