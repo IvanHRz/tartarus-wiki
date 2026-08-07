@@ -46,5 +46,26 @@ tags: [despliegue, readiness, gate, campo]
 4. Lanzar 1 sonda de prueba → confirmar que aterriza en el feed del flock correcto.
 5. Correr `scripts/audit_gate.sh` desde el engine antes de dar por bueno el despliegue.
 
+## Runbook — API SOC (para que XSIAM/SOC consuma) · E-D1
+
+> La API read-only ya existe (`/v1/soc/incidents|devices|detections`, token `X-API-Key`, rate-limited,
+> scopeada al flock del token). El **código** está; lo de abajo es lo que la **infra** debe aplicar en
+> el host real para exponerla con seguridad. Sin esto, no se entrega a un SOC.
+
+1. **Engine internal-only** (ya en código): el compose base bindea el engine a `127.0.0.1` (no en la
+   interfaz externa). No revertir a `0.0.0.0` en prod.
+2. **TLS + hostname estable:** poner un certificado real en `./certs/server.{crt,key}` (o frontear con
+   un reverse-proxy ACME/Let's Encrypt) y un DNS estable. `ui/nginx-prod.conf` ya termina TLS 1.2/1.3
+   + HSTS + rate-limit y proxya `/api/` → engine. **Hoy `certs/` está vacío** — es el bloqueante.
+3. **Activar la auth de consola en prod:** `TARTARUS_SESSION_AUTH=true` + `TARTARUS_JWT_SECRET` fuerte
+   (el default es de dev). Las rutas `/v1/soc/` saltan la sesión de consola a propósito (usan su token).
+4. **Emitir el token del SOC (menor privilegio):** `POST /api/soc/tokens {name:"xsiam", flock_id?}` →
+   devuelve el token **una sola vez**. Dárselo a XSIAM/al colector. Revocar con `DELETE /api/soc/tokens/{id}`.
+   No usar el token admin de consola para la SOC (regla de la doc de alcances).
+5. **XSIAM consume:** `GET https://<host>/api/v1/soc/incidents?hours=1&limit=500` con
+   `X-API-Key: <token>` en un poll programado (o el feed que se decida en E-D2). Una consola = un
+   solo origen para las N unidades.
+6. Verificar: sin token → 401; token válido → JSON; token de flock A no ve datos de B.
+
 ## Enlaces
 - [[roadmap]] (Tier 0 = esta puerta; Tier E = despliegue self-service) · [[2026-08-07-ingesta-amqp-ciega]] · [[sensores]]
