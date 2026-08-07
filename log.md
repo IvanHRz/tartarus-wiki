@@ -84,3 +84,26 @@ Bitácora de actualizaciones. Append-only.
 - **Roadmap:** Tier 0 (gate) + Tier E (despliegue self-service) añadidos a `.agents/ROADMAP.md`.
 - Pendiente: fix real del `#11` en el path AMQP; build del Tier E (enrollment + auto-bind); verificación E2E de la reconexión por inactividad bajo canal muerto.
 — claude
+
+## [2026-08-07] bitacora | Tier E arranque: enrolamiento, notificaciones, dashboard (ref. Thinkst)
+- Origen: evaluación de **Thinkst Canary** (POC en `~/Documents/Thinks Canary`) como plataforma de
+  referencia. Matriz de gap TARTARUS vs Canary + reestructura del Tier E (E-A…E-G) en `.agents/ROADMAP.md`.
+- **E-A enrolamiento** (`fcea76c`): `POST /flocks/{id}/enroll` (token single-use en Redis) +
+  `POST /sensors/enroll` (auto-bind del `flock_id`) + re-home de sensores al borrar flock (lección POC:
+  borrar un Flock desemparejó el hardware). E2E: token→auto-bind→re-home. `scripts/sensor-enroll.sh`.
+- **E-E notificaciones** (`ae28dd7`): estaban rotas (todo off por defecto, config solo-RAM). Tabla
+  `notify_config` (JSONB) + `persist()`/`load_persisted()` al boot + UI de credenciales email/WhatsApp +
+  test-con-body + errores a `logger.error`. E2E: config sobrevive reinicio.
+- **E-F dashboard** (`446ed87`, [[0011-dashboard-alerts-centric]]): navegación por vistas
+  (Principal/Análisis/⚙Gestión) — de 27 secciones/3 mapas a un núcleo triage. `graph.js` borrado.
+  Variante Balanceada; Mínima documentada como alternativa.
+- **E-F2 Gestión/Análisis honestos** (`378a07c`): Threat Intelligence agrupa Internos vs Externos y la
+  IP interna (RFC1918) dice explícito "sin inteligencia externa" (antes tarjeta vacía); **Infra Map
+  eliminado** (redundante con Remote Sensors + Attack Map); Attack Origin Map ya no se atasca en
+  "Cargando…"; Audit Trail con etiquetas legibles (auth/flocks/sensores + rutas `{id}`).
+- **Regla de oro registrada (usuario):** todo lo que incorporemos debe priorizar **intuición + facilidad
+  de uso**; referencia Thinkst = una alerta se resuelve en 5-8 campos, cero relleno.
+- Suite 864 verde. Rama `feature/tier0-deployment-readiness` (5 commits code + wiki), sin push aún.
+- Pendiente Tier E: E-F2.5 alert-UX (Related Incidents/Ignore-IP), **E-B OT (Modbus+portscan)**, E-C
+  cebos rotos (planter no beacona), E-D export a XSIAM, modos VM/OVA·Tailscale (nube al final).
+— claude
