@@ -133,3 +133,18 @@ Bitácora de actualizaciones. Append-only.
   para prod hay que activarla + cert TLS real (`certs/` está vacío) + hostname. Documentado en el runbook.
 - Pendiente Tier E: E-C.4 (SMB), E-D2 (feed SIEM), TE-B3/B4 (LDAP/VNC/realismo/AD), TE-G (VM/OVA·Tailscale).
 — claude
+
+## [2026-08-07] refactor | Wikis narrativas + brief de cowork + Tier F (para la asesora)
+- Motivo: enriquecer la wiki a alto nivel/narrativa para lectura de dirección (dsantamaria, asesora con
+  lectura del repo privado). La `sintesis.md` estaba desfasada (jul-30) — su "tensión central" (#10,
+  aislamiento sin probar, detección inflada) **ya se resolvió** en el Tier 0.
+- Páginas: **[[sintesis]]** reescrita al presente (PR #12) · **[[estado-y-rumbo]]** (nueva: qué tenemos /
+  qué mejoramos / próximas acciones con estimados S/M/L) · **[[brief-cowork]]** (nueva: onboarding
+  completo — arquitectura, constraints C1-C5, OPSEC, cómo trabajamos, qué estudiar) · **[[roadmap]]**
+  actualizada (Tier 0 ✅, Tier E en curso, Tier F). index.md enlaza las nuevas.
+- Roadmap de código: **Tier F** (13 brechas) añadido a `.agents/ROADMAP.md` con causa raíz + estimados.
+  #1 (aislamiento) es P0: el backend SÍ aísla; la "fuga" visible era un guard cosmético del front, pero
+  hay 2 vistas sin filtrar (kill-chain/correlación) y falta el clamp datos por usuario→flock (MSSP real).
+- Próximo: quick-wins de UI (memo con Enter, color de sensores, estados vacíos) + validación #9 (cebos
+  + alertas email/Telegram/SMS, requiere credenciales) + seguridad de la llave del honeypot.
+— claude

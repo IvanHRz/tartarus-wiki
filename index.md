@@ -10,10 +10,12 @@ El agente lee este archivo **antes** de cualquier query.
 
 ## Estado
 
-- [[sintesis]] — el proyecto en una página
-- [[roadmap]] — Tier 0 (saneamiento/gate) + Tier E (despliegue de campo) añadidos 2026-08-07
-- [[deploy-checklist]] — **definición de "desplegable"** (gate `scripts/audit_gate.sh`)
-- [[backlog]] — 3 ideas diferidas con su razonamiento
+- [[brief-cowork]] — **onboarding**: todo lo que necesita quien llega a ayudar a dirigir/planear.
+- [[sintesis]] — el proyecto en una página (al día, PR #12).
+- [[estado-y-rumbo]] — qué tenemos, qué se evalúa/mejora, próximas acciones **con estimados**.
+- [[roadmap]] — plan por fases: Tier 0 (readiness) ✅ · Tier E (despliegue) · **Tier F (13 brechas)**.
+- [[deploy-checklist]] — **definición de "desplegable"** (gate `scripts/audit_gate.sh`).
+- [[backlog]] — 3 ideas diferidas con su razonamiento.
 
 ## ADRs
 

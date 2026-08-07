@@ -1,63 +1,69 @@
 ---
 tipo: roadmap
 creado: 2026-07-09
-actualizado: 2026-07-30
-commit_ref: 0085c31
+actualizado: 2026-08-07
+commit_ref: PR#12 (rama feature/tier0-deployment-readiness)
 ---
 
-# Roadmap — Tartarus
+# Roadmap — TARTARUS
 
-Estados: `idea` → `decidido` (tiene ADR) → `en curso` (tiene issue) → `hecho` (tiene release) → `descartado` (con razón)
-**Nada se borra.** Lo descartado es tan informativo como lo hecho.
+Estados: `idea` → `decidido` (ADR) → `en curso` (issue) → `hecho` (release) → `descartado` (con razón).
+**Nada se borra.** Estimados: **S ≈ 1 día · M ≈ 2–3 días · L ≈ 1 semana**. El plan operativo detallado
+vive en `.agents/ROADMAP.md` (repo de código).
 
 ## Hecho — MSSP / multi-tenancy (v0.5.0 → v0.6.2, PR #8)
 
-| Ítem | Estado | ADR | Commit |
-|---|---|---|---|
-| Multi-tenancy "Flocks" (aislamiento por flock_id) | hecho | [[0002-multi-tenancy-flocks]] | `78b4263` |
-| RBAC 3 roles | hecho | [[0003-rbac-tres-roles]] | `3f83f1c` |
-| Acknowledge + consistencia de ventana | hecho | [[0004-acknowledge-limpieza-de-ruido]] | `665cd09` |
-| Attack Map contexto de despliegue | hecho | [[0005-attack-map-contexto-de-despliegue]] | `5891465` |
-| Consola de dos niveles (madre/workspace) | hecho | [[0006-consola-dos-niveles]] | `4b707ed` |
-| Fijar Beelzebub a v3.8.0 (reproducibilidad) | hecho | — | `965c65c` |
+Flocks + RBAC + Acknowledge + Attack Map + consola de dos niveles, cada uno con su ADR
+([[0002-multi-tenancy-flocks]]…[[0006-consola-dos-niveles]]) + pin de Beelzebub v3.8.0.
 
-## En curso — bloqueantes de despliegue (issues abiertos)
+## Hecho — Tier 0: readiness (PR #12) ✅
 
-| Ítem | Estado | Issue | Nota |
-|---|---|---|---|
-| Ingesta muerta (canal AMQP se cae) | en curso | `#10` | **crítico — condición de "desplegable"**. Healthcheck de ingesta + reconexión. |
-| `events.honeypot_id` siempre NULL | en curso | `#11` | Bloquea el join real events→sensor. Clave estable de sensor en `events`. |
-| Test de integración con Postgres real | idea | — | El aislamiento entre flocks solo se prueba con pool mockeado. |
+La **puerta de calidad** antes de features. Gate 11/11 (`scripts/audit_gate.sh`). Aquí se cerró el
+riesgo que nos frenaba:
+
+| Ítem | Estado |
+|---|---|
+| **Ingesta ciega (#10)** — detección de frescura + reconexión AMQP | ✅ ([[2026-08-07-ingesta-amqp-ciega|postmortem]]) |
+| Telemetría de campo (`POST /ingest/sensor`, HMAC) | ✅ |
+| Test de integración de aislamiento entre flocks (Postgres real) | ✅ |
+| Conteo de detección honesto (cargadas vs aplicables) | ✅ |
+
+## En curso — Tier E: sensores, despliegue, consola, API (PR #12)
+
+| Ítem | Estado | Nota |
+|---|---|---|
+| Enrolamiento de sensores por token + auto-bind a flock | ✅ | re-home al borrar flock |
+| Honeypot **OT (Modbus)** + scoring ICS | ✅ | write = crítico |
+| Detección de port-scan de primera clase | ✅ | |
+| Cebos que "beaconan" + creds únicas + breadcrumbs reconciliados | ✅ | falta file-share SMB (E-C.4) |
+| **API SOC** read-only con token de menor privilegio | ✅ base | ver [[0012-api-soc-menor-privilegio]] |
+| Notificaciones (persistencia + credenciales + Ignorar-IP real) | ✅ | falta canal **SMS** |
+| Dashboard alerts-centric (Principal/Análisis/Gestión) | ✅ | ver [[0011-dashboard-alerts-centric]] |
+| **Pendiente**: feed real al SIEM (pull vs push), file-share SMB, LDAP/VNC + realismo (AD-DC), modos VM/OVA·Tailscale (nube al final) | idea/decidido | tras Tier F |
+
+## Tier F — brechas de producto y validación (nuevo, en cola)
+
+Salieron de probar la consola en vivo. Detalle con causa raíz en `.agents/ROADMAP.md` §Tier F.
+
+| Grupo | Ítems | Est. |
+|---|---|---|
+| **Aislamiento fino** (seguridad) | Fuga cosmética de totales por flock (#1a) · kill-chain/correlación sin filtrar (#1b) · **clamp datos por usuario→flock** (#1c) · Usuarios&Roles claro (#12) | S · S–M · **M** · S–M |
+| **Claridad de consola** | Memo con Enter (#4/#6, un solo fix) · Attack Map con logs al click (#2) · búsqueda estratégica (#3) · sensores color+etiqueta (#5) · estados vacíos (#8/#11) · detección concisa (#10) · copy de deception (#7) | S–M cada uno |
+| **Motor de IA del honeypot** | Rotar/asegurar la llave (#13a) · **panel de prompts de persona** — que actúe como Windows/PowerShell (#13b) | S–M · **L** |
+| **Validación E2E** | Desplegar 1 token de cada tipo + alertas email/Telegram/**SMS** en bucle (#9) | M (requiere credenciales) |
 
 ## Bloqueante: validación en hardware RPi 5 16GB
 
-[[0001-arquitectura-de-sensores]] es `PROPOSED` y **prohíbe** implementar hasta pasar los 6 criterios. Todo lo demás del cluster de sensores depende de esto.
+[[0001-arquitectura-de-sensores]] sigue `PROPOSED` y **prohíbe** implementar hasta pasar 6 criterios de
+campo (scanner nativo, icmp-canary por host networking, bootstrap idempotente, DROP de `remote_sensors`
+tras actualizar `docs/generate_report.py:553`). Todo el cluster de sensores distribuidos depende de esto.
 
-| # | Criterio | Estado |
-|---|---|---|
-| 1 | Scanner nativo escanea LAN real (≥1 host distinto del propio RPi) | ⬜ |
-| 2 | icmp-canary en host networking recibe ping a ghost IP → evento en `/events` en <5 s | ⬜ |
-| 3 | Stack del bridge levanta sin `name resolution failed` | ⬜ |
-| 4 | `GET /sensors` devuelve `sensor_registry` (≥6 sensores, sin shape legacy) | ⬜ |
-| 5 | `DROP TABLE remote_sensors` limpio, `COUNT(*)=0` re-confirmado antes | ⬜ |
-| 6 | Bootstrap idempotente: 3 restarts con sensor borrado → `COUNT(*)` sigue en 5 | ⬜ |
+## Descartado (se conserva la razón)
 
-## Implementación (Sprint 6+, bloqueada por lo anterior)
+| Ítem | Por qué |
+|---|---|
+| Host networking universal | Rompe DNS del bridge; Docker Desktop lo emula mal en Mac; expone Redis sin auth |
+| Scanner ↔ engine vía HTTP | No resuelve el fondo; dos canales para el mismo concepto |
 
-| Ítem | Estado | ADR | Issue | Nota |
-|---|---|---|---|---|
-| Eliminar `sensor_router.py` (~104 LoC) | decidido | [[0001-arquitectura-de-sensores]] | — | |
-| Migración `DROP TABLE remote_sensors` | decidido | 0001 | — | ⚠ **actualizar `docs/generate_report.py:553` primero** |
-| Sacar `scanner:` del compose → nativo en host | decidido | 0001 | — | nmap + `setcap` + systemd unit + `scanner-host.py` |
-| `docker-compose.dev-mac-host-canary.yml` | decidido | 0001 | — | |
-| `field-rpi.yml`: añadir icmp-canary con `network_mode: host` | decidido | 0001 | — | + `ip addr add` de ghost IPs en `setup-rpi.sh` |
-| Unificar `SEED_SENSORS` + `bootstrap_policy` | decidido | 0001 | — | |
-| Alias `GET /sensors` → `GET /sensors/status` | decidido | 0001 | — | |
-| `GET /deploy/status`: leer registry o deprecar | decidido | 0001 | — | decisión menor, se cierra al implementar |
-
-## Descartado
-
-| Ítem | Por qué | Fecha |
-|---|---|---|
-| Host networking universal (Opción B) | Rompe DNS interno del bridge; Docker Desktop lo emula mal en Mac; expone Redis sin auth | 2026-05-06 |
-| Scanner ↔ engine vía HTTP (Opción E) | No resuelve BUG-032 ni el fondo de BUG-031b; dos canales para el mismo concepto | 2026-05-06 |
+## Enlaces
+[[sintesis]] · [[estado-y-rumbo]] · [[deploy-checklist]] · [[brief-cowork]]
