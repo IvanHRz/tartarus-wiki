@@ -11,7 +11,8 @@ El agente lee este archivo **antes** de cualquier query.
 ## Estado
 
 - [[sintesis]] — el proyecto en una página
-- [[roadmap]] — bloqueado por la validación en hardware RPi 5
+- [[roadmap]] — Tier 0 (saneamiento/gate) + Tier E (despliegue de campo) añadidos 2026-08-07
+- [[deploy-checklist]] — **definición de "desplegable"** (gate `scripts/audit_gate.sh`)
 - [[backlog]] — 3 ideas diferidas con su razonamiento
 
 ## ADRs
@@ -31,7 +32,7 @@ El agente lee este archivo **antes** de cualquier query.
 
 ## Postmortems
 
-*(vacío — candidato inmediato: issue `#10`, la ingesta AMQP muerta)*
+- [[2026-08-07-ingesta-amqp-ciega]] — #10: ingesta ciega (canal AMQP muerto). Detección + reconexión 2026-08-07.
 
 ## Módulos
 
@@ -44,7 +45,7 @@ El agente lee este archivo **antes** de cualquier query.
 
 ## Releases
 
-*(vacío — v0.6.2 documentada vía ADRs 0002–0006; falta página de release formal)*
+- [[v0.6.2]] — Multi-tenancy MSSP (Flocks completo, dos niveles, acknowledge). `6f584b7..0085c31`
 
 ---
 

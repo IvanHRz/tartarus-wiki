@@ -73,3 +73,14 @@ Bitácora de actualizaciones. Append-only.
 - Smoke-test OK: `git_digest.sh` y `stale_modules.sh` resuelven `.raw/repo`.
 - Nota zsh: el word-splitting no aplica a `$VAR` sin comillas — `for f in $FILES` iteraba una sola vez. Usar lista explícita o `${=FILES}`.
 — claude
+
+## [2026-08-07] refactor | Tier 0 saneamiento: loop de evaluación + gate verde 11/11
+- Origen: auditoría del *proceso de trabajo* + exploración del despliegue de campo. 11 hallazgos (T0-1..T0-11) → puerta de calidad antes de retomar features (decisión del usuario: "todo el backlog").
+- **Motor del loop:** `scripts/audit_gate.sh` (criterio de "sano" por hallazgo, exit 0 = todo verde). Reemplaza a `verify_features.sh` (v0.5). Verificado **11 OK / 0 FAIL / 0 SKIP** con el stack arriba.
+- **Críticos sanados y E2E-verificados:**
+  - `#10` ingesta ciega → `engine/ingestion_health.py` + `consumer:last_event_ts` + `/health.checks.ingestion` (ok/stale/idle) + reconexión AMQP por inactividad. Tras ingerir, `/health` → `ingestion=ok`. Ver [[2026-08-07-ingesta-amqp-ciega]].
+  - Telemetría de campo rota → `POST /ingest/sensor` (HMAC, flock-aware, `sensor_id`→`honeypot_id` mitiga `#11`). E2E: evento de campo aterrizó en `events` con risk 80. `push-to-rpi.sh`/composes corregidos (apuntaban a `/events/webhook` inexistente).
+- **Otros:** test de integración de aislamiento de flocks (`_windowed_where` real vs Postgres); `/detections/rules` ahora distingue **cargadas (427) vs aplicables a honeypot (117)**; skills `tartarus-*` consolidadas a una ubicación + banner v0.6.x; `scripts/reset_clean.sh` (clean-slate); git-maintenance off en la wiki.
+- **Roadmap:** Tier 0 (gate) + Tier E (despliegue self-service) añadidos a `.agents/ROADMAP.md`.
+- Pendiente: fix real del `#11` en el path AMQP; build del Tier E (enrollment + auto-bind); verificación E2E de la reconexión por inactividad bajo canal muerto.
+— claude
