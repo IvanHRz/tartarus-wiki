@@ -29,6 +29,8 @@ El agente lee este archivo **antes** de cualquier query.
 | [[0008-rabbitmq-event-bus]] | RabbitMQ entre honeypot y consumer | **aceptada** — legacy; "never lost" contradicho (`#10`) |
 | [[0009-risk-scoring-aditivo]] | Score 0–100 determinista, sin ML | **aceptada** — legacy, vigente |
 | [[0010-websocket-real-time]] | `/ws/events` push post-INSERT | **aceptada** — legacy; huérfana (Neural Graph retirado) |
+| [[0011-dashboard-alerts-centric]] | Navegación por vistas (Principal/Análisis/Gestión) | **aceptada** — E-F (PR #12); variante Mínima documentada |
+| [[0012-api-soc-menor-privilegio]] | Token M2M read-only + flock para consumo por SOC/SIEM | **aceptada** — E-D1 (PR #12) |
 
 ## Postmortems
 

@@ -107,3 +107,29 @@ Bitácora de actualizaciones. Append-only.
 - Pendiente Tier E: E-F2.5 alert-UX (Related Incidents/Ignore-IP), **E-B OT (Modbus+portscan)**, E-C
   cebos rotos (planter no beacona), E-D export a XSIAM, modos VM/OVA·Tailscale (nube al final).
 — claude
+
+## [2026-08-07] bitacora | Tier E cont.: OT (Modbus+portscan), cebos, API SOC → PR #12
+- Continuación de la sesión larga. Rama `feature/tier0-deployment-readiness` **pusheada, PR #12 → main**
+  (11 commits, suite 882 verde).
+- **E-F2.5** (`7511b41`): "Ignorar IP" real — el notifier consume el set `ignored_ips` (antes no-op).
+- **E-B OT** (`95d7d1d`,`7461491`): honeypot **Modbus/TCP** señuelo (`sensors/modbus_canary/`, parser
+  puro + servidor asyncio, scoring ICS: read=Discovery/T0846, **write=Impact/T0836 crítico**) +
+  **portscan detection first-class** (`portscan_detector.py`, ventana Redis de puertos distintos por IP,
+  dispara "Host Port Scan"/T1046 una vez por ventana; enganchado en consumer + `/ingest/sensor`).
+  Candidatos a página [[modulos]]: `modbus_canary`, `portscan_detector`.
+- **E-C cebos** (`083a4aa`): el planter doc/pdf ahora **beacona** (reusa `canary_docgen` → docx/pdf real
+  con web-bug; deploy_router pasa `token_value` único); creds aws/slack **únicas + `register_decoy`**
+  (antes: llave-ejemplo famosa inerte); breadcrumbs FTP/RDP/SMB reconciliados con OpenCanary
+  (`ACTIVE_HONEYPOT_PROTOCOLS`). Pendiente **E-C.4**: file-share SMB con árbol tokenizado.
+- **E-D1 API SOC** (`c06f63b`): decisión = **token de menor privilegio** para consumo por máquinas, no
+  el JWT de consola ni la llave-plana. Ver [[0012-api-soc-menor-privilegio]]. `soc_auth.py` (tokens
+  hasheados, read-only, flock-scoped) + `soc_router.py` (`/api/v1/soc/{incidents,devices,detections}`,
+  rate-limited; `/soc/tokens` admin). engine internal-only (bind 127.0.0.1). Runbook en [[deploy-checklist]].
+  **E-D2 (el feed real al SIEM) queda para decidir: pull vs push.**
+- **OPSEC:** `190ff39` neutralizó el nombre del SIEM del cliente en 2 docstrings. 2 mensajes de commit lo
+  conservan (aceptado por el usuario — el cliente ya estaba público en el repo; `filter-branch` bloqueado
+  en el entorno). "Thinkst"/"IQSEC" ya eran públicos en 22/25 archivos de `main` desde antes.
+- **Hallazgo (readiness):** la auth de la API está **OFF por defecto** (`TARTARUS_SESSION_AUTH=false`);
+  para prod hay que activarla + cert TLS real (`certs/` está vacío) + hostname. Documentado en el runbook.
+- Pendiente Tier E: E-C.4 (SMB), E-D2 (feed SIEM), TE-B3/B4 (LDAP/VNC/realismo/AD), TE-G (VM/OVA·Tailscale).
+— claude
