@@ -10,6 +10,16 @@ commit_ref: PR#12 (rama feature/tier0-deployment-readiness)
 > Página de seguimiento para dirección/asesoría. Complementa [[sintesis]] (el proyecto en una página)
 > y [[roadmap]] (el plan por fases). Estimados: **S ≈ 1 día · M ≈ 2–3 días · L ≈ 1 semana**.
 
+> **Avance 2026-08-07 (+9 commits sobre PR #12, suite 904 verde):** cerradas **12 de 13** brechas del
+> Tier F. Lo más relevante: **aislamiento MSSP real** (una dependencia `flock_scope` clampa 17 endpoints
+> server-side → un `manager` no puede leer datos de otro cliente aunque lo pida); **guard de secretos**
+> en pre-commit + runbook de rotación de la API key del honeypot; **filtros data-driven** en Live Events
+> (los menús solo ofrecen lo detectado, con conteo — nada de opciones vacías) y el Attack Map que filtra
+> el feed por IP en vez de duplicar tabla; detección concisa; Discovered Hosts con IPs observadas.
+> **Quedan 2**: **#13b** dashboard de prompts de persona (reescribir el disfraz del honeypot; **L**, en
+> curso) y **#9** validación E2E de cebos+alertas (**bloqueada** por credenciales: Twilio SMS + Gmail App
+> Password). Nuevo forward: **TF-14** Session Correlation asistida por IA (a planear).
+
 ## 1. Qué tenemos hecho (y verificado)
 
 Todo lo de abajo está en **PR #12** (rama `feature/tier0-deployment-readiness`), con pruebas

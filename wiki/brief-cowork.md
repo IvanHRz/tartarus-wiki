@@ -50,6 +50,18 @@ dashboard alerts-centric). Antes, el salto a MSSP (flocks/RBAC/dos-niveles) ya e
 **Abierto ahora**: 13 brechas de producto (Tier F del roadmap) — aislamiento fino, claridad de la
 consola, y el motor de IA del honeypot. Ver [[estado-y-rumbo]] §2.
 
+> **Actualización 2026-08-07 (sobre PR #12, +9 commits, suite 904 verde):** cerradas **12 de 13**
+> brechas del Tier F. Hecho: aislamiento MSSP real (`flock_scope` clampa 17 endpoints server-side +
+> fuga cosmética de totales), memo con Ctrl+Enter, sensores con color/etiqueta, guard de secretos en
+> pre-commit + runbook de rotación de la key, detección concisa (top-5 + roll-up honesto + catálogo
+> lazy), **filtros data-driven** en Live Events (`/events/facets` → protocolo/IP/táctica solo lo
+> detectado con conteo; IP pasó a dropdown), **Attack Map** que filtra el feed por IP (sin tabla
+> duplicada), Discovered Hosts con IPs observadas, y Usuarios & Roles legible. **Pendientes**: **#13b**
+> (dashboard de prompts de persona — reescribir el disfraz del honeypot; es **L**, en curso) y **#9**
+> (validación E2E de cebos + alertas — **bloqueada** por credenciales de notificación: Twilio SMS +
+> Gmail App Password). Nuevo forward-looking: **TF-14** (Session Correlation asistida por IA). El
+> detalle vivo, en [[estado-y-rumbo]].
+
 ## 4. Reglas duras (no negociables)
 
 - **C1**: sin pandas (Polars siempre). **C2**: `engine/main.py` < 600 líneas. **C3**: Canvas puro (sin
