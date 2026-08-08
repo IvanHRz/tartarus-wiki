@@ -160,3 +160,15 @@ alcanzable documentada, y verificación viva E2E (`scripts/verify_canary_open.py
 Pendiente agendado: HTTPS/TLS del callback por escenario (P1, no bloqueante; autofirmado ROMPE el beacon
 → solo cert de confianza; Cloudflare Tunnel para off-site).
 — claude
+
+## [2026-08-08] modulo | Consola de Canarios usable (crear≠desplegar) + rate-limit por token
+Rediseño accionable de la consola tras feedback de UX (repo `c1310cf`). La UX previa confundía:
+"+ Add Token" para docs no generaba archivo, menú de despliegue duplicado, "Memo" opaco, flujos por
+`prompt()`, etiquetas en inglés. Ahora: panel unificado que **genera y descarga el archivo real** (o
+la URL para web); crear ≠ desplegar (método = trazabilidad en la tarjeta); modales con checklist para
+"Enviar al cliente"/"Bundle"; endpoint nuevo `POST /canary-tokens/credential`; y **rate-limit de
+alertas por TOKEN** para canarios (antes por IP suprimía pruebas locales, que salen todas con la IP
+del gateway Docker). Guía how-to: `.raw/repo/docs/GUIA_CONSOLA_CANARIOS.md`. Actualizada [[canary-tokens]].
+No era bug: el web token disparaba (evento confirmado) pero lo tapaba el rate-limit por IP; el correo
+al cliente se enviaba pero el ZIP caía en spam corporativo.
+— claude

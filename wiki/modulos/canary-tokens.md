@@ -2,14 +2,16 @@
 tipo: modulo
 creado: 2026-08-08
 actualizado: 2026-08-08
-commit_ref: fa60f1f
+commit_ref: c1310cf
 tags: [deception, canary, tokens, cebos, notificaciones]
 ---
 
 # Módulo: Canary tokens (cebos) — qué dispara alerta y cuándo
 
-> Verificado contra `fa60f1f` el 2026-08-08. Si el HEAD actual difiere mucho, esta página miente.
+> Verificado contra `c1310cf` el 2026-08-08. Si el HEAD actual difiere mucho, esta página miente.
 > Comprobar: `bash tools/stale_modules.sh`
+>
+> **Cómo usar la consola** (how-to, vive en el repo): `.raw/repo/docs/GUIA_CONSOLA_CANARIOS.md`.
 
 ## Responsabilidad
 
@@ -60,6 +62,17 @@ el sistema falla. Aquí queda fijada la realidad honesta por tipo. El *qué hace
    abierto en otra máquina no dispara. nginx enruta `/canary/` al engine (`329e9f1`). Ver la nota de
    alcanzabilidad y HTTPS en el repo (`docs/CANARY_ALCANZABILIDAD.md`).
 4. **docx lleva doble vector** (imagen + plantilla remota) para subir la tasa de disparo.
+
+## Consola (crear ≠ desplegar) — rediseño `c1310cf`
+
+La UX previa confundía: "+ Add Token" para docs solo insertaba una fila sin generar archivo, el
+menú de despliegue estaba duplicado, y los flujos usaban `prompt()`. Ahora:
+- **Crear** = panel unificado que **genera y descarga el archivo real** (docx/xlsx/pdf/credencial)
+  o muestra la **URL** (web). El *método de despliegue* es solo trazabilidad en la tarjeta, no bloquea.
+- **Enviar al cliente / Bundle** = modales con checklist (sin `prompt`).
+- Endpoint nuevo `POST /canary-tokens/credential` (los cred antes solo salían por el bundle).
+- **Rate-limit de alertas por TOKEN** para canarios (antes por IP suprimía las pruebas locales, que
+  salen todas con la IP del gateway Docker). El honeypot normal sigue por IP.
 
 ## Trampas conocidas
 
