@@ -45,6 +45,7 @@ El agente lee este archivo **antes** de cualquier query.
 - [[sigma-eval]] — evaluación Sigma inline, AST sin `eval`. `god: _safe_eval_condition`
 - [[reporting]] — reporte de engagement (VRA, 100% forense). `god: _generate_engagement_report_impl`
 - [[sensores]] — registro, bootstrap, binding a flock (Fase 5). `god: HmacVerifier (50)`
+- [[canary-tokens]] — cebos: qué dispara alerta y cuándo (3 familias). `commit_ref: fa60f1f`
 - Todas `commit_ref: 0085c31` salvo donde se indique.
 
 ## Releases

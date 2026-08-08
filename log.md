@@ -148,3 +148,15 @@ Bitácora de actualizaciones. Append-only.
 - Próximo: quick-wins de UI (memo con Enter, color de sensores, estados vacíos) + validación #9 (cebos
   + alertas email/Telegram/SMS, requiere credenciales) + seguridad de la llave del honeypot.
 — claude
+
+## [2026-08-08] modulo | Cebos: qué dispara alerta y cuándo (fire-on-open amarrado)
+Nueva página [[canary-tokens]] con la realidad honesta por tipo de cebo (3 familias: 🔗 web/DNS al
+accederse, 📄 documento al abrirse viewer-dependiente, 🔑 credencial al usarse). El *por qué*: la
+pregunta recurrente "dejé un archivo y no me llegó alerta" casi nunca es bug — es confundir familias.
+Ancla `fa60f1f`. En el repo: `docs/CEBOS_QUE_DISPARAN.md` (tabla operativa) + `docs/CANARY_ALCANZABILIDAD.md`.
+Contexto de código (repo): se arregló la brecha #1 (nginx no enrutaba `/canary/` → el beacon caía en la
+SPA; `329e9f1`), docx ahora lleva doble vector (imagen + plantilla remota, paridad Thinkst), base URL
+alcanzable documentada, y verificación viva E2E (`scripts/verify_canary_open.py`, PASS localhost y LAN+nginx).
+Pendiente agendado: HTTPS/TLS del callback por escenario (P1, no bloqueante; autofirmado ROMPE el beacon
+→ solo cert de confianza; Cloudflare Tunnel para off-site).
+— claude
