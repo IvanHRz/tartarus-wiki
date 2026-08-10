@@ -210,3 +210,10 @@ Tier 1 ya existían; se cerró el hueco real T1136 (create-account) para Windows
 1010 verde; auditoría de aislamiento 0 fugas. Detalle en `.agents/BITACORA.md`. Bloqueado: HASSH (fork
 Beelzebub) para la regla c2_encrypted_channel.
 — claude
+
+## [2026-08-10] plan | Clean slate + ataque E2E + fixes UI + skill de planes
+Plan aceptado archivado en [[planes/2026-08-10]]. Limpiar todos los flocks, atacar todos los protocolos
+por el camino real (Beelzebub→pipeline) y auditar que no se filtre a otros flocks (Iván testigo);
+arreglar recarga/vista de flock; limpieza mínima del panel central; auditar cobertura de protocolos al
+roadmap; y nueva skill `registrar-plan` que archiva cada plan aceptado aquí (este es el primero).
+— claude

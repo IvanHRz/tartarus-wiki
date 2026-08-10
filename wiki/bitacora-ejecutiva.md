@@ -100,6 +100,30 @@ vez, manteniendo los datos de cada uno separados de los demás.
   migrando las existentes de forma transparente la próxima vez que cada usuario entre, sin que nadie
   note el cambio.
 
+### 10 de agosto de 2026 (borrón y cuenta nueva + prueba real) — Limpieza total, ataque a todo y verificación de que nada se filtra
+
+- **Qué se logró.** Se dejó la plataforma en cero y se hizo una prueba de fuego: atacar todos los
+  servicios trampa por el camino real y comprobar, con datos medidos, que la información de un ataque
+  cae donde debe y **no se cuela a otros clientes**.
+- **Cómo se probó.** Se creó una herramienta que limpia todo, lanza el ataque y audita el resultado.
+  Resultado: **136 registros de ataque en el cliente por defecto** (repartidos entre SSH, HTTP, MCP,
+  TCP y Prometheus) y **cero en el cliente de prueba usado como testigo**. Es decir, la separación
+  entre clientes también aguanta por el camino real, no solo en las pruebas de laboratorio.
+- **Un problema real detectado y resuelto.** En el primer intento el ataque no dejó ningún registro:
+  el puente entre el sensor de trampas y la base de datos se había "colgado". Se reinició el
+  componente y se dejó la herramienta preparada para detectarlo y recuperarse sola. Queda anotado para
+  reforzarlo de forma permanente.
+- **Qué faltó cubrir (y ya está en la lista de pendientes).** Al medir, se vio que **el servicio de
+  Telnet no registró nada** pese a atacarlo (hay que revisar por qué), que **la prueba de HTTPS no
+  corresponde a un servicio real** (cobertura aparente), y que **Modbus (industrial) e ICMP** están
+  puestos pero no se prueban. Todo esto quedó registrado para atender.
+- **Mejoras de uso.** Al recargar la página estando dentro de un cliente, ya no te saca al panel
+  general: te mantiene donde estabas. Y al entrar a un cliente ahora abre primero su pantalla
+  principal (antes abría la de análisis). El panel general se limpió para que muestre solo lo que
+  aporta (indicadores, tarjetas de clientes y el registro de alertas).
+- **Orden y memoria.** A partir de ahora, cada plan de trabajo aprobado se guarda íntegro en esta wiki
+  (en la bitácora del día) para poder revisarlo y mejorarlo con el tiempo.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la

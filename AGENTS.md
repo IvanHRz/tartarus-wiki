@@ -37,7 +37,7 @@ tools/git_digest.sh
 
 ```yaml
 ---
-tipo: adr | postmortem | modulo | release | roadmap | backlog
+tipo: adr | postmortem | modulo | release | roadmap | backlog | plan | estado
 creado: YYYY-MM-DD
 actualizado: YYYY-MM-DD
 commit_ref: a1b2c3d      # commit vigente cuando se escribió
