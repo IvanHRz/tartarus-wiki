@@ -239,3 +239,13 @@ POST /settings/beelzebub/ai. (3) Revisión de vulnerabilidades priorizada (docs/
 + job secret-scan en CI. (4) Diseño del dashboard de despliegue G-2/G-3/G-4 (docs/DISENO_DASHBOARD_DESPLIEGUE.md),
 sin construir. Suite 1010 verde.
 — claude
+
+## [2026-08-10] plan+bitacora | Auditoría de Beelzebub + alcance de la IA + quick wins
+Cuarto plan del día en [[planes/2026-08-10]]. Repo commits 1367cf4 (guardrails/validate CI/respaldo telnet)
+y 2eaf198 (docs). (1) Auditoría de capacidades de Beelzebub (docs/AUDITORIA_BEELZEBUB.md): huecos —
+métricas Prometheus reales perdidas (:2112 tapado por honeypot falso), telnet/MCP no nativos, Ollama/
+multi-proveedor, MazeHoneypot, key hardcodeada, evaluar upgrade de imagen. (2) Mapa de alcance de la IA
+(docs/ALCANCE_IA_TARTARUS.md) + apartado [[alcance-ia]]. (3) Quick wins probados: guardrails anti-jailbreak
+en los honeypots, respaldo estático en telnet, validación de YAML de Beelzebub en CI. (4) Nuevo apartado
+[[actualizaciones-herramientas]] (tool-watch). Diseño del dashboard ampliado (multi-proveedor + observabilidad).
+— claude

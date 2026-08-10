@@ -15,6 +15,8 @@ El agente lee este archivo **antes** de cualquier query.
 - [[estado-y-rumbo]] — qué tenemos, qué se evalúa/mejora, próximas acciones **con estimados**.
 - [[bitacora-ejecutiva]] — **avance por fechas** en lenguaje llano (para asesoría): qué se logró, qué falló, cómo se resolvió.
 - [[roadmap]] — plan por fases: Tier 0 (readiness) ✅ · Tier E (despliegue) · **Tier F (13 brechas)**.
+- [[alcance-ia]] — **hasta dónde llega la IA** en la plataforma (qué usa IA hoy/planeado + privacidad).
+- [[actualizaciones-herramientas]] — **tool-watch**: versión y mejoras pendientes de cada herramienta (Beelzebub, IA, etc.).
 - [[deploy-checklist]] — **definición de "desplegable"** (gate `scripts/audit_gate.sh`).
 - [[backlog]] — 3 ideas diferidas con su razonamiento.
 

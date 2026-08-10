@@ -165,6 +165,24 @@ vez, manteniendo los datos de cada uno separados de los demás.
   se cuele al repositorio (antes solo se revisaba en la máquina local). Y se dejó una lista priorizada de
   las mejoras y riesgos pendientes.
 
+### 10 de agosto de 2026 (sacarle todo el jugo a las herramientas) — Auditoría de Beelzebub y de la IA
+
+- **Qué se logró.** Se revisó a fondo el motor de señuelos (Beelzebub) para ver todo lo que puede hacer y
+  qué no estamos aprovechando, y se mapeó **hasta dónde llega la inteligencia artificial** en la plataforma.
+- **Mejoras aplicadas de una vez (probadas):** los señuelos con IA ahora **resisten intentos de
+  manipulación** (que les pidan "salir del papel" o revelar que son IA — siguen actuando como el equipo
+  real); el señuelo de router **ya no se queda mudo** si la IA falla (responde solo a los comandos comunes);
+  y se añadió una revisión automática que valida la configuración de los señuelos antes de publicar.
+- **Hallazgo importante:** estábamos **perdiendo las estadísticas internas** del motor de señuelos porque un
+  señuelo ocupaba el puerto donde el motor publica sus métricas. Quedó anotado para recuperarlas.
+- **Apartados nuevos en esta wiki** (para dirección): "[[alcance-ia|Alcance de la IA]]" (qué usa IA hoy, qué
+  se planea, y la promesa de privacidad: la IA nunca ve datos del cliente) y
+  "[[actualizaciones-herramientas|Actualizaciones de herramientas]]" (el estado y las mejoras pendientes de
+  cada herramienta que usamos, empezando por Beelzebub y los modelos de IA).
+- **Rumbo.** Quedó en el plan: recuperar las métricas, añadir telnet real, poder elegir el proveedor de IA
+  por señuelo desde la interfaz, y evaluar **actualizar la versión** del motor de señuelos (varias mejoras
+  podrían venir incluidas).
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
