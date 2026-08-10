@@ -13,6 +13,7 @@ El agente lee este archivo **antes** de cualquier query.
 - [[brief-cowork]] — **onboarding**: todo lo que necesita quien llega a ayudar a dirigir/planear.
 - [[sintesis]] — el proyecto en una página (al día, PR #12).
 - [[estado-y-rumbo]] — qué tenemos, qué se evalúa/mejora, próximas acciones **con estimados**.
+- [[bitacora-ejecutiva]] — **avance por fechas** en lenguaje llano (para asesoría): qué se logró, qué falló, cómo se resolvió.
 - [[roadmap]] — plan por fases: Tier 0 (readiness) ✅ · Tier E (despliegue) · **Tier F (13 brechas)**.
 - [[deploy-checklist]] — **definición de "desplegable"** (gate `scripts/audit_gate.sh`).
 - [[backlog]] — 3 ideas diferidas con su razonamiento.

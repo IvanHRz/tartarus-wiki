@@ -184,3 +184,15 @@ observed dedupe global. Resultado: **0 fugas en 5 rondas**, incl. reportes/CSV/S
 RBAC no forzado por defecto (P0), integridad de mutaciones por-id (P1), notificaciones por-flock (P1),
 rate-limit por flock (P2), assignments obligatorios (P2), watermark de flock en reportes (P3).
 — claude
+
+## [2026-08-10] seguridad+ejecutivo | Segunda pasada de hermeticidad + bitácora ejecutiva
+Cerrada la 2ª parte de la seguridad entre clientes (integridad + autorización), tras la de lectura
+(repo `17d167c`). En el repo (sin commitear al escribir esto): mutaciones acotadas por flock
+(borrar/editar cebos, borrar honey creds, reconocer/silenciar IP; "limpiar todo" ya no arrasa con los
+demás clientes), freno de alertas e IPs silenciadas por flock, y marca de agua de cliente en el reporte
+de engagement. RBAC: la barrera ya existía y estaba dormida (sesión apagada en dev); se añadió test que
+la fija (`test_mutation_flock_scope.py`) y guía `docs/SEGURIDAD_MULTITENANT.md` para encender producción.
+Auditoría en bucle: **0 fugas** en lectura, reportes/export y mutación. Suite 998 verde / 4 skip.
+Nueva página [[bitacora-ejecutiva]] (avance por fechas, lenguaje llano, para asesoría). ROADMAP del repo
+actualizado: pendientes con fecha objetivo + épica nueva "Plataforma de gestión de clientes" (venta).
+— claude
