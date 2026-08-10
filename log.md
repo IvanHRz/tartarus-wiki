@@ -172,3 +172,15 @@ del gateway Docker). Guía how-to: `.raw/repo/docs/GUIA_CONSOLA_CANARIOS.md`. Ac
 No era bug: el web token disparaba (evento confirmado) pero lo tapaba el rate-limit por IP; el correo
 al cliente se enviaba pero el ZIP caía en spam corporativo.
 — claude
+
+## [2026-08-10] seguridad | Auditoría de hermeticidad de flocks (100%) — reportes/export cerrados
+Fuga entre clientes reportada por Iván. Auditado TODO con harness determinista (repo
+`scripts/audit_flock_isolation.py`: 2 flocks marcados, 19 superficies, loop). Hallazgos + fix
+(repo `17d167c`): (1) fuga VISUAL front-end (DOM/caché sin limpiar al cambiar de flock); (2) fuga REAL
+en **reportes de engagement + 6 fuentes + PDF/HTML por-id + exportación CSV/normalized/STIX** que NO
+scopeaban por flock (la última era la query de ventana en `correlate_around_detections`); (3) `/hosts`
+observed dedupe global. Resultado: **0 fugas en 5 rondas**, incl. reportes/CSV/STIX. Guardarraíl
+`test_report_export_flock_scope.py`. Vulnerabilidades PENDIENTES en `.agents/ROADMAP.md §Auditoría`:
+RBAC no forzado por defecto (P0), integridad de mutaciones por-id (P1), notificaciones por-flock (P1),
+rate-limit por flock (P2), assignments obligatorios (P2), watermark de flock en reportes (P3).
+— claude
