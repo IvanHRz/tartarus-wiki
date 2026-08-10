@@ -229,3 +229,13 @@ el sensor levantado), attack_icmp (campo) y attack_prometheus (14 eventos). (4) 
 recomendado desplegar (P2/M), solo evaluado esta ronda. Nueva página [[competencia-thinkst]]. Los planes
 del día en [[planes/2026-08-10]] ahora incluyen los prompts del usuario (skill registrar-plan mejorada).
 — claude
+
+## [2026-08-10] plan+bitacora | Análisis Telnet + gestión LLM (DeepSeek) + revisión seguridad + diseño dashboard
+Tercer plan del día en [[planes/2026-08-10]] (con prompts). Repo commit 73d1715. (1) Análisis Telnet
+(docs/ANALISIS_TELNET.md): CLI Cisco por LLM convincente, pero éxito PARCIAL, NO garantía (no habla telnet
+real → pierde IoT/Mirai; LLM puro depende de key viva; costo por interacción). (2) Key LLM cambiada a la de
+GPT.rtf ($4.67); runbook DeepSeek listo (docs/RUNBOOK_LLM_DEEPSEEK.md); documentado el no-op de
+POST /settings/beelzebub/ai. (3) Revisión de vulnerabilidades priorizada (docs/REVISION_SEGURIDAD_PENDIENTES.md)
++ job secret-scan en CI. (4) Diseño del dashboard de despliegue G-2/G-3/G-4 (docs/DISENO_DASHBOARD_DESPLIEGUE.md),
+sin construir. Suite 1010 verde.
+— claude

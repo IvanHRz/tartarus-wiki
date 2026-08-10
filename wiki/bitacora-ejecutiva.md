@@ -143,6 +143,28 @@ vez, manteniendo los datos de cada uno separados de los demás.
 - **Registro más completo.** Ahora, junto a cada plan guardado, se anota también el pedido original que
   lo motivó, para no perder el "por qué".
 
+### 10 de agosto de 2026 (evaluación y rumbo) — ¿el "Telnet" sirve? + costos de la IA + plan del panel de despliegue
+
+- **¿El honeypot de Telnet es garantía de éxito?** Se probó en vivo: emula un router Cisco de forma muy
+  convincente (responde como un equipo real, incluso rechaza comandos que no existen). Pero el veredicto
+  honesto es **éxito parcial, NO garantía**: por dentro usa la tecnología de acceso remoto seguro, así que
+  **no atrapa los ataques de "telnet" clásico** (las botnets de dispositivos, que son lo más común en ese
+  punto), y depende de una **IA de pago**: si se acaba el saldo, ese señuelo se queda mudo. Se dejó un
+  análisis con recomendaciones para volverlo garantizable (añadir un telnet real en paralelo, una respuesta
+  de reserva sin IA, y una IA local para bajar costo). Nuestro competidor de referencia (Thinkst) y la
+  opción libre (Cowrie) sí hacen telnet real.
+- **Costos de la IA.** Los señuelos con IA usaban una cuenta; se cambiaron a la clave con saldo (~$4.67)
+  para aprovecharla, y quedó listo el procedimiento para migrar a un proveedor más barato (DeepSeek) cuando
+  se acabe. De paso se detectó que un botón de la interfaz decía cambiar la clave de IA pero en realidad no
+  surtía efecto: quedó documentado y se arregla con el nuevo panel.
+- **Panel de despliegue (diseño).** Se diseñó a detalle el panel único para poner y gestionar los señuelos
+  (hoy disperso en un asistente de 1342 líneas): tarjetas para encender/apagar cada servicio, elegir su
+  disfraz y su proveedor de IA, y plantar cebos, todo desde un solo lugar. Aún no se construye; quedó la
+  especificación para las próximas rondas.
+- **Seguridad reforzada.** Se añadió una comprobación automática en la nube que impide que una clave secreta
+  se cuele al repositorio (antes solo se revisaba en la máquina local). Y se dejó una lista priorizada de
+  las mejoras y riesgos pendientes.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
