@@ -196,3 +196,17 @@ Auditoría en bucle: **0 fugas** en lectura, reportes/export y mutación. Suite 
 Nueva página [[bitacora-ejecutiva]] (avance por fechas, lenguaje llano, para asesoría). ROADMAP del repo
 actualizado: pendientes con fecha objetivo + épica nueva "Plataforma de gestión de clientes" (venta).
 — claude
+
+## [2026-08-10] sesión-autónoma | Cruce visual de cebos + avisos por cliente + detección + bcrypt
+Tanda de trabajo continuo (repo, 4 commits `028b945`..`d25e562`). (1) El "cruce de cebos entre
+clientes" reportado era DOM rancio: la consola no limpiaba el grid al cambiar a un cliente sin cebos
+(quedaban los del anterior). Fix: limpiar en vacío + blanquear al cambiar + mutaciones por flock
+(`028b945`). De paso, `scripts/audit_flock_isolation.py` era destructivo (borraba datos reales): ahora
+acota su limpieza a los flocks de auditoría; nuevo `scripts/seed_demo.py`. (2) Notificaciones por
+cliente (`abd47e2`): tabla `notify_config_flock`, `Notifier.config_for`, enrutado por `event.flock_id`,
+endpoints con `?flock_id`; falta el selector en la UI. (3) Detección (`59edc1e`): las 16 reglas del
+Tier 1 ya existían; se cerró el hueco real T1136 (create-account) para Windows/PowerShell. (4) Bcrypt
+(`d25e562`): opcional con degradación, verificación compatible, rehash transparente en login. Suite
+1010 verde; auditoría de aislamiento 0 fugas. Detalle en `.agents/BITACORA.md`. Bloqueado: HASSH (fork
+Beelzebub) para la regla c2_encrypted_channel.
+— claude

@@ -72,21 +72,51 @@ vez, manteniendo los datos de cada uno separados de los demás.
 - **Impacto para el cliente.** El compartimento de cada cliente es hermético en los dos
   sentidos: nadie ve ni cambia lo que no es suyo.
 
+### 10 de agosto de 2026 (sesión de trabajo continuo) — Arreglo del cruce de cebos, avisos por cliente y más
+
+- **Qué se logró.** Una tanda de mejoras trabajadas de corrido, cada una con sus pruebas:
+  se corrigió que los cebos parecieran "cruzarse" entre clientes, cada cliente puede tener sus
+  propios avisos, se reforzó la detección de intrusos y se endureció el guardado de contraseñas.
+- **El problema del cruce de cebos (lo que se reportó).** Al cambiar de un cliente a otro, la
+  pantalla seguía mostrando los cebos del cliente anterior si el nuevo no tenía ninguno. Parecía
+  que un cebo "se filtraba", pero era un efecto de la pantalla: los datos por debajo estaban bien
+  separados; lo que fallaba es que la vista no se limpiaba al quedar vacía. **Cómo se resolvió:**
+  la pantalla ahora se limpia siempre al cambiar de cliente y muestra un aviso claro ("sin cebos
+  en este cliente"); además, borrar o limpiar cebos quedó atado al cliente activo (antes "limpiar
+  todo" podía borrar los de todos). **Impacto:** desaparece la confusión y ya no hay riesgo de
+  borrar de más.
+- **Un riesgo de datos corregido de paso.** La herramienta interna que audita la separación entre
+  clientes borraba datos reales al ejecutarse. Se corrigió para que solo toque sus propios datos de
+  prueba, y se dejó un pequeño generador de datos de demostración para poder probar sin partir de
+  cero.
+- **Avisos por cliente.** Hasta ahora la configuración de alertas era única para todos. Ahora cada
+  cliente puede tener sus propios canales y umbral; el aviso de un cliente va solo a sus canales, y
+  si no tiene configuración propia, usa la general. (Falta el selector en la pantalla de ajustes;
+  por debajo ya funciona.)
+- **Más detección.** Al revisar el catálogo de reglas se confirmó que la cobertura de técnicas de
+  ataque ya estaba prácticamente completa. Se cerró un hueco concreto: ahora se detecta la creación
+  de cuentas también en equipos Windows (antes solo en Linux).
+- **Contraseñas más fuertes.** El guardado de contraseñas pasó a un método más robusto (bcrypt),
+  migrando las existentes de forma transparente la próxima vez que cada usuario entre, sin que nadie
+  note el cambio.
+
 ## Estado actual (en lenguaje llano)
 
-- Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa.
-- Cada cliente está **separado** de los demás: ni ve ni modifica lo ajeno, y sus informes van
-  etiquetados con su nombre.
-- Todo lo anterior está respaldado por pruebas automáticas (cerca de mil) que se ejecutan en
-  cada cambio, más una auditoría específica de separación entre clientes que se corre en bucle.
+- Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
+  pantalla ya no "arrastra" los de un cliente al siguiente.
+- Cada cliente está **separado** de los demás: ni ve ni modifica lo ajeno, sus informes van
+  etiquetados con su nombre, y puede tener **sus propios avisos**.
+- El guardado de contraseñas es más robusto.
+- Todo lo anterior está respaldado por pruebas automáticas (más de mil) que se ejecutan en cada
+  cambio, más una auditoría específica de separación entre clientes que se corre en bucle y da
+  cero fugas.
 
 ## Próximos pasos (con fecha estimada)
 
 | Pendiente | Por qué importa | Prioridad | Fecha objetivo |
 |-----------|-----------------|-----------|----------------|
 | Activar el inicio de sesión y los roles en el primer despliegue con clientes reales | Hoy la separación funciona porque el operador elige el cliente; con clientes reales debe ser una barrera obligatoria, no una elección | Alta | septiembre 2026 |
-| Notificaciones por cliente | Que cada cliente reciba solo sus avisos, por su propio canal | Media | septiembre 2026 |
-| Reforzar el guardado de contraseñas | Endurecimiento de seguridad (hoy no es una fuga) | Media | septiembre 2026 |
+| Pantalla de administración de clientes (crear, renombrar, entrar, salud de cada uno) y selector de cliente en los ajustes de avisos | Cerrar la parte visual de lo que ya funciona por debajo | Media | siguiente iteración |
 | Panel de proveedor para gestionar varias instalaciones | Para cuando se venda el servicio: ver todos los despliegues de cada cliente y darles soporte | Media | por planificar (tras la venta) |
 
 ## Riesgos y pendientes de seguridad conocidos (sin alarmismo)
