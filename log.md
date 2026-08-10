@@ -217,3 +217,15 @@ por el camino real (Beelzebub→pipeline) y auditar que no se filtre a otros flo
 arreglar recarga/vista de flock; limpieza mínima del panel central; auditar cobertura de protocolos al
 roadmap; y nueva skill `registrar-plan` que archiva cada plan aceptado aquí (este es el primero).
 — claude
+
+## [2026-08-10] refactor+bitacora | Telnet, watchdog del pipeline, cobertura y estudio HTTPS
+Cierre de los huecos detectados en la auditoría de cobertura (repo, commits 0226ee9..90dbf7d).
+(1) Telnet: attack_all.py usaba TCP crudo contra un honeypot SSH (Beelzebub no tiene telnet nativo;
+:23 es SSH+LLM) → 0 eventos; ahora ataca por SSH, verificado 28 eventos TELNET. (2) Watchdog
+`scripts/beelzebub_watchdog.sh`: el host sondea /health (ingestion stale) y reinicia Beelzebub con
+cooldown (el engine ya se auto-recupera; Beelzebub Go no). (3) Scripts attack_modbus (10 eventos, con
+el sensor levantado), attack_icmp (campo) y attack_prometheus (14 eventos). (4) Estudio HTTPS
+`docs/ESTUDIO_HTTPS_TLS.md`: Thinkst Canary (competidor principal) ofrece HTTPS con cert configurable →
+recomendado desplegar (P2/M), solo evaluado esta ronda. Nueva página [[competencia-thinkst]]. Los planes
+del día en [[planes/2026-08-10]] ahora incluyen los prompts del usuario (skill registrar-plan mejorada).
+— claude

@@ -124,6 +124,25 @@ vez, manteniendo los datos de cada uno separados de los demás.
 - **Orden y memoria.** A partir de ahora, cada plan de trabajo aprobado se guarda íntegro en esta wiki
   (en la bitácora del día) para poder revisarlo y mejorarlo con el tiempo.
 
+### 10 de agosto de 2026 (cierre de pendientes detectados) — Telnet arreglado, auto-recuperación y más pruebas
+
+- **Qué se logró.** Se resolvieron los huecos que la prueba anterior había destapado:
+- **El servicio de Telnet ya registra.** Antes no dejaba rastro porque la prueba lo tocaba de forma
+  equivocada (el servicio de "Telnet" en realidad usa la tecnología de acceso remoto seguro por dentro,
+  una limitación del motor de honeypots que usamos). Se corrigió la prueba y ahora sí queda registrado.
+- **El sistema se recupera solo cuando el sensor se "traba".** Se detectó que, tras ciertos reinicios,
+  el sensor de trampas se quedaba mudo y los ataques no llegaban a la base. Se creó un vigilante que lo
+  detecta y lo reinicia solo, sin intervención.
+- **Más pruebas de cobertura.** Se añadieron pruebas para el sensor industrial (Modbus/OT), el de red
+  (ICMP) y el de monitoreo (Prometheus), que estaban puestos pero no se ejercitaban. El industrial y el
+  de monitoreo quedaron probados aquí; el de red se prueba en el sitio del cliente.
+- **Estudio de HTTPS y competencia.** Se evaluó si conviene ofrecer un servicio-trampa por HTTPS
+  (conexión web segura). Conclusión: **sí conviene**, porque nuestro competidor de referencia,
+  **Thinkst Canary, lo ofrece**. Quedó un estudio con la recomendación y un plan; el despliegue se hará
+  más adelante. Se estableció a Thinkst Canary como el referente contra el que nos comparamos.
+- **Registro más completo.** Ahora, junto a cada plan guardado, se anota también el pedido original que
+  lo motivó, para no perder el "por qué".
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
