@@ -249,3 +249,11 @@ multi-proveedor, MazeHoneypot, key hardcodeada, evaluar upgrade de imagen. (2) M
 en los honeypots, respaldo estático en telnet, validación de YAML de Beelzebub en CI. (4) Nuevo apartado
 [[actualizaciones-herramientas]] (tool-watch). Diseño del dashboard ampliado (multi-proveedor + observabilidad).
 — claude
+
+## [2026-08-10] release+plan | Upgrade de Beelzebub v3.8.0 → v3.9.0
+Quinto plan del día en [[planes/2026-08-10]]. Repo commit 858620e (pin de imagen). Upgrade empírico y
+reversible: los 6 servicios cargan sin errores del nuevo validador por schema, todos los honeypots responden
+(probados uno por uno), guardrails y respaldo estático de Telnet intactos, pipeline ingiere. Hallazgo clave:
+v3.9.0 trae NATIVO telnet, TLS/HTTPS, multi-proveedor LLM (host), MazeHoneypot y guardrail → varios
+pendientes se abaratan (config, no build). Re-priorizado en el roadmap. Tool-watch: [[actualizaciones-herramientas]].
+— claude

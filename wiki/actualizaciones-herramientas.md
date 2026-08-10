@@ -13,7 +13,22 @@ tags: [herramientas, versiones, upgrades, beelzebub]
 
 ## Beelzebub (framework de honeypots) — **lo prioritario ahora**
 
-- **Versión que corremos:** `m4r10/beelzebub:v3.8.0` (imagen precompilada; su código Go no está en el repo).
+- ✅ **ACTUALIZADO el 10-ago-2026: `v3.8.0` → `v3.9.0`** (multi-arch amd64+arm64; sirve también para el
+  RPi). Verificado de punta a punta: los 6 servicios cargan sin errores del nuevo validador por esquema,
+  todos los honeypots responden, y el pipeline sigue ingiriendo. **No rompió nada** (nuestros YAML, los
+  guardrails y el respaldo del Telnet siguen igual). Rollback documentado (volver a v3.8.0).
+- 🎁 **El upgrade DESBLOQUEÓ nativamente varias mejoras que teníamos pendientes** (confirmado inspeccionando
+  el binario de v3.9.0):
+  | Capacidad ahora NATIVA en v3.9.0 | Antes (v3.8.0) | Qué cambia |
+  |----------------------------------|----------------|------------|
+  | **Telnet nativo** (`TelnetStrategy`) | Hack SSH-en-:23 | Podemos capturar **telnet real** (botnets IoT/Mirai) cambiando `protocol: telnet`. Mucho más barato que antes |
+  | **HTTPS/TLS nativo** (`tlsCertFile`/`tlsKeyFile`) | No había | Honeypot HTTPS **sin nginx**; resuelve el hueco del estudio HTTPS |
+  | **Multi-proveedor LLM** (`host`/`BaseURL`) | Hardcode OpenAI | DeepSeek/OpenRouter vía `host` (provider `openai`) u **Ollama** — confirma el runbook |
+  | **MazeHoneypot** (laberinto anti-scanner, solo HTTP) | Sin usar | Disponible para activar |
+  | **Guardrail nativo** ("guardrail detected malicious output") | Solo nuestro prompt | Refuerzo adicional del framework |
+  | **Config por JSON** (`BEELZEBUB_SERVICES_CONFIG`) | Key hardcodeada | Vía para sacar la key del YAML |
+  → **Re-prioriza "lo demás":** telnet nativo y HTTPS nativo pasan de "construir desde cero" a "configurar".
+- **Versión anterior:** `m4r10/beelzebub:v3.8.0` (imagen precompilada; su código Go no está en el repo).
 - **Qué usamos:** protocolos SSH/HTTP/TCP nativos; "Telnet" y "MCP" **emulados** (no nativos); LLM OpenAI;
   tracing por RabbitMQ.
 - **Capacidades del upstream que NO aprovechamos (huecos):**

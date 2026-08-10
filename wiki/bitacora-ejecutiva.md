@@ -183,6 +183,19 @@ vez, manteniendo los datos de cada uno separados de los demás.
   por señuelo desde la interfaz, y evaluar **actualizar la versión** del motor de señuelos (varias mejoras
   podrían venir incluidas).
 
+### 10 de agosto de 2026 (actualización del motor de señuelos) — Beelzebub al día (v3.9.0)
+
+- **Qué se logró.** Se actualizó el motor de señuelos (Beelzebub) de la versión 3.8 a la **3.9**, la más
+  reciente, de forma segura y reversible. Todos los señuelos siguen funcionando igual (se probó uno por uno)
+  y no se rompió nada.
+- **Lo mejor: varias mejoras vienen incluidas.** La versión nueva **ya trae de fábrica** cosas que teníamos
+  como pendientes de construir: **telnet de verdad** (para atrapar las botnets que hoy se nos escapaban),
+  **conexión web segura (HTTPS)** sin herramientas extra, y poder **elegir el proveedor de inteligencia
+  artificial** (incluido uno local, sin costo). Eso vuelve mucho más baratas esas mejoras: pasan de
+  "programar desde cero" a "configurar".
+- **Rumbo inmediato.** Con la base actualizada, lo que sigue es aprovechar esas capacidades: activar el
+  telnet real y el HTTPS, y dejar elegir el proveedor de IA por señuelo.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
