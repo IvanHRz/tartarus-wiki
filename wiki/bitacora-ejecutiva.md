@@ -196,6 +196,17 @@ vez, manteniendo los datos de cada uno separados de los demás.
 - **Rumbo inmediato.** Con la base actualizada, lo que sigue es aprovechar esas capacidades: activar el
   telnet real y el HTTPS, y dejar elegir el proveedor de IA por señuelo.
 
+### 11 de agosto de 2026 — Telnet real y HTTPS reales (aprovechando el motor actualizado)
+
+- **Qué se logró.** Con el motor de señuelos ya actualizado, se activaron dos capacidades que antes había
+  que programar y ahora venían incluidas: **telnet de verdad** y **conexión web segura (HTTPS)**.
+- **Telnet de verdad.** El señuelo de router ahora responde por telnet real, así que **atrapa las botnets
+  de dispositivos** (el tipo de ataque más común en ese punto), sin perder el realismo del router con IA.
+- **HTTPS.** Se levantó un señuelo web con cifrado (HTTPS), con su propio certificado, sin herramientas
+  extra. Cierra el punto que quedó del estudio de la sesión anterior.
+- **Impacto.** Cerramos dos huecos de cobertura reales y damos paridad con el competidor de referencia.
+  Todo probado y sin afectar los demás señuelos.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la

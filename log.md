@@ -257,3 +257,10 @@ reversible: los 6 servicios cargan sin errores del nuevo validador por schema, t
 v3.9.0 trae NATIVO telnet, TLS/HTTPS, multi-proveedor LLM (host), MazeHoneypot y guardrail → varios
 pendientes se abaratan (config, no build). Re-priorizado en el roadmap. Tool-watch: [[actualizaciones-herramientas]].
 — claude
+
+## [2026-08-11] feat+plan | Telnet nativo + HTTPS nativo (Beelzebub v3.9.0)
+Repo commit acfb90b. Aprovechando v3.9.0: telnet-23 -> protocol telnet (captura telnet real/IoT, conserva
+CLI Cisco por IA + respaldo estatico + guardrails; verificado 32 eventos TELNET); honeypot HTTPS en :443
+(host :8443) con cert autofirmado, sin nginx (consumer fija dest_port=443 via TLSServerName; test añadido).
+services.example actualizado; .gitignore certs/. Suite 1011 verde. Plan en [[planes/2026-08-11]].
+— claude
