@@ -289,3 +289,13 @@ honeypots" auto-provisionado); no arranca por defecto. (3) Mount rw de configs e
 (docker-compose.prod.yml) -> personas/G-4/etiquetado funcionan en produccion. 9 tests nuevos, suite 1035
 verde. E2E: probe de escaner sale marcado, portal no; Grafana target UP con beelzebub_events_total=386.
 Se suma al PR #15. — fable
+
+## [2026-08-11] feat+plan | Reconciliar metricas (embudo) + Grafana benchmark + G-3 (on/off + reiniciar)
+Repo commit al momento 1ada8a5. El usuario noto que Grafana (754/45/736) != panel Principal (1166/94/821).
+Diagnostico: 5 causas estructurales (ventana, flock, taxonomia, fuente-vs-persistido, reset). F1: embudo de
+ingesta Beelzebub->consumer(Redis)->BD, GET /observability/reconcile (brechas, separa colapso de port-scan de
+perdida real), panel en la UI, scripts/compare_metrics.py. E2E: consumer->BD 0.0% (sin perdida). F2: Grafana
+benchmark (increase reset-aware, anotacion de reinicios, endpoint /metrics/tartarus + 2o job Prometheus,
+fuente vs persistido). F3: G-3 encender/apagar honeypots (mueve YAML a disabled/) + reiniciar via flag que
+ejecuta el watchdog (C4). 16 tests nuevos, suite 1045 verde. Doc nuevo docs/OBSERVABILIDAD_METRICAS.md.
+Reconciliacion aprovechada en [[actualizaciones-herramientas]]. — fable

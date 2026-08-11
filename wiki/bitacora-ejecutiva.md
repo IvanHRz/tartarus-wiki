@@ -251,6 +251,25 @@ vez, manteniendo los datos de cada uno separados de los demás.
   muestra los contadores reales subiendo; y que la configuración de producción queda bien armada. Más de
   mil pruebas automáticas en verde (1035).
 
+### 11 de agosto de 2026 — Que los números cuadren y poder prender/apagar trampas
+
+- **Qué se logró.** Tres cosas a partir de una observación del usuario (Grafana no mostraba los mismos
+  números que TARTARUS):
+  1. **Explicar y reconciliar la diferencia.** Se construyó un "**embudo**" que sigue cada ataque desde que
+     lo ve el señuelo, pasa por el procesador y llega a la base de datos, y **muestra si se pierde algo por
+     el camino**. La diferencia con Grafana quedó explicada (miden momentos distintos: Grafana cuenta en la
+     puerta, TARTARUS cuenta lo que quedó guardado y ordenado por cliente). **La base de datos es la verdad**
+     para investigar; Grafana es un buen espejo para comparar. Resultado: **no se está perdiendo información**
+     real; la diferencia grande era ruido de escaneos que el sistema agrupa a propósito.
+  2. **Grafana como banco de comparación.** Se pulió para que sea un espejo honesto (marca los reinicios,
+     grafica "en la puerta" vs "guardado" lado a lado). El tablero principal sigue siendo el de TARTARUS.
+  3. **Prender/apagar trampas y reiniciar, desde la consola.** Ahora se puede apagar o encender cada señuelo
+     con un botón, y pedir el reinicio del motor de señuelos sin tocar la terminal.
+- **Por qué importa.** Da **confianza en los números** (y una alarma temprana si de verdad se perdiera algo),
+  y **control operativo** simple sobre qué trampas están activas.
+- **Probado.** Se verificó que no hay pérdida real de datos, que el espejo de Grafana refleja lo mismo, y que
+  apagar/encender/reiniciar funciona de punta a punta. Más de mil pruebas automáticas en verde (1045).
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
