@@ -320,3 +320,12 @@ pantalla dentro del hub, estilo sobrio de Thinkst: escenario (prellena) + contex
 único. Ejecuta /api/deploy/execute (cero backend nuevo) y pinta tabla de resultado; "Ir al hub" salta a
 Gestión. Bug corregido: setView no está en window → se usa el tab de vista. 7 tests E2E nuevos verdes;
 verificado a mano. Detalle ejecutivo en [[bitacora-ejecutiva]]. — fable
+
+## [2026-08-11] feat | Rediseño del despliegue: honesto, accionable y manipulable en vivo
+Se rehízo el modal de despliegue en 5 fases tras el feedback del usuario: escenarios que explican qué activan
+(sin tiempos inventados), contexto de 2 opciones directas (atacante activo/preparación), sistema renombrado,
+sensores que distinguen IA (Beelzebub) vs solo-detección (OpenCanary) con verificación de /settings/ai, trampas
+que generan+descargan el archivo real con nombre/ruta editables (endpoints de canarios), escaneo reencuadrado
+como "Reconocer la red" que sugiere sensores desde /hosts, y hub vivo (quitar/reasignar sensor; nuevo
+DELETE /sensors/registry/{id}). 2 bugs corregidos (re-render async que borraba la tabla; funciones no globales
+en módulo ES). Suite 1048 (+3), 10 E2E verdes, verificado a mano. Detalle en [[bitacora-ejecutiva]]. — fable

@@ -306,6 +306,31 @@ vez, manteniendo los datos de cada uno separados de los demás.
   del "canario ICMP" valida el formato). Verificado además a mano en el navegador de punta a punta. El motor
   no se tocó; sus más de mil pruebas siguen en verde.
 
+### 11 de agosto de 2026 — Que la pantalla de despliegue sea honesta y de verdad útil
+
+- **Qué se logró.** Se rehízo a fondo la pantalla de despliegue para que cada parte responda por sí misma,
+  después de que se detectara que varias secciones "prometían" cosas sin explicarlas. Ahora: (1) los cuatro
+  **escenarios** dicen exactamente qué activan y por qué (nada de tiempos inventados); (2) la pregunta de
+  **situación** es directa —"¿hay un atacante dentro ahora mismo?" o "estoy preparando defensas"—, que es lo
+  que de verdad decide si se actúa con sigilo; (3) queda claro que **dónde se instala** el sensor es el equipo
+  físico; (4) cada **sensor** dice si usa inteligencia artificial (y si falta la clave, se avisa y se ofrece
+  configurarla ahí mismo) o si solo detecta; (5) las **trampas** se generan como archivos reales y **se
+  descargan** para plantarlas, pidiendo el nombre y la ruta para que, cuando alguien las abra, la alerta llegue
+  con ese contexto; (6) el **reconocimiento de la red** explica su propósito y hasta **sugiere qué sensores**
+  desplegar según lo que ya vive en la red; y (7) desde el mismo lugar se puede **quitar o reasignar** un sensor
+  cuando el incidente cambia.
+- **Por qué importa.** El objetivo era superar en claridad a la consola del competidor de referencia. Una
+  pantalla "bonita pero ambigua" no sirve en un incidente; ahora cada decisión es explícita y accionable, y el
+  despliegue deja de ser "una sola vez" para volverse algo que se ajusta sobre la marcha.
+- **Qué apareció y cómo se resolvió.** En las pruebas se encontró que, al desplegar, la tabla de resultados a
+  veces desaparecía: dos consultas en segundo plano (estado de la IA y de la red) repintaban toda la pantalla al
+  llegar tarde. Se corrigió para que cada consulta actualice solo su recuadro. También se ajustó un detalle
+  técnico de cómo se invocan los botones de "quitar/reasignar" sensor.
+- **Probado.** Diez pruebas automáticas de esta pantalla en verde y verificación manual completa (generar y
+  descargar cada tipo de cebo con su nombre y ruta, ver la sugerencia de sensores a partir de la red, quitar y
+  reasignar un sensor). El motor no se tocó salvo un endpoint nuevo para dar de baja un sensor, con sus pruebas;
+  el total pasó a 1048 pruebas, todas en verde.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
