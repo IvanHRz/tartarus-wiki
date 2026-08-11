@@ -280,3 +280,12 @@ compose (sin quitar el senuelo) + observability_router.py (GET /observability/be
 beelzebub:2112 por red interna, parser minimo, resiliente) + panel de salud en la UI. 7 tests nuevos,
 suite 1026 verde. E2E: contadores suben con el trafico. Maze y metricas aprovechados en
 [[actualizaciones-herramientas]]. — fable
+
+## [2026-08-11] feat+plan | Cierre de pendientes menores (etiqueta laberinto + Grafana opcional + prod)
+Repo commit al momento 1bbbf4f. (1) Etiqueta de laberinto: maze_tagger.py deduce si una peticion HTTP cayo
+en el maze (URI sin handler real) e inyecta maze_hit en el payload; badge en el feed. (2) Grafana opcional:
+perfil compose observability (Prometheus rasca beelzebub:2112 + Grafana :3300 con dashboard "Salud de
+honeypots" auto-provisionado); no arranca por defecto. (3) Mount rw de configs en prod
+(docker-compose.prod.yml) -> personas/G-4/etiquetado funcionan en produccion. 9 tests nuevos, suite 1035
+verde. E2E: probe de escaner sale marcado, portal no; Grafana target UP con beelzebub_events_total=386.
+Se suma al PR #15. — fable

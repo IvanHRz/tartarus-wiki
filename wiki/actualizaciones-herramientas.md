@@ -34,7 +34,7 @@ tags: [herramientas, versiones, upgrades, beelzebub]
 - **Capacidades del upstream que NO aprovechamos (huecos):**
   | Capacidad | Estado en TARTARUS | Acción |
   |-----------|--------------------|--------|
-  | ✅ Métricas Prometheus propias (`beelzebub_events_*`) — **RECUPERADAS (11-ago)** | Estaban perdidas (el host :2112 lo ocupa el honeypot falso) | Reales expuestas en `:9112` + el engine las raspa (`GET /observability/beelzebub`) + panel de salud por protocolo en la UI. Verificado |
+  | ✅ Métricas Prometheus propias (`beelzebub_events_*`) — **RECUPERADAS (11-ago)** | Estaban perdidas (el host :2112 lo ocupa el honeypot falso) | Reales expuestas en `:9112` + el engine las raspa (`GET /observability/beelzebub`) + panel de salud por protocolo en la UI + **Grafana opcional** (perfil `observability`, dashboard "Salud de honeypots"). Verificado |
   | Telnet nativo (`protocol: telnet`) | No — usamos SSH-en-:23 | Añadir telnet real en paralelo (captura botnets IoT) (P1) |
   | ✅ Multi-proveedor LLM (DeepSeek/OpenRouter/Ollama vía `host`) — **APROVECHADO (11-ago)** | No — hardcode OpenAI | **Selector por señuelo desde la UI** (G-4): OpenAI/DeepSeek/OpenRouter/Ollama por honeypot, sin editar YAML |
   | Ollama local | No | Costo cero + campo (P2) |

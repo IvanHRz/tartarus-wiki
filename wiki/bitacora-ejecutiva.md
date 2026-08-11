@@ -234,6 +234,23 @@ vez, manteniendo los datos de cada uno separados de los demás.
   sigue funcionando igual; y que el contador de capturas **sube** con cada ataque. Más de mil pruebas
   automáticas en verde.
 
+### 11 de agosto de 2026 — Marcar al escáner atrapado y un tablero opcional de métricas
+
+- **Qué se logró.** Tres remates de lo anterior:
+  1. **Se marca en pantalla** cuándo un sondeo automático **cayó en el laberinto** (una etiqueta "🌀
+     laberinto" junto al evento), para distinguir de un vistazo al escáner atrapado de una visita normal.
+  2. Un **tablero visual opcional** (Grafana) con gráficas de cuántos ataques capta cada tipo de trampa y
+     a qué ritmo. Es **opcional**: solo se enciende cuando se pide, no consume recursos si no se usa.
+  3. Se dejó listo el **modo de producción** para que, cuando se despliegue con un cliente real, funcionen
+     sin ajustes manuales los disfraces de los señuelos, el cambio de proveedor de IA y el marcado del
+     laberinto.
+- **Por qué importa.** La etiqueta da **claridad operativa** (se ve el escáner atrapado sin leer detalles);
+  el tablero da una **vista ejecutiva** de la actividad para quien prefiera gráficas; y el modo producción
+  evita sorpresas el día del despliegue.
+- **Probado.** Se comprobó que un sondeo de escáner sale marcado y una visita normal no; que el tablero
+  muestra los contadores reales subiendo; y que la configuración de producción queda bien armada. Más de
+  mil pruebas automáticas en verde (1035).
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
