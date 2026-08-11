@@ -217,6 +217,23 @@ vez, manteniendo los datos de cada uno separados de los demás.
 - **Probado.** Se cambió el modelo de un señuelo desde la consola, se confirmó que sigue respondiendo, y se
   revirtió — todo sin exponer la clave.
 
+### 11 de agosto de 2026 — Laberinto para escáneres y termómetro de los señuelos
+
+- **Qué se logró.** Dos mejoras aprovechando el motor actualizado:
+  1. **Laberinto anti-escáner.** Cuando un programa automático de sondeo (de los que buscan carpetas
+     escondidas como `/.git`, `/admin` o `/backup`) toca uno de nuestros sitios trampa, en vez de un simple
+     "no encontrado" recibe un **laberinto infinito de carpetas falsas** con archivos que parecen jugosos
+     (respaldos, bases de datos, claves). El atacante automático se **queda dando vueltas** y gastando su
+     tiempo, y nosotros registramos su comportamiento — sin que toque nada real.
+  2. **Termómetro de los señuelos.** Recuperamos las **estadísticas propias del motor** (cuántos ataques ha
+     capturado cada tipo de trampa: SSH, web, etc.), que hasta ahora estaban tapadas, y las mostramos en un
+     **panel de salud** dentro de la consola. De un vistazo se ve qué señuelos están recibiendo actividad.
+- **Por qué importa.** El laberinto **desgasta a los escáneres** y da inteligencia sobre ellos; el termómetro
+  da **visibilidad operativa** (saber que todo está vivo y captando) sin instalar herramientas pesadas.
+- **Probado.** Se comprobó con sondas reales que el laberinto responde y que la puerta de entrada legítima
+  sigue funcionando igual; y que el contador de capturas **sube** con cada ataque. Más de mil pruebas
+  automáticas en verde.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la

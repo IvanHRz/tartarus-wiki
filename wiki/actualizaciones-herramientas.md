@@ -24,7 +24,7 @@ tags: [herramientas, versiones, upgrades, beelzebub]
   | ✅ **Telnet nativo** (`TelnetStrategy`) — **APROVECHADO (11-ago)** | Hack SSH-en-:23 | El :23 ahora habla **telnet real** y captura botnets IoT/Mirai (conservando el CLI Cisco por IA). Verificado |
   | ✅ **HTTPS/TLS nativo** (`tlsCertPath`/`tlsKeyPath`) — **APROVECHADO (11-ago)** | No había | Honeypot HTTPS en :443 **sin nginx**, con certificado. Resuelto el hueco del estudio HTTPS. Verificado |
   | **Multi-proveedor LLM** (`host`/`BaseURL`) | Hardcode OpenAI | DeepSeek/OpenRouter vía `host` (provider `openai`) u **Ollama** — confirma el runbook |
-  | **MazeHoneypot** (laberinto anti-scanner, solo HTTP) | Sin usar | Disponible para activar |
+  | ✅ **MazeHoneypot** (laberinto anti-scanner, solo HTTP) — **APROVECHADO (11-ago)** | Sin usar | El :80 y :443 sirven un laberinto infinito de directorios falsos (con `.env`, `backup.tar.gz`, `database_dump.sql`) a los escáneres en vez de un 404. Verificado |
   | **Guardrail nativo** ("guardrail detected malicious output") | Solo nuestro prompt | Refuerzo adicional del framework |
   | **Config por JSON** (`BEELZEBUB_SERVICES_CONFIG`) | Key hardcodeada | Vía para sacar la key del YAML |
   → **Re-prioriza "lo demás":** telnet nativo y HTTPS nativo pasan de "construir desde cero" a "configurar".
@@ -34,11 +34,11 @@ tags: [herramientas, versiones, upgrades, beelzebub]
 - **Capacidades del upstream que NO aprovechamos (huecos):**
   | Capacidad | Estado en TARTARUS | Acción |
   |-----------|--------------------|--------|
-  | Métricas Prometheus propias (`beelzebub_events_*`) | **Perdidas** — el puerto :2112 lo ocupa un honeypot falso; las reales no se publican | Exponerlas en otro puerto + panel de salud (P1) |
+  | ✅ Métricas Prometheus propias (`beelzebub_events_*`) — **RECUPERADAS (11-ago)** | Estaban perdidas (el host :2112 lo ocupa el honeypot falso) | Reales expuestas en `:9112` + el engine las raspa (`GET /observability/beelzebub`) + panel de salud por protocolo en la UI. Verificado |
   | Telnet nativo (`protocol: telnet`) | No — usamos SSH-en-:23 | Añadir telnet real en paralelo (captura botnets IoT) (P1) |
   | ✅ Multi-proveedor LLM (DeepSeek/OpenRouter/Ollama vía `host`) — **APROVECHADO (11-ago)** | No — hardcode OpenAI | **Selector por señuelo desde la UI** (G-4): OpenAI/DeepSeek/OpenRouter/Ollama por honeypot, sin editar YAML |
   | Ollama local | No | Costo cero + campo (P2) |
-  | MazeHoneypot (laberinto anti-scanner) | No | Añadir en HTTP/TCP (P2) |
+  | ✅ MazeHoneypot (laberinto anti-scanner) — **APROVECHADO (11-ago)** | Ya activo en HTTP :80/:443 | Fallback anti-escáner en los honeypots HTTP |
   | MCP nativo | No — MCP falso vía HTTP | Evaluar (P2) |
   | Key por variable de entorno / JSON | No — key en el YAML | Sacarla del archivo (P1) |
 - **Ya cerrado (10-ago-2026):** guardrails anti-jailbreak en los prompts (probado); respaldo estático en

@@ -271,3 +271,12 @@ YAML (OpenAI/DeepSeek/OpenRouter/Ollama via provider+host). Seccion "Proveedor L
 no-op de settings/beelzebub/ai (deprecado). C5: la key nunca se devuelve/loguea. E2E: loop gpt-4o<->
 gpt-4o-mini por API. Suite 1019 verde. Multi-proveedor aprovechado en [[actualizaciones-herramientas]].
 — claude
+
+## [2026-08-11] feat+plan | MazeHoneypot (anti-escaner) + metricas Prometheus reales (observabilidad)
+Repo commit al momento d2105a5. (A) MazeHoneypot: fallback plugin MazeHoneypot en http-80.yaml y
+https-443.yaml (reemplaza el 404) -> laberinto infinito de directorios falsos a los escaneres; portal y
+login intactos. (B) Metricas Prometheus reales de Beelzebub recuperadas: mapeo del :2112 real a :9112 en
+compose (sin quitar el senuelo) + observability_router.py (GET /observability/beelzebub raspa
+beelzebub:2112 por red interna, parser minimo, resiliente) + panel de salud en la UI. 7 tests nuevos,
+suite 1026 verde. E2E: contadores suben con el trafico. Maze y metricas aprovechados en
+[[actualizaciones-herramientas]]. — fable
