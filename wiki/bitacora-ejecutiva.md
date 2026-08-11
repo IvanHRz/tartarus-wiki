@@ -270,6 +270,20 @@ vez, manteniendo los datos de cada uno separados de los demás.
 - **Probado.** Se verificó que no hay pérdida real de datos, que el espejo de Grafana refleja lo mismo, y que
   apagar/encender/reiniciar funciona de punta a punta. Más de mil pruebas automáticas en verde (1045).
 
+### 11 de agosto de 2026 — Un solo lugar para desplegar: honeypots, sensores y cebos
+
+- **Qué se logró.** Se unificó el despliegue en **una sola pantalla ("Despliegue")** dentro de cada cliente,
+  con tres bloques: **Honeypots** (los señuelos, con prender/apagar, disfraz, proveedor de IA y reinicio),
+  **Sensores remotos** (con su estado en vivo: activo/degradado/caído y último latido), y **Deception**
+  (botones directos para **clonar un sitio**, **plantar un cebo** y **plantar una credencial señuelo**).
+- **Por qué importa.** Antes el despliegue estaba repartido entre un grid de señuelos y un asistente largo de
+  "siguiente-siguiente". Ahora es "elige qué desplegar y hazlo" desde un mismo lugar, más claro y rápido de
+  manejar. El asistente guiado se conserva como **"Modo avanzado"** para los casos con escenarios y perfiles
+  de hardware, así que no se pierde nada.
+- **Probado.** Se verificó que las tres familias cargan, que los sensores muestran su estado real, y que
+  plantar un cebo y una credencial funciona de punta a punta (se probó y se limpió). No se tocó el motor;
+  las más de mil pruebas automáticas siguen en verde.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la

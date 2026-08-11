@@ -299,3 +299,11 @@ benchmark (increase reset-aware, anotacion de reinicios, endpoint /metrics/tarta
 fuente vs persistido). F3: G-3 encender/apagar honeypots (mueve YAML a disabled/) + reiniciar via flag que
 ejecuta el watchdog (C4). 16 tests nuevos, suite 1045 verde. Doc nuevo docs/OBSERVABILIDAD_METRICAS.md.
 Reconciliacion aprovechada en [[actualizaciones-herramientas]]. — fable
+
+## [2026-08-11] feat+plan | Hub de despliegue (Honeypots + Sensores + Deception en Gestion)
+Repo commit al momento 34f98b2. La seccion "Honeypot Services" se reencuadro como "Despliegue" con 3 familias:
+Honeypots (grid existente), Sensores remotos (loadSensorsFamily sobre GET /sensors/status), y Deception (barra
+de acciones + modal: clonar sitio, plantar cebo, plantar honey-cred). Cero backend nuevo (endpoints ya
+existian). Wizard conservado como "Modo avanzado" (deprecacion segura). Corregido: el grid ahora sigue al
+flock activo (refreshFlockViews). Bug evitado: el wizard posteaba canary sin token_value (obligatorio); el hub
+lo genera. E2E: 3 familias + plantar cebo/cred OK. Solo UI; suite backend intacta (1045). — fable
