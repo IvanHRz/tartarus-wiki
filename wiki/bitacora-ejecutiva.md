@@ -284,6 +284,28 @@ vez, manteniendo los datos de cada uno separados de los demás.
   plantar un cebo y una credencial funciona de punta a punta (se probó y se limpió). No se tocó el motor;
   las más de mil pruebas automáticas siguen en verde.
 
+### 11 de agosto de 2026 — Desplegar un sensor en una sola pantalla (jubilamos el asistente largo)
+
+- **Qué se logró.** Se retiró por completo el viejo asistente de despliegue de cinco pasos y se sustituyó por
+  **una sola pantalla** integrada en la sección "Despliegue". Se eligió como referencia de estilo la consola
+  de configuración de Thinkst Canary (el competidor de referencia): sobria y profesional, con el nombre de
+  cada apartado a la izquierda y sus controles a la derecha, y los servicios como una lista de casillas que se
+  amplían solo cuando hacen falta. Se empieza eligiendo un **escenario** (Respuesta a incidentes, Evaluación
+  planificada, Purple Team o Laboratorio) que **rellena todo con valores sensatos**; a partir de ahí se ajusta
+  lo que se quiera, se ve un resumen en vivo y se despliega con un solo botón.
+- **Por qué importa.** El asistente anterior obligaba a pasar por cinco pantallas de "siguiente-siguiente";
+  ahora todo está a la vista, es más rápido y más claro, y —según el objetivo planteado— más cómodo que la
+  consola de Thinkst que tomamos como vara de medir. Al terminar, el propio despliegue muestra una tabla con
+  qué quedó activo y qué no, y ofrece volver directo al panel de gestión.
+- **Qué problema apareció y cómo se resolvió.** Al probarlo en el navegador, el botón "Ir al hub" del final no
+  cambiaba de vista por un detalle interno de cómo se llamaba a la función de navegación; se corrigió usando la
+  pestaña de vista directamente. También se pulieron detalles visuales (avisos agrupados, no encimar la razón
+  de un servicio no disponible con su credencial de ejemplo).
+- **Probado.** Se añadieron siete pruebas automáticas nuevas (los cuatro escenarios despliegan de verdad, los
+  ajustes manuales quedan registrados, cambiar el tipo de equipo actualiza la lista de sensores, y la subred
+  del "canario ICMP" valida el formato). Verificado además a mano en el navegador de punta a punta. El motor
+  no se tocó; sus más de mil pruebas siguen en verde.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la

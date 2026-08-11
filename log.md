@@ -312,3 +312,11 @@ lo genera. E2E: 3 familias + plantar cebo/cred OK. Solo UI; suite backend intact
 Plan aceptado archivado en [[planes/2026-08-11]]. Reemplazar el wizard de 1342 lineas por un
 despliegue de una sola pantalla dentro del hub (estilo Thinkst, sobrio), migrando escenarios y
 perfiles de hardware como datos, y borrar wizard.js. — fable
+
+## [2026-08-11] feat | Despliegue en una sola pantalla (retiro total de wizard.js)
+Se borró wizard.js (1342 líneas) y su CSS/HTML; en su lugar deploy_hub.js monta el despliegue de una
+pantalla dentro del hub, estilo sobrio de Thinkst: escenario (prellena) + contexto + sistema destino
+(9 perfiles) + sensores (ICMP con subform) + trampas por SO + escaneo (sigilo/normal) + resumen + botón
+único. Ejecuta /api/deploy/execute (cero backend nuevo) y pinta tabla de resultado; "Ir al hub" salta a
+Gestión. Bug corregido: setView no está en window → se usa el tab de vista. 7 tests E2E nuevos verdes;
+verificado a mano. Detalle ejecutivo en [[bitacora-ejecutiva]]. — fable
