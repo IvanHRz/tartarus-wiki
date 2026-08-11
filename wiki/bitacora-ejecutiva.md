@@ -331,6 +331,26 @@ vez, manteniendo los datos de cada uno separados de los demás.
   reasignar un sensor). El motor no se tocó salvo un endpoint nuevo para dar de baja un sensor, con sus pruebas;
   el total pasó a 1048 pruebas, todas en verde.
 
+### 11 de agosto de 2026 — Afinar la pantalla de despliegue con ojo crítico
+
+- **Qué se logró.** Tras una revisión exigente, se corrigieron cuatro cosas que aún no convencían: (1) la
+  pregunta de "¿tiene internet el sitio?" ya **sirve de verdad** — si no hay internet, avisa que los señuelos
+  con inteligencia artificial en la nube no podrán responder y qué hacer en su lugar; (2) decir "hay un atacante
+  dentro" ahora **da recomendaciones concretas** (no escanear todavía, plantar primero los cebos), en vez de no
+  cambiar nada visible; (3) se quitó la jerga ("sigilo") por lenguaje claro; (4) se explica qué son de verdad
+  los sensores —**avisan y engañan, no bloquean ni echan al atacante**— y qué hace el sensor de "cable-trampa"
+  de red. Además, ahora se puede **elegir de un catálogo** el tipo de cebo que encaje con el caso (además de los
+  recomendados), y **un solo botón** arma un paquete listo para plantar que **respeta el nombre y la ruta** que
+  el operador eligió (para que la alerta llegue con ese contexto). El reconocimiento de la red pasó a ser un
+  **paso previo y opcional** que no depende de instalar nada.
+- **Por qué importa.** Cada parte de la pantalla ahora responde por sí misma: qué preguntamos, para qué sirve y
+  qué cambia. Es la diferencia entre una herramienta que se ve bien y una en la que el operador confía bajo
+  presión.
+- **Probado.** Doce pruebas automáticas de esta pantalla en verde y verificación del lado del servidor de que
+  el paquete de cebos conserva el nombre y la ruta elegidos. El motor casi no se tocó (solo se amplió la
+  generación del paquete para respetar esos datos, con sus pruebas); el total quedó en 1050 pruebas, todas en
+  verde.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la

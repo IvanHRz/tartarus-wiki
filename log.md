@@ -329,3 +329,10 @@ que generan+descargan el archivo real con nombre/ruta editables (endpoints de ca
 como "Reconocer la red" que sugiere sensores desde /hosts, y hub vivo (quitar/reasignar sensor; nuevo
 DELETE /sensors/registry/{id}). 2 bugs corregidos (re-render async que borraba la tabla; funciones no globales
 en módulo ES). Suite 1048 (+3), 10 E2E verdes, verificado a mano. Detalle en [[bitacora-ejecutiva]]. — fable
+
+## [2026-08-11] feat | Refinamiento crítico del despliegue (contexto que orienta, catálogo, un solo botón)
+2ª pasada de feedback sobre el modal: internet deja de ser decorativo (afecta el aviso de IA), atacante activo
+genera recomendaciones concretas, se quita "sigilo" (jerga), se explica pasividad de sensores y el ICMP
+(tripwire de IPs señuelo), catálogo "+" de ~13 tipos de cebo, y un solo botón "Generar cebos (paquete)". Backend:
+POST /canary-tokens/bundle que respeta nombre/ruta por cebo (el enriquecimiento viaja en el ZIP). Reconocimiento
+reposicionado como paso previo opcional. Suite 1050 (+2), 12 E2E verdes. Detalle en [[bitacora-ejecutiva]]. — fable
