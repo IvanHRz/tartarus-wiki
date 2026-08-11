@@ -307,3 +307,8 @@ de acciones + modal: clonar sitio, plantar cebo, plantar honey-cred). Cero backe
 existian). Wizard conservado como "Modo avanzado" (deprecacion segura). Corregido: el grid ahora sigue al
 flock activo (refreshFlockViews). Bug evitado: el wizard posteaba canary sin token_value (obligatorio); el hub
 lo genera. E2E: 3 familias + plantar cebo/cred OK. Solo UI; suite backend intacta (1045). — fable
+
+## [2026-08-11] plan | Retiro total de wizard.js
+Plan aceptado archivado en [[planes/2026-08-11]]. Reemplazar el wizard de 1342 lineas por un
+despliegue de una sola pantalla dentro del hub (estilo Thinkst, sobrio), migrando escenarios y
+perfiles de hardware como datos, y borrar wizard.js. — fable
