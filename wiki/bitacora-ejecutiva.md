@@ -207,6 +207,16 @@ vez, manteniendo los datos de cada uno separados de los demás.
 - **Impacto.** Cerramos dos huecos de cobertura reales y damos paridad con el competidor de referencia.
   Todo probado y sin afectar los demás señuelos.
 
+### 11 de agosto de 2026 — Elegir el proveedor de IA por señuelo, desde la consola
+
+- **Qué se logró.** Ahora se puede **elegir qué proveedor de inteligencia artificial usa cada señuelo**
+  (OpenAI, DeepSeek, OpenRouter o uno local) y su clave, **desde la interfaz**, sin editar archivos a mano.
+- **Por qué importa.** Habilita el **ahorro** (cambiar a un proveedor más barato como DeepSeek, o a uno
+  local sin costo) con dos clics, y arregla un botón que antes decía cambiar la clave pero **no surtía
+  efecto**. Además, la clave se guarda de forma segura y **nunca se muestra** de vuelta en pantalla.
+- **Probado.** Se cambió el modelo de un señuelo desde la consola, se confirmó que sigue respondiendo, y se
+  revirtió — todo sin exponer la clave.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la

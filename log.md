@@ -264,3 +264,10 @@ CLI Cisco por IA + respaldo estatico + guardrails; verificado 32 eventos TELNET)
 (host :8443) con cert autofirmado, sin nginx (consumer fija dest_port=443 via TLSServerName; test añadido).
 services.example actualizado; .gitignore certs/. Suite 1011 verde. Plan en [[planes/2026-08-11]].
 — claude
+
+## [2026-08-11] feat+plan | G-4: proveedor/key LLM por honeypot desde la UI
+Repo commit 0ecbf84. POST /services/{file}/llm + personality_engine.set_llm escriben el bloque plugin del
+YAML (OpenAI/DeepSeek/OpenRouter/Ollama via provider+host). Seccion "Proveedor LLM" en el modal. Arregla el
+no-op de settings/beelzebub/ai (deprecado). C5: la key nunca se devuelve/loguea. E2E: loop gpt-4o<->
+gpt-4o-mini por API. Suite 1019 verde. Multi-proveedor aprovechado en [[actualizaciones-herramientas]].
+— claude

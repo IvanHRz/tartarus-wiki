@@ -36,7 +36,7 @@ tags: [herramientas, versiones, upgrades, beelzebub]
   |-----------|--------------------|--------|
   | Métricas Prometheus propias (`beelzebub_events_*`) | **Perdidas** — el puerto :2112 lo ocupa un honeypot falso; las reales no se publican | Exponerlas en otro puerto + panel de salud (P1) |
   | Telnet nativo (`protocol: telnet`) | No — usamos SSH-en-:23 | Añadir telnet real en paralelo (captura botnets IoT) (P1) |
-  | Multi-proveedor LLM (DeepSeek/OpenRouter/Ollama vía `host`) | No — hardcode OpenAI | Selector por señuelo desde la UI (P1) |
+  | ✅ Multi-proveedor LLM (DeepSeek/OpenRouter/Ollama vía `host`) — **APROVECHADO (11-ago)** | No — hardcode OpenAI | **Selector por señuelo desde la UI** (G-4): OpenAI/DeepSeek/OpenRouter/Ollama por honeypot, sin editar YAML |
   | Ollama local | No | Costo cero + campo (P2) |
   | MazeHoneypot (laberinto anti-scanner) | No | Añadir en HTTP/TCP (P2) |
   | MCP nativo | No — MCP falso vía HTTP | Evaluar (P2) |
