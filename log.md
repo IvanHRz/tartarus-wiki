@@ -336,3 +336,92 @@ genera recomendaciones concretas, se quita "sigilo" (jerga), se explica pasivida
 (tripwire de IPs señuelo), catálogo "+" de ~13 tipos de cebo, y un solo botón "Generar cebos (paquete)". Backend:
 POST /canary-tokens/bundle que respeta nombre/ruta por cebo (el enriquecimiento viaja en el ZIP). Reconocimiento
 reposicionado como paso previo opcional. Suite 1050 (+2), 12 E2E verdes. Detalle en [[bitacora-ejecutiva]]. — fable
+
+## [2026-08-25] feat | Renombrar flocks — cierre del P0 "Interfaz global de gestión de flocks"
+Retomada la rama `feature/tier0-deployment-readiness` tras perder las sesiones en curso. El P0 de gestión de
+flocks estaba casi cerrado por el trabajo previo de la consola de dos niveles (deploy_hub): ya existían
+**crear/borrar/entrar**, **salud por cliente** (tarjetas con Atacantes/Alto riesgo/sparkline 24h), **persistir
+el flock al recargar** (`localStorage tartarus_flock` + rehidratación) y el **selector de vista `view-nav`**
+(`setView` valida/sincroniza/persiste en `tartarus_view`). El único faltante real era **renombrar**: se añadió
+`PATCH /flocks/{flock_id}` (`rename_flock`, mismo patrón que create/delete — `can_mutate`, nombre requerido,
+duplicados contra otros flocks, 404 si no existe, `is_default` inmutable) + botón "Renombrar" en cada tarjeta y
+`renameFlock()` en la UI (si se renombra el flock activo, refresca banner/selector sin salir). Tests: ruta PATCH
+en `test_flocks_router_exposes_crud_routes` + `test_rename_flock_rejects_empty_name`. Suite **1051 verde**.
+Verificación en vivo pendiente: el engine/DB no estaban arriba (solo grafana/prometheus/beelzebub); probar el
+PATCH contra el stack cuando se levante. Sin commitear aún. — fable
+
+## [2026-08-25] fix+auditoría | Falsos positivos: la infraestructura se autogeneraba alertas CRITICAL
+Iván reporta correos CRITICAL sin parar (TCP:8080, T1046, riesgo 80) sin que nadie ataque. Diagnóstico: el
+atacante `192.168.97.8` es **el propio engine**; `.7` es **beelzebub**. **~97% del tráfico ingerido era de
+nuestra propia infraestructura**. En la BD (3691 eventos): `.7` beelzebub 2159 (2158 = TCP:8080), `.8` engine
+169, `.1` gateway 1363 (mix real de simulaciones NATeadas). Causa raíz: `sensor_health_worker.py` prueba
+beelzebub:8080/:22/:80 **cada 30s** + `sensor_manager.py` (probes de verificación de despliegue) + beelzebub
+hacia sí mismo; beelzebub loguea TODA conexión TCP como "sesión" → se ingiere como recon CRITICAL → correo.
+**Fix (parte 1):** el consumer descarta EN INGESTA los eventos cuyo `source_ip` es de un contenedor propio
+(auto-resuelto por DNS: engine/beelzebub/scanner/ui/… = .2–.10; el gateway .1 se CONSERVA porque por ahí entran
+ataques externos NATeados). Override `TARTARUS_INGEST_IGNORE_IPS`/`_HOSTS`. Test
+`test_parse_ignores_infra_source`. Suite **1052 verde**. Verificado en el contenedor: ignora .2–.10, no .1 ni
+IPs externas. **Limpieza histórica:** script `scripts/purge_infra_noise.sh` (dry-run confirma 2328 eventos-ruido
+.7+.8); el borrado quedó **pendiente de correr por el usuario** — el clasificador de seguridad del harness
+bloqueó el DELETE directo. **Auditoría abierta en `.agents/ROADMAP.md` (P0):** recalibrar que un simple "New TCP
+Session" no sea riesgo 80/CRITICAL, doble taxonomía TCP vs TCP/HTTP, rate-limit de recon repetido, y evaluar que
+el health worker no toque el puerto de ataque. Sin commitear aún. — fable
+
+## [2026-08-25] fix+auditoría | Recalibración de severidad (recon ya no es CRITICAL) + conteo del flock
+Segunda parte de la auditoría de falsos positivos. **(1) Recon marcado CRITICAL:** un simple `GET /` (o
+`New TCP Session`, `GET /tools/list`) salía **80/CRITICAL** por un bug circular de scoring. La regla Sigma
+`multi_protocol_kill_chain` (nivel critical) tenía `condition: any_event` → matcheaba CUALQUIER evento, y el
+consumer floreaba el riesgo a 80; encima 3 meta-reglas (`critical_risk_event` ≥80, `high_risk_event` ≥70,
+`multi_protocol_recon` ≥60) solo re-expresaban el `risk_score` como "detección", retroalimentando el floor. Y
+los umbrales estaban inconsistentes (≥80 en stats/reportes/correo vs ≥85 en `risk_to_severity`): un 80 era
+"high" al guardarse pero "CRITICAL" en los tiles/correo. **Fix:** las 4 meta-reglas a `status: deprecated` (+
+el loader de Sigma ahora ignora deprecated); **fuente única de umbrales** (`session_scorer` 85/70/40) aplicada
+en events_router/report_router/notifier/llm_analyzer/narrative_builder/cross_correlator; y el floor de Sigma/
+YARA usa los cortes canónicos **y se registra en `risk_factors`** (antes el 80 salía sin explicación: los
+factores sumaban 50 pero el score era 80). Verificado en vivo: el mismo `GET /` ahora da **50 = MEDIUM**
+(factores 30+20=50, cuadran) y no dispara correo (<70). **(2) Conteo del flock:** el header decía "3693" pero
+los paneles casi vacíos — no es bug: el header/selector usa `event_count` histórico (all-time) mientras los
+paneles usan ventana de 24h (solo 2 eventos recientes; 2328 de los 3693 son el ruido de infra aún sin purgar).
+Se etiquetó el selector ("… · 3693 total") y la tarjeta ("Eventos (total)"). Suite **1054 verde**. Reglas
+activas 655 (−4). Sin commitear aún. — fable
+
+## [2026-08-25] auditoría+fix | Audit profundo de FP/alertas/métricas (3 agentes) — Ola 1
+A petición de Iván ("audita todo a profundidad") se lanzaron 3 agentes de exploración (scoring/Sigma,
+alertas/correo, métricas). Hallazgos estructurales grandes. Plan aceptado por olas
+(`~/.claude/plans/si-sigue-hazlo-a-refactored-rivest.md`). **Ola 1 (detener el flood + FP estructurales),
+suite 1058 verde:** (1) las fases MITRE peligrosas (SMB/RDP/FTP/Telnet/SSH-login) ya no saltan el umbral por
+sí solas — requieren interacción real (comando/credencial/payload); era la causa dominante del exceso de
+correos. (2) Tope global de alertas por flock/hora (`NOTIFY_MAX_PER_HOUR`) + rate-limit configurable. (3) Un
+honey-cred ya no queda suprimido por una alerta trivial de la misma IP (bug de sub-alerta). (4) El filtro de
+infra ahora corre en TODOS los webhooks (opencanary/icmp/ingest/canary), no solo en RabbitMQ — extraído a
+`engine/engine/infra_filter.py`. (5) sigma_lite: un bloque de detección vacío ya no lanza NameError→fallback
+`any()` (anulaba los `and not filtro` → FP masivos como T1021_004_ssh_lateral). (6) las reglas de correlación
+(`event_count gte:N`) ya no disparan con 1 evento (ssh_brute_force, ping_sweep). (7) deprecada
+`icmp_tunnel_exfil` (circular). Verificado en vivo: un `GET /` recon da 50=MEDIUM sin floor. Faltan Ola 2
+(limpiar el corpus Sigma, filtrar por aplicabilidad) y Ola 3 (unificar métricas + purga de datos). Sin
+commitear aún. — fable
+
+## [2026-08-25] fix | Auditoría profunda — Ola 2 (corpus Sigma) y Ola 3 (métricas unificadas)
+Continuación del audit por olas. **Ola 2 — el corpus de reglas:** el motor cargaba 669 reglas y evaluaba
+cientos escritas para telemetría de endpoint (Sysmon/EDR: `CommandLine` 305 usos, `Image` 252, `EventID`
+124) contra los 14 campos que tiene un evento de honeypot. Ahora solo se cargan las reglas cuyos campos
+existen en el evento: **669 → 366**, y el arranque lo dice en el log (7 deprecadas + 304 no aplicables), sin
+recortes silenciosos. Al probarlo apareció un **bug del motor**: el patrón del modificador `re` pasaba por
+`.lower()`, lo que convertía `\S` en `\s` (y `\D`→`\d`, `\W`→`\w`) y rompía en silencio cualquier regex con
+clases negadas; corregido. Además se deprecaron las dos reglas que disparaban solo por protocolo
+(RDP/SMB lateral, ya cubierto por el motor de riesgo), se bajaron a "medio" cuatro que se activaban con un
+simple saludo de conexión (rdp/smb/telnet/ftp) y se afinaron seis que casaban por trozo de palabra ('host'
+dentro de 'hostname', 'sudo' dentro de 'sudoku', '--' de cualquier opción, 'NLA' en el JSON crudo…).
+Comprobado de punta a punta: una conexión pelada ya no pasa de "medio", mientras SQLi, salto de directorio
+y subida de webshell siguen saliendo en 85/crítico; cero disparos de reglas retiradas.
+**Ola 3 — que los números cuadren:** la unificación de umbrales estaba a medias y el sitio más visible (la
+tira principal del panel) seguía con la escala vieja, así que un mismo evento salía "crítico" en un panel y
+"alto" en otro. Se migró todo a 85/70/40 (motor, reportes, PDF, TheHive, recomendaciones y el **texto que
+lee el operador**, que documentaba la escala vieja), el frontend pasó a usar una constante única, el KPI
+"alertas críticas" del panel central dejó de mezclar histórico con la ventana de 24h, el resumen por cliente
+ya no cuenta los críticos dos veces, y el embudo de ingesta dejó de leer como "pérdida" lo que en realidad
+son descartes del filtro de infraestructura. Se añadió una prueba que falla si alguien reintroduce la escala
+vieja. Suite **1066 verde**. Corregidas también las fechas de las entradas anteriores (estaban puestas como
+18-ago tomando la fecha del correo de alerta; el trabajo es del 25-ago).
+**Pendiente de Iván (el harness bloquea los borrados):** correr `scripts/purge_infra_noise.sh --apply`
+(2328 eventos-ruido) y borrar los flocks de prueba AUDIT_A/AUDIT_B. Sin commitear aún. — fable
