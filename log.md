@@ -466,3 +466,28 @@ encender la Mac y escribe en `/tmp/tartarus-watchdog.log` (solo habla cuando act
 explícito porque launchd arranca sin `docker` ni `python3` en el camino. **Probado en serio**: se simuló
 la avería, el vigilante la detectó y reinició Beelzebub, y la ingesta volvió a estar sana en segundos.
 Para apagarlo: `launchctl bootout gui/$(id -u)/com.tartarus.beelzebub-watchdog`. — fable
+
+## [2026-08-26] limpieza | Fuera el ruido histórico de la base (y el watchdog, corregido)
+Último pendiente del audit: la base seguía arrastrando los eventos que se colaron **antes** de que
+pusiéramos el filtro, es decir, los que generaba el propio sistema al vigilarse a sí mismo. Mientras
+estuvieran ahí, los paneles y los informes contaban ruido como si fueran ataques.
+
+**Lo que se hizo, en orden.** Primero un **respaldo** de la base (no existía ninguna costumbre de
+respaldos en el proyecto: los únicos volcados eran de mayo), verificado antes de borrar nada — y de paso
+quedó escrito cómo restaurarlo, que tampoco estaba documentado. Después se reforzó el script de limpieza:
+solo contemplaba dos tablas y dejaba referencias colgando en otras tres; ahora las limpia todas en la
+misma operación. Se ensayó el borrado completo **con marcha atrás** para comprobar que salía bien, y
+recién entonces se ejecutó de verdad.
+
+**Resultado:** de 3720 eventos quedaron **1389**, y de 15978 detecciones quedaron **6679**. Los 1389
+eventos de las simulaciones reales (los que entran por la puerta de enlace) están intactos. Se borraron
+también los dos clientes de prueba que había dejado una auditoría vieja (AUDIT_A y AUDIT_B, vacíos) y tres
+eventos sintéticos de las pruebas de hoy. Importante: hubo que **ajustar los contadores internos**, porque
+si no el sistema comparaba "3710 recibidos contra 1389 guardados" y reportaba una pérdida de datos del
+62% que era falsa; ahora marca 0%.
+
+**Corrección sobre la marcha:** el vigilante que dejamos activo ayer estaba **reiniciando el honeypot cada
+cinco minutos** sin necesidad. El motivo: reiniciaba en cuanto veía que no entraban datos, pero en un
+laboratorio sin ataques eso es lo normal, no una avería. Ahora distingue las dos situaciones — mira si el
+honeypot **sí** está registrando cosas que no llegan a la base (avería de verdad) o si simplemente no hay
+tráfico (silencio) — y solo actúa en el primer caso. Probados los dos escenarios. Sin commitear aún. — fable
