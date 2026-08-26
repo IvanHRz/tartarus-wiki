@@ -512,3 +512,41 @@ errores durante la avería real, 0 con el sistema sano.
 **Probado provocando la avería de verdad**, no simulándola: se reinició la cola de mensajes para romper el
 canal, se confirmó que los eventos se perdían, y el vigilante lo detectó, reinició el honeypot y la
 ingesta volvió a funcionar. Y con solo tráfico de sondas, no toca nada. — fable
+
+## [2026-08-26] fix | Unificar la ingesta: lo que entraba por webhook se guardaba pero no se analizaba
+El pendiente era "el barrido de pings no detecta nada". Investigándolo resultó ser la punta de algo mayor:
+**había cinco puertas de entrada de eventos y solo una estaba completa**. La principal (la de los
+honeypots) hacía quince cosas con cada evento —buscar patrones de ataque, elevar el riesgo, correlacionar,
+registrar la cadena del ataque—; las otras cuatro (el sensor ICMP, OpenCanary, los cebos y los sensores de
+campo) hacían entre cinco y ocho. En la práctica: **todo lo que entraba por esas cuatro puertas se
+guardaba en la base pero nunca se analizaba**. Aparecía en la lista de eventos y jamás generaba una
+detección. No daba error; simplemente no ocurría.
+
+**Lo que se hizo.** Se extrajo el análisis a un solo sitio que ahora usan las cinco puertas, de modo que no
+puedan volver a separarse. De paso salieron cuatro fallos que llevaban tiempo escondidos:
+- El registro de la cadena de ataque del sensor ICMP **nunca funcionó**: se le pasaban mal los datos y el
+  error se descartaba en silencio. Al arreglarlo apareció un segundo fallo detrás del primero. Ahora el
+  error se registra bien visible: el silencio era justo lo que lo mantenía vivo.
+- El disparo del cebo de un cliente **acababa atribuido al cliente por defecto**, sin avisar. Comprobado
+  ya funcionando: el cebo del cliente "Iván" queda en su sitio.
+- **Ocho reglas de ataques web** (inyección SQL, XSS, SSRF y compañía) estaban cargadas pero no podían
+  detectar nada, porque miraban unos datos que nadie rellenaba —aunque el sistema ya los tenía a mano—.
+  Al activarlas se destapó otra: una regla que habría marcado como sospechosa **cualquier** visita normal;
+  corregida antes de que molestara.
+- Los contadores de las cuatro puertas no se actualizaban, así que el panel de control mostraba menos de
+  lo que realmente entraba.
+
+**El corpus de reglas.** Se auditaron las 83 reglas de comportamiento y 13 no podían disparar jamás: unas
+buscaban textos que este honeypot nunca escribe (ese era el caso del barrido de pings, cuyo término salió
+de documentación vieja), otras miraban el campo equivocado —las de escáner buscaban el nombre de la
+herramienta en la dirección web en vez de en el identificador del navegador—, y las de contraseñas
+buscaban la clave dentro del texto del comando, lo que provocaba avisos falsos con cosas tan inocentes
+como `chown root` y, a la vez, no veía el intento real. Todas corregidas y verificadas una por una.
+
+**Lo más importante para el futuro:** se añadieron doce comprobaciones automáticas que fallan si alguien
+vuelve a escribir una regla que mire un dato inexistente, o añade una puerta de entrada que no analice lo
+que recibe. Al ponerlas en marcha ya destaparon siete casos más.
+
+**Comprobado de punta a punta:** dos pings no disparan nada; el tercero genera **una sola** alerta de
+barrido; el cuarto no duplica. OpenCanary y los sensores de campo ya generan detecciones (antes, ninguna).
+Suite en 1102 pruebas verdes. Sin commitear aún. — fable
