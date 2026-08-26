@@ -491,3 +491,24 @@ cinco minutos** sin necesidad. El motivo: reiniciaba en cuanto veía que no entr
 laboratorio sin ataques eso es lo normal, no una avería. Ahora distingue las dos situaciones — mira si el
 honeypot **sí** está registrando cosas que no llegan a la base (avería de verdad) o si simplemente no hay
 tráfico (silencio) — y solo actúa en el primer caso. Probados los dos escenarios. Sin commitear aún. — fable
+
+## [2026-08-26] corrección | El vigilante estaba reiniciando el honeypot en bucle (tercera es la vencida)
+Rectifico lo que di por bueno hace unas horas: dije que el vigilante ya no reiniciaba en bucle, basándome
+en una comprobación de seis minutos que cayó en un momento tranquilo. No era suficiente para un fallo que
+se repite cada cinco. Revisando el registro completo aparecieron **166 reinicios en unas catorce horas**.
+
+**Por qué fallaron los dos primeros intentos.** El primero reiniciaba en cuanto veía que no entraban datos;
+en un laboratorio sin ataques eso es lo normal, no una avería. El segundo intentaba deducirlo comparando
+cuántos eventos registra el honeypot contra cuántos llegan a la base — y ahí estaba la trampa: **al
+reiniciar el honeypot sus contadores vuelven a cero**, y las propias sondas de salud del sistema los suben
+otra vez; como esas sondas se descartan a propósito al entrar, parecía "produce pero no llega". Se mordía
+la cola solo.
+
+**La solución que sí funciona** es dejar de deducir y mirar el síntoma directo: cuando el honeypot pierde
+la conexión con la cola de mensajes, lo escribe en su propio registro con un error concreto, uno por cada
+evento que no consigue enviar. Ahora se exige ese error para actuar. La diferencia es medible: 106 de esos
+errores durante la avería real, 0 con el sistema sano.
+
+**Probado provocando la avería de verdad**, no simulándola: se reinició la cola de mensajes para romper el
+canal, se confirmó que los eventos se perdían, y el vigilante lo detectó, reinició el honeypot y la
+ingesta volvió a funcionar. Y con solo tráfico de sondas, no toca nada. — fable
