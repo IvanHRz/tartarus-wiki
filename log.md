@@ -425,3 +425,44 @@ vieja. Suite **1066 verde**. Corregidas también las fechas de las entradas ante
 18-ago tomando la fecha del correo de alerta; el trabajo es del 25-ago).
 **Pendiente de Iván (el harness bloquea los borrados):** correr `scripts/purge_infra_noise.sh --apply`
 (2328 eventos-ruido) y borrar los flocks de prueba AUDIT_A/AUDIT_B. Sin commitear aún. — fable
+
+## [2026-08-26] fix | Pendientes del audit: sensores, cebos y correlación (Olas A, B y C)
+Segunda tanda del audit, por olas. Suite **1090 verde**.
+**A · Sensores (lo que se veía en pantalla).** El sensor ICMP salía "failed" en el despliegue y "offline"
+en el panel aunque funcionara: se le hacía una sonda TCP a un puerto (`:8000`) que en realidad es el del
+engine — ese sensor no escucha nada, reporta por webhook. Ahora se verifica por su estado real y, además,
+cada evento suyo deja constancia de que está vivo (nadie emitía su latido, por eso el "offline" eterno;
+verificado: pasó a activo). También se quitó ruido en origen: el vigilante abría ~14.400 conexiones al día
+contra los puertos de ataque del honeypot; ahora usa las métricas del proceso y espacia las sondas
+(medido: 0 eventos en 100 s, antes ~15).
+**B · Cebos: que solo avise lo que importa.** OpenCanary marcaba TODO evento como cebo disparado, así que
+cada conexión de un escaneo mandaba correo; ahora solo avisan los intentos reales (login/credencial/abrir
+un fichero señuelo) y las conexiones se registran sin avisar. Al probarlo salió un hueco: la descripción
+que escribe OpenCanary ("RDP connection") pasaba por comando tecleado, así que se añadió una señal
+explícita de "hubo intento real". Y los **previsualizadores de enlaces** (Safe Links, Slack, antivirus de
+correo) que abren un cebo al reenviarlo por correo: ahora se reconocen, el disparo se guarda como
+evidencia con su etiqueta pero no manda correo. De paso se corrigió de quién se registra la IP: se tomaba
+el primer valor de la cabecera de proxy (falsificable y, con un previsualizador de por medio, la IP
+equivocada).
+**C · Escaneo de puertos y correlación.** La "ventana de 5 minutos" del detector no era tal: se rearmaba
+en cada evento, así que un escáner lento acumulaba para siempre; ahora es deslizante de verdad. Y se
+añadió una lista de escáneres autorizados (el Nessus de la empresa deja constancia pero no dispara
+alarma). Lo más importante: se implementó la **correlación real**, así que las reglas de umbral vuelven a
+servir — "5 intentos de acceso desde la misma IP en 5 minutos" ahora cuenta de verdad en vez de disparar
+con el primero. Al probarla se descubrió que la regla de fuerza bruta buscaba un texto ("Failed password")
+que este honeypot **nunca escribe**, porque acepta todos los accesos a propósito; se corrigió contra lo
+que emite de verdad. Verificado: 1 intento no dispara, 6 disparan una sola vez.
+**Hallazgo operativo serio:** al probar salió que **el honeypot llevaba desde ayer 23:30 sin ingerir nada**
+— Beelzebub había perdido su conexión con la cola de mensajes y no la reintenta solo. Se restauró
+reiniciándolo, pero el vigilante que existe para esto (`beelzebub_watchdog.sh`) **no está corriendo en la
+máquina**; conviene dejarlo activo o el honeypot puede quedarse mudo sin avisar. Sin commitear aún. — fable
+
+## [2026-08-26] ops | El vigilante del honeypot ya está activo (y por qué nunca lo estuvo)
+Cerrando el hallazgo anterior: el script que vigila la ingesta (`beelzebub_watchdog.sh`) existía desde
+agosto pero **nunca tuvo permiso de ejecución**, así que jamás llegó a correr — de ahí que el honeypot
+pudiera quedarse mudo ocho horas sin que nadie se enterara. Se le dio permiso y se dejó instalado como
+servicio del sistema (launchd, `com.tartarus.beelzebub-watchdog`): comprueba cada minuto, arranca solo al
+encender la Mac y escribe en `/tmp/tartarus-watchdog.log` (solo habla cuando actúa). Se le puso el PATH
+explícito porque launchd arranca sin `docker` ni `python3` en el camino. **Probado en serio**: se simuló
+la avería, el vigilante la detectó y reinició Beelzebub, y la ingesta volvió a estar sana en segundos.
+Para apagarlo: `launchctl bootout gui/$(id -u)/com.tartarus.beelzebub-watchdog`. — fable
