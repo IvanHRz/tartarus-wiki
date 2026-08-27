@@ -641,6 +641,24 @@ en la ficha; borrarla contesta "1 regla retirada" y el fichero desaparece. El si
 (antes las críticas eran el 87 %). La entrada de eventos sigue funcionando igual y cada puntuación
 sigue cuadrando con sus motivos. Suite en 1146 pruebas verdes.
 
+**De dónde salían de verdad.** Al vigilar el sistema después de limpiarlo aparecieron siete reglas
+nuevas de la nada. No las creaba nadie usando la plataforma: **las creaban las propias pruebas
+automáticas**. Varias plantan trampas para comprobar que funcionan, y cada vez que se ejecutaban
+dejaban su rastro en el directorio de verdad. Como las pruebas corren en cada cambio que se guarda,
+ahí estaba el goteo desde julio. Tres ficheros de prueba lo provocaban, pero el fondo era otro: solo
+una de las tres vías por las que se planta una trampa respetaba el ajuste que manda esos ficheros a
+un sitio temporal; las otras dos escribían siempre en el directorio real. Se unificó en un único
+sitio y se añadió una regla general para todas las pruebas, de modo que quien escriba una prueba
+nueva quede cubierto sin tener que saber nada de esto. Comprobado: ahora la tanda entera de pruebas
+deja el directorio tal como lo encontró.
+
+**Un fallo propio, dicho claro.** La primera versión del script de limpieza nombraba la copia de
+seguridad solo con la fecha, así que al ejecutarlo por segunda vez el mismo día **se sobrescribió la
+copia de la primera** y se perdió el respaldo de las 384 reglas retiradas. El daño real es pequeño
+—eran reglas sin dueño, que no habían disparado nunca en toda la historia del sistema— pero la copia
+existe justo para no tener que confiar en eso. Corregido: ahora el nombre lleva fecha y hora, y el
+script se niega a machacar una copia que ya exista.
+
 **Queda anotado:** los señuelos de tipo "migaja de pan" no se guardan en ninguna tabla, así que sus
 reglas siguen sin poder emparejarse con nada. Cerrar también ese ciclo necesita una tabla nueva y se
 dejó para otra tanda. — fable

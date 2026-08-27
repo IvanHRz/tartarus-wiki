@@ -295,11 +295,32 @@ mitades, que las rutas de baja llamen a `retire_decoys`, que el alta guarde el v
 migración exista. Más los casos feos: hash vacío/None/numérico no puede llevarse una regla por
 delante, y retirar dos veces el mismo cebo es un no-op, no un error.
 
+**4. De dónde salían de verdad las 382** (encontrado al observar tras la purga): la **propia suite
+de tests las generaba en el árbol real**. Se midieron **7 reglas nuevas en una sola pasada** de
+`pytest`; con el pre-commit corriendo la suite en cada commit, más CI, ahí está la acumulación desde
+julio. Tres ficheros la causaban (`test_breadcrumb_engine.py`, `test_canary_planter_beacon.py`,
+`test_honey_creds_dedup.py`), pero la raíz era más profunda: **solo `canary_planter` respetaba
+`TARTARUS_DECOY_RULES_DIR`**; `honey_creds_router` y `breadcrumbs_router` llamaban a
+`register_decoy()` sin `rules_dir` y escribían siempre en el corpus real, por mucho que un test
+fijara la variable. Arreglado en el punto único `decoy_usage._rules_dir()` (argumento → variable de
+entorno → dir por defecto, resuelto en cada llamada) más un fixture `autouse` de sesión en
+`conftest.py` que redirige toda la suite a un temporal. `autouse` a propósito: un test nuevo que
+plante un cebo queda cubierto sin que su autor sepa nada de esto. Comprobado: la suite entera deja el
+árbol igual que lo encontró.
+
 **Verificado en vivo:** plantar un `aws-keys` crea la regla y deja su `decoy_hash` en la fila;
 borrarlo devuelve `{"status":"deleted","decoy_rules_retired":1}` y el `.yml` desaparece. El corpus
 cargado pasa de **465 a 84** reglas, con distribución por fin sana: **16 medium / 43 high / 25
 critical** (30 %, frente al 87 % anterior). Ingesta sin regresión: `GET /.env` → 85 con factores que
-suman 85; invariante en 0. Suite **1146 verde** (+14).
+suman 85; invariante en 0. Estado final: **1 regla en disco, 1 con dueño, 0 huérfanas**.
+Suite **1148 verde** (+16).
+
+**Un fallo propio, dicho con todas las letras:** la primera versión del script nombraba el respaldo
+solo con la fecha, así que la **segunda pasada del mismo día sobrescribió el tar.gz de la primera** y
+se perdió el respaldo de las 384 reglas retiradas. Impacto real bajo (eran huérfanas confirmadas, sin
+dueño y sin un solo disparo en toda la historia de la base), pero el respaldo existe justo para no
+depender de eso. Corregido: el nombre lleva fecha **y hora**, y el script aborta antes que
+sobrescribir un respaldo existente.
 
 - ⏳ **PENDIENTE nuevo (P2) — ciclo de vida de los breadcrumbs.** `breadcrumbs_router.py:94` registra
   la regla del marcador, pero **los breadcrumbs no se guardan en ninguna tabla**: el marcador solo
