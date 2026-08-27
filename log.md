@@ -714,3 +714,49 @@ un evento descuadrado. Suite en 1179 pruebas verdes.
 **Queda anotado:** los textos de los motivos vienen en inglés del motor de riesgo, mientras la consola
 es en español. Se muestran tal cual porque son el dato real; traducirlos toca una veintena de textos
 y sus pruebas, y mezclarlo aquí habría enturbiado la comprobación. — fable
+
+## [2026-08-27] fix | La misma táctica contada dos veces: unificar los nombres de MITRE
+El panel que resume qué tipo de ataques se han visto llevaba contando mal desde siempre, y hoy se vio
+por qué.
+
+**El problema.** Cada detección guarda a qué "táctica" de la clasificación MITRE pertenece —
+reconocimiento, robo de credenciales, movimiento lateral…—. El panel agrupa por ese texto. Y ese texto
+estaba escrito de varias maneras distintas para la misma cosa: de 1.643 detecciones, 644 lo tenían en
+minúsculas (`discovery`), 643 con su código delante (`TA0007 - Discovery`) y 356 en blanco. Resultado:
+"Descubrimiento" aparecía **dos veces en el panel**, con 225 y 87, cuando eran 312. "Persistencia"
+salía en cuatro filas, una de ellas con un guion largo en vez de corto — invisible a simple vista y
+suficiente para que la base las tratara como cosas distintas.
+
+**No era culpa de quien escribe las reglas.** Cuando una regla no dice su táctica, el sistema la
+deducía de sus etiquetas y la dejaba en minúsculas; cuando sí la dice, unas usan un guion y otras
+otro. Tres formas de escribir lo mismo y nadie comprobando nada. En el conjunto de reglas activas
+había **29 variantes para 13 tácticas**.
+
+**Lo que se hizo.** Un único sitio que sabe cómo se llama cada táctica y traduce cualquier forma a la
+buena. La forma buena no hubo que inventarla: el resto del sistema ya usaba el nombre limpio
+("Descubrimiento" sin código), y por eso el mapa de calor de MITRE —que bebe de otra tabla— siempre
+estuvo bien. Ahora las reglas se normalizan al cargarse, y un script limpió lo ya guardado: 17
+variantes quedaron en 10 tácticas, 1.287 filas corregidas, con copia de seguridad previa.
+
+**Y tirando de ese hilo aparecieron tres fallos encadenados**, cada uno tapando al siguiente:
+
+1. Las 356 detecciones en blanco eran todas del motor de firmas (YARA). El código metía la **técnica**
+   en la casilla de la **táctica**, y dejaba la de técnica vacía.
+2. Al corregirlo, seguía sin funcionar: **el motor de firmas nunca entregaba los datos de la regla**.
+   Quien los pedía tenía valores por defecto para todo, así que nada fallaba — simplemente toda
+   detección se guardaba como "alta" aunque su regla dijera "media", y nunca se sabía qué cadena había
+   saltado.
+3. Y aun así seguía sin funcionar, porque **había dos puertas para guardar detecciones**: la unificada
+   y una copia propia dentro del componente que procesa el honeypot principal, que la unificación del
+   día anterior había dejado atrás. Como por ahí pasa la mayor parte del tráfico, arreglar la puerta
+   buena no arreglaba nada. Ahora hay una sola puerta, y una comprobación automática impide que
+   vuelvan a ser dos.
+
+**Comprobado en vivo:** las detecciones nuevas nacen con el nombre correcto; las del motor de firmas
+ya llevan su técnica, su gravedad real y las cadenas concretas que saltaron (solo los nombres de las
+cadenas, no su contenido: eso puede ser el ataque en sí y no tiene por qué acabar en la base). El
+panel ya no duplica ninguna táctica. Y el mapa de calor de MITRE quedó **exactamente igual** antes y
+después, que era justo la prueba de que no se rompió nada al lado. Suite en 1240 pruebas verdes.
+
+**Queda anotado:** la táctica de las detecciones del motor de firmas sigue en blanco. Ya tienen
+técnica, pero deducir la táctica exige un trabajo aparte sobre 89 formatos distintos. — fable

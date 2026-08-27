@@ -383,6 +383,60 @@ intermitente es el comportamiento normal sin tráfico.
   y traducirlos toca ~20 textos y sus tests; mezclarlo con esta tanda habría enturbiado la
   verificación.
 
+#### Séptima tanda (27-ago-2026) — ✅ **HECHO**: una sola forma de nombrar cada táctica MITRE
+
+El panel de detecciones contaba mal la cobertura, y llevaba haciéndolo desde siempre. De 1.643
+detecciones: **644 con la táctica en texto suelto**, **643 con código** y **356 vacías**. No era
+cosmético: `discovery` (225) y `TA0007 - Discovery` (87) eran **la misma táctica partida en dos**;
+`Persistence` aparecía en cuatro filas distintas, una de ellas con **guion largo** (`–`). Sobre el
+corpus vivo, **29 variantes para 13 tácticas** — `Collection` de tres formas, una regla en cada una.
+
+**La culpa no era de las reglas, sino del loader.** `sigma_lite` derivaba la táctica de los *tags*
+cuando la regla no la declaraba (`attack.credential_access` → `"credential access"`), y las que sí la
+declaraban usaban guiones distintos entre sí. Tres formas de escribir lo mismo, ninguna validada.
+
+**1. El vocabulario, en un sitio** (`engine/engine/mitre_taxonomy.py`): las 14 tácticas Enterprise,
+`normalize_tactic()` (traga nombre suelto, código, los dos guiones, forma de tag, y de un campo con
+dos tácticas se queda con la primera) y `normalize_technique()` (saca `T1234[.001]` de un texto
+libre). La forma canónica **no se inventó**: `risk_engine`, `report_model.tactic_order` e
+`ioc_extractor._INTENT_MAP` ya usaban el nombre limpio — por eso `/mitre/heatmap`, que lee de
+`events`, siempre salió bien y solo desentonaba `detections`.
+
+**2. El loader normaliza al cargar**: las 29 variantes del corpus colapsaron a **13 tácticas** antes
+de escribir una sola detección más.
+
+**3. Saneado** (`scripts/normalize_detection_tactics.py`, dry-run por defecto, respaldo a CSV con
+fecha **y hora**): 17 variantes → **10 tácticas**, 1.287 filas. `Discovery` pasó de 225+87 partidas a
+**312 juntas**.
+
+**4. Y tirando de ese hilo, tres bugs encadenados en YARA.** Las 356 vacías eran todas suyas:
+- `insert_detections` metía `meta["mitre"]` —que contiene **técnicas**— en la columna `mitre_tactic`,
+  y dejaba `mitre_technique` siempre vacío.
+- Al arreglarlo, seguía sin funcionar: **`YaraEngine.scan()` nunca devolvía `meta`**. El consumidor
+  caía en sus valores por defecto, así que TODA detección YARA se guardaba como `high` aunque su
+  regla dijera `medium`, y `matched_fields` iba siempre vacío. Nada fallaba: los defaults tapaban el
+  agujero.
+- Y aun así seguía sin funcionar, porque **el consumer tenía su propia copia del `INSERT`**
+  (`consumer.py:499-530`) que la unificación de la ingesta del 26-ago dejó atrás. Como el consumer es
+  el camino de Beelzebub —la mayoría del tráfico—, arreglar `insert_detections` no arreglaba nada.
+  Ahora delega en la función compartida, y un guardarraíl impide que vuelva a haber dos puertas.
+
+**Verificado en vivo:** las detecciones Sigma nacen con la táctica canónica; las de YARA ya llevan su
+técnica (`T1046`, `T1190`), su severidad real (`medium`, no el default) y las cadenas que casaron
+(`["$nmap1","$nmap2","$nmap3"]`, solo los identificadores — el contenido puede ser payload de un
+atacante). `/detections/stats` sin duplicados; **cero tácticas con dos grafías**. Y `/mitre/heatmap`
+**byte a byte idéntico** antes y después, que era la prueba de no romper nada al lado.
+Suite **1240 verde** (+61).
+
+- ⏳ **PENDIENTE nuevo (P2) — la táctica de las detecciones YARA sigue vacía** (356 filas). Ya llevan
+  técnica, pero derivar la táctica exige un mapeo técnica→táctica sobre las **89 variantes** de
+  formato del campo `mitre` de las reglas, o que las 41 reglas declaren su táctica. Otra tanda.
+
+- ⏳ **PENDIENTE nuevo (P3) — unificar los vocabularios de tácticas.** `report_model.tactic_order` e
+  `ioc_extractor._INTENT_MAP` mantienen sus propias listas; deberían salir de `mitre_taxonomy`. No se
+  tocó porque `tactic_order` fija el orden del SVG del informe VRA y cambiarlo sin verlo renderizado
+  es arriesgado.
+
 - ⏳ **PENDIENTE nuevo (P2) — ciclo de vida de los breadcrumbs.** `breadcrumbs_router.py:94` registra
   la regla del marcador, pero **los breadcrumbs no se guardan en ninguna tabla**: el marcador solo
   vive en el `.yml`. Así que sus reglas no se pueden vincular a nada y el ciclo sigue abierto para
@@ -398,10 +452,8 @@ intermitente es el comportamiento normal sin tráfico.
 - ✅ ~~**PENDIENTE (P1) — la explicación del riesgo no llega a la consola**~~ **HECHO (27-ago)**, ver
   la sexta tanda más abajo.
 
-- ⏳ **PENDIENTE nuevo (P3) — taxonomía MITRE inconsistente en `detections`.** Conviven
-  `"TA0007 - Discovery"` y `"discovery"`, `"T1083 - File and Directory Discovery"` y `"T1087"` a secas,
-  más 348 detecciones con `tactic` vacía. El mapa MITRE cuenta la misma táctica dos veces. Visto el
-  26-ago en `/detections/by-technique`.
+- ✅ ~~**PENDIENTE (P3) — taxonomía MITRE inconsistente en `detections`**~~ **HECHO (27-ago)**, ver
+  la séptima tanda más abajo.
 
 - ✅ **OLA A — HECHO (26-ago)** Sensores. Suite 1073 verde.
   1. **El sensor ICMP ya no se verifica con una sonda TCP**: `sensor_manager` gana `mode="push"` y el
