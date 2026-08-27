@@ -175,14 +175,14 @@ riesgo con el motivo anotado), `insert_detections()`, `bump_counters()` y `build
 30s"); el 4º no duplica. OpenCanary y sensores de campo **ya generan detecciones** (antes cero). Datos de
 prueba limpiados; 1395 eventos, embudo 0,0 %.
 
-- ⏳ **Queda anotado**: sin cobertura de reglas para MODBUS/SNMP/NTP (el sensor Modbus emite y nadie lo
-  mira — matiz medido el 26-ago: `risk_engine.py:352-365` SÍ lo puntúa (read→T0846, write→T0836 ≥80);
-  lo que falta es la capa Sigma, o sea la detección con nombre. SNMP/NTP tienen camino de ingesta real
-  en `opencanary_router.py:48-50` pero CERO eventos: OpenCanary no está desplegado, así que solo se
-  podrían verificar sintéticamente); literales con barra invertida mal escapada en 3 reglas (medido el
-  26-ago: **impacto casi nulo**, están en reglas de artefactos Windows que el loader ya descarta; la
-  única viva es `owasp/A03_ldap_injection.yml:32`); reglas Windows sobre un honeypot Linux; el cebo
-  `decoy_reuse` con valor `trap123`, demasiado genérico.
+- ✅ ~~**Queda anotado**: sin cobertura MODBUS/SNMP/NTP; literales con barra invertida~~ **HECHO
+  (27-ago, Ola C)**. Dos reglas Modbus (lectura → `medium`/Discovery, escritura → `critical`/Impact),
+  verificadas en vivo con `attack_modbus.sh`; una regla SNMP/NTP con verificación **sintética**
+  (OpenCanary no está desplegado). Los literales resultaron ser **tres** y el matiz importaba: en
+  `command` la doble barra es inerte, pero en `payload` es **correcta** (se compara contra el JSON
+  serializado). Sobre el cebo `trap123`: no queda ninguna regla con ese valor tras la purga del
+  27-ago. **Sigue abierto** solo lo de las reglas Windows sobre un honeypot Linux — el loader ya las
+  descarta por esquema, así que no aportan cobertura falsa; retirarlas sería higiene, no un arreglo.
 
 #### Cuarta tanda (26-ago-2026) — ✅ **HECHO**: sanear el histórico de la base
 
@@ -376,12 +376,58 @@ sin regresión, invariante en 0, cero trazas. Suite **1179 verde** (+31).
 las reglas de cebo estables en 1 — el guardarraíl de la tanda anterior aguanta. El `ingestion: stale`
 intermitente es el comportamiento normal sin tráfico.
 
-- ⏳ **PENDIENTE nuevo (P3) — las descripciones de los factores están en inglés.** La consola es en
-  español pero los textos que ahora se muestran vienen de `risk_engine` en inglés ("Any access to
-  perimeter sensor infrastructure is unauthorized"), mientras los añadidos en agosto sí están en
-  español ("Regla Sigma critical eleva el riesgo a 85"). Se muestran tal cual porque son el dato real
-  y traducirlos toca ~20 textos y sus tests; mezclarlo con esta tanda habría enturbiado la
-  verificación.
+- ✅ ~~**PENDIENTE (P3) — descripciones de los factores en inglés**~~ **HECHO (27-ago, Ola D)**: 41
+  textos traducidos. Se tradujo lo visible, nunca la clave `factor` (es identificador y el saneado
+  agrupa por `f->>'factor'` en SQL).
+
+#### Octava tanda (27-ago-2026) — ✅ **HECHO**: cerrar TODA la deuda de la auditoría (5 olas)
+
+Los seis pendientes que fueron dejando las tandas del 25 al 27. Al inventariarlos, **uno estaba ya
+resuelto** (`icmp_ping_sweep`) y varios resultaron más baratos o más graves de lo anotado.
+
+**OLA A — taxonomía MITRE** (`af449f6`). De **356 detecciones sin táctica a cero**. `report_model` e
+`ioc_extractor` mantenían su propia lista —tres copias del vocabulario, que es lo que dejó colarse la
+taxonomía rota— y ahora salen de `mitre_taxonomy`, con las traducciones al español centralizadas.
+La lista del informe VRA tenía **dos** diferencias con MITRE: le faltaba `Resource Development` y
+ponía `Exfiltration` antes de `Command and Control`. Tres cosas aparecieron al hacerlo, todas del
+mismo tipo —el dato estaba, no se leía—:
+- el corpus declara la técnica con **tres claves** (`mitre` 119 usos, `mitre_technique` 47,
+  `mitre_attack` 20); leer una sola dejaba reglas sin táctica;
+- **33 reglas viven en subdirectorios** y tanto el script como *mi propio guardarraíl* usaban `glob`
+  en vez de `rglob` — al corregir el test, él mismo destapó 12 técnicas que faltaban en el mapa;
+- las detecciones históricas no tenían técnica de la que derivar la táctica, pero **el dato seguía en
+  el fichero de su regla** y el `rule_id` dice cuál es: se recuperan de ahí en vez de darlas por
+  perdidas.
+
+**OLA B — la evidencia de las reglas rotas** (`d1dd8ea`). Reevaluadas contra la regla de HOY, no
+borradas en bloque — y menos mal, porque el resultado es discriminante: `Network Scanning` sobrevive
+**entera** (188/188, la reescritura solo la afinó), mientras `SSH Lateral Movement` (222) y
+`C2 Beaconing` (175) caen al completo. Lo que las disparaba eran **peticiones HTTP normales**:
+`GET / HTTP/1.1` casaba `host` dentro de la cabecera `Host:` y `192.168.` en su valor, así que una
+visita web se registraba a la vez como movimiento lateral por SSH y como baliza C2.
+**264 conservadas, 685 retiradas.** Para poder reevaluar hubo que cerrar otra segunda puerta: la
+vista Sigma la construía el consumer **inline**, con su propio diccionario. Extraída a
+`ingest_pipeline.sigma_view_from_payload()`, que acepta el payload como dict **o** como cadena —de la
+base sale de las dos formas y equivocarse deja la vista vacía, con lo que *todo* parecería evidencia
+falsa y se borraría de más.
+
+**OLA C — cobertura que faltaba** (`9e09eba`). Reglas **MODBUS** (verificadas en vivo con
+`attack_modbus.sh`: 7 lecturas → `medium`/Discovery, 3 escrituras → `critical`/Impact con riesgo 90),
+**SNMP/NTP** (verificación **sintética**: OpenCanary no está desplegado) y los literales inertes. El
+matiz de estos últimos importaba: en `command` la doble barra no puede casar, pero en `payload` **sí
+es correcta** (se compara contra el JSON serializado, donde `C:\Windows` es `C:\\Windows`) — un
+guardarraíl que no distinguiera habría roto literales que funcionaban.
+
+**OLA D — los motivos en español** (`f596ca4`). 41 textos. Se tradujo lo visible, **nunca** la clave
+`factor`: es identificador y el saneado del histórico agrupa por `f->>'factor'` en SQL.
+
+**OLA E — ciclo de vida de los breadcrumbs** (`7f5970a`). Tabla `breadcrumbs` que guarda el
+`decoy_hash` (nunca el marcador), listado y baja que retira su regla. Un detalle que los tests
+existentes destaparon: pedir el pool por `Depends` hacía que generar un breadcrumb **exigiera** base
+de datos, y antes funcionaba sin ella — eso era una regresión, así que el pool se toma de forma
+tolerante.
+
+Suite **1292 verde** (+52 sobre las 1240 del inicio de la tanda).
 
 #### Séptima tanda (27-ago-2026) — ✅ **HECHO**: una sola forma de nombrar cada táctica MITRE
 
@@ -428,26 +474,19 @@ atacante). `/detections/stats` sin duplicados; **cero tácticas con dos grafías
 **byte a byte idéntico** antes y después, que era la prueba de no romper nada al lado.
 Suite **1240 verde** (+61).
 
-- ⏳ **PENDIENTE nuevo (P2) — la táctica de las detecciones YARA sigue vacía** (356 filas). Ya llevan
-  técnica, pero derivar la táctica exige un mapeo técnica→táctica sobre las **89 variantes** de
-  formato del campo `mitre` de las reglas, o que las 41 reglas declaren su táctica. Otra tanda.
+- ✅ ~~**PENDIENTE (P2) — táctica de las detecciones YARA vacía**~~ **HECHO (27-ago, Ola A)**: de 356
+  a **cero**.
 
-- ⏳ **PENDIENTE nuevo (P3) — unificar los vocabularios de tácticas.** `report_model.tactic_order` e
-  `ioc_extractor._INTENT_MAP` mantienen sus propias listas; deberían salir de `mitre_taxonomy`. No se
-  tocó porque `tactic_order` fija el orden del SVG del informe VRA y cambiarlo sin verlo renderizado
-  es arriesgado.
+- ✅ ~~**PENDIENTE (P3) — unificar los vocabularios de tácticas**~~ **HECHO (27-ago, Ola A)**. De paso
+  se corrigieron dos diferencias del informe VRA con MITRE: le faltaba `Resource Development` y ponía
+  `Exfiltration` antes de `Command and Control`.
 
-- ⏳ **PENDIENTE nuevo (P2) — ciclo de vida de los breadcrumbs.** `breadcrumbs_router.py:94` registra
-  la regla del marcador, pero **los breadcrumbs no se guardan en ninguna tabla**: el marcador solo
-  vive en el `.yml`. Así que sus reglas no se pueden vincular a nada y el ciclo sigue abierto para
-  ellos (eran 140 de las 384 retiradas). Requiere tabla nueva + endpoint de borrado. Fuera de alcance
-  el 27-ago por decisión explícita.
+- ✅ ~~**PENDIENTE (P2) — ciclo de vida de los breadcrumbs**~~ **HECHO (27-ago, Ola E)**: tabla
+  `breadcrumbs` (guarda el `decoy_hash`, nunca el marcador), `GET /breadcrumbs` y
+  `DELETE /breadcrumbs/{id}` que retira su regla.
 
-- ⏳ **PENDIENTE nuevo (P2) — 921 detecciones de reglas que se reescribieron por estar rotas.**
-  `sshlateral003` (222), `netscan017` (188), `c2beacon016` (175), `t4r7-1005-http-scanner-detection` (168)
-  y `t4r7-0004-suspicious-ua-honeypot` (168) se generaron con la versión ANTERIOR de esas reglas. No son
-  fantasma (la regla existe) pero su evidencia es dudosa. Requiere mirar regla por regla; se dejó fuera
-  del saneado a propósito.
+- ✅ ~~**PENDIENTE (P2) — detecciones de reglas reescritas por rotas**~~ **HECHO (27-ago, Ola B)**:
+  reevaluadas una a una contra la regla de hoy. 264 conservadas, 685 retiradas.
 
 - ✅ ~~**PENDIENTE (P1) — la explicación del riesgo no llega a la consola**~~ **HECHO (27-ago)**, ver
   la sexta tanda más abajo.
@@ -526,9 +565,10 @@ Suite **1240 verde** (+61).
   `ok` en segundos. Sobrevive a reinicios de la Mac. Para desactivarlo:
   `launchctl bootout gui/$(id -u)/com.tartarus.beelzebub-watchdog`.
 
-- ⏳ **PENDIENTE menor de la Ola C**: `icmp_ping_sweep` sigue sin poder disparar por dos motivos ajenos a
-  la correlación — el ingest ICMP no ejecuta Sigma en absoluto, y la regla pide `'Echo request'` cuando
-  el comando real es `ICMP:echo_request_received`.
+- ✅ ~~**PENDIENTE menor de la Ola C**: `icmp_ping_sweep` no puede disparar~~ **ANOTACIÓN OBSOLETA**,
+  cerrada el 27-ago. Se resolvió el 26-ago (la regla acepta `echo_request` y el ingest ICMP ejecuta
+  `analyze()`) y nadie actualizó la nota. Confirmado en vivo: tres pings en menos de 30 s producen
+  **una sola** detección de barrido, con táctica `Discovery`.
 
 Plan aceptado en `~/.claude/plans/si-sigue-hazlo-a-refactored-rivest.md`. Decisiones: por olas · filtrar
 Sigma por aplicabilidad · alertar solo con interacción real.
@@ -637,9 +677,10 @@ Sigma por aplicabilidad · alertar solo con interacción real.
 
 
 
-- ⏳ **Nota pendiente (no es un borrado)**: de los 1389 eventos que quedan, ~983 están en 70-84 por el
-  *floor* de Sigma que estaba mal antes de la recalibración del 25-ago. Decidir si se recalculan, se
-  marcan como "pre-recalibración" o se asumen como históricos.
+- ✅ ~~**Nota pendiente**: ~983 eventos en 70-84 por el *floor* de Sigma mal calibrado~~ **HECHO
+  (26-ago)**. Al medirlo eran **1.284** los que había que tocar, no 983. Recalculados con
+  `scripts/rescore_legacy_events.py`; hoy no queda ni un evento cuyo riesgo no cuadre con sus
+  factores.
 
 - 📋 **Nuevos pendientes del audit (a valorar, no bloquean):** opencanary marca `canary_triggered=True` →
   alerta en CADA evento (revisar); canary web-bug (`canary_router.py`) dispara con previsualizadores de

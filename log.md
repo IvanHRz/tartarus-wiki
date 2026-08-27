@@ -760,3 +760,54 @@ después, que era justo la prueba de que no se rompió nada al lado. Suite en 12
 
 **Queda anotado:** la táctica de las detecciones del motor de firmas sigue en blanco. Ya tienen
 técnica, pero deducir la táctica exige un trabajo aparte sobre 89 formatos distintos. — fable
+
+## [2026-08-27] fix | Cerrar toda la deuda de la auditoría: cinco frentes de una tanda
+Las tandas de estos tres días fueron dejando cosas apuntadas «para otro momento»: detalles que se
+descartaban a propósito para no enturbiar la comprobación de lo que se estaba arreglando en ese
+instante. Eran seis. Se cierran todos.
+
+Al hacer inventario antes de empezar, **uno estaba ya resuelto**: la nota decía que el barrido de
+pings no podía detectarse, pero eso se arregló el día 26 y nadie actualizó el apunte. Comprobado en
+vivo: tres pings seguidos producen una sola alerta de barrido, como debe ser.
+
+**Los nombres de las tácticas.** El sistema clasifica cada detección según el catálogo MITRE, y 356
+no tenían clasificación ninguna. Se arreglaron todas. Por el camino aparecieron tres cosas del mismo
+tipo —el dato estaba, simplemente no se leía—: las reglas declaran su técnica con **tres nombres de
+campo distintos** y el código solo miraba uno; **33 reglas viven en subcarpetas** que ni el script ni
+*mi propia comprobación automática* estaban mirando (al corregir la comprobación, ella misma destapó
+doce técnicas que faltaban); y las detecciones antiguas no tenían de dónde deducir la clasificación…
+salvo que el dato seguía en el fichero de su regla, y el identificador de la detección dice cuál es.
+Se recuperaron de ahí en vez de darlas por perdidas.
+
+**La evidencia de las reglas que estaban rotas.** Cinco reglas se reescribieron el día 26 porque no
+detectaban lo que decían detectar. Sus detecciones anteriores seguían guardadas. En vez de borrarlas
+en bloque, se volvió a pasar **la regla de hoy** sobre el evento original: si sigue casando, la
+detección vale; si no, era falsa. Menos mal que se hizo así, porque el resultado no fue uniforme: una
+de las cinco se salvó **entera** (la reescritura solo la había afinado), mientras que otras dos
+cayeron al completo. ¿Qué las disparaba? **Peticiones web normales.** Un simple `GET /` contenía la
+palabra `host` dentro de una cabecera y una dirección `192.168.`, y con eso el sistema lo registraba
+a la vez como salto entre máquinas por SSH y como comunicación con un servidor de control. Una visita
+contaba como dos ataques. De 949 detecciones, 264 tenían fundamento y 685 no.
+
+**Cobertura que faltaba.** El sensor industrial llevaba desde julio emitiendo eventos que ninguna
+regla miraba: el riesgo se calculaba bien, pero no aparecía con nombre en el panel. Ahora hay dos
+reglas —leer el proceso es reconocimiento; **escribir** en él es intentar manipularlo, y eso es lo
+grave—, comprobadas con un ataque real contra el señuelo. También se cubrieron SNMP y NTP, aunque
+ahí la comprobación es simulada: ese señuelo no está desplegado en esta máquina y conviene decirlo.
+
+**Los textos, en español.** Desde que la consola explica por qué un evento puntúa lo que puntúa, esos
+textos los lee una persona — y venían en inglés. Cuarenta y uno traducidos. Se tradujo lo que se ve,
+nunca la etiqueta interna: esa se usa en las consultas a la base y traducirla las habría roto.
+
+**Y las migas de pan.** Eran el último hueco: se generaban, se registraba su regla de vigilancia y no
+se guardaban en ninguna parte, así que no se podían ni listar ni retirar. De las 384 reglas
+huérfanas que hubo que purgar el día anterior, 140 eran justamente eso. Ahora tienen su ficha, se
+listan y al borrarlas se llevan su regla. Comprobado el ciclo entero.
+
+**Un detalle que las pruebas existentes cazaron y agradezco:** al pedir la conexión a la base para
+guardar la ficha, generar una miga pasaba a **exigir** base de datos, y antes funcionaba sin ella.
+Eso era empeorar, no mejorar. Se dejó tolerante: si no hay base, el artefacto se entrega igual.
+
+Suite en 1292 pruebas verdes. En el roadmap ya no queda deuda de esta auditoría; lo que sigue
+apuntado son las épicas de producto (despliegue, notificaciones, cifrado del canal), que son otra
+cosa. — fable
