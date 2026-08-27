@@ -9,7 +9,8 @@ commit_ref: PR#12 (rama feature/tier0-deployment-readiness)
 
 Estados: `idea` → `decidido` (ADR) → `en curso` (issue) → `hecho` (release) → `descartado` (con razón).
 **Nada se borra.** Estimados: **S ≈ 1 día · M ≈ 2–3 días · L ≈ 1 semana**. El plan operativo detallado
-vive en `.agents/ROADMAP.md` (repo de código).
+vive en `.agents/ROADMAP.md` (repo de código, no versionado); su copia de respaldo está en
+[roadmap-operativo.md](roadmap-operativo.md) y se actualiza al cerrar cada sesión.
 
 ## Hecho — MSSP / multi-tenancy (v0.5.0 → v0.6.2, PR #8)
 

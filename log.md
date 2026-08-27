@@ -550,3 +550,54 @@ que recibe. Al ponerlas en marcha ya destaparon siete casos más.
 **Comprobado de punta a punta:** dos pings no disparan nada; el tercero genera **una sola** alerta de
 barrido; el cuarto no duplica. OpenCanary y los sensores de campo ya generan detecciones (antes, ninguna).
 Suite en 1102 pruebas verdes. Sin commitear aún. — fable
+
+## [2026-08-26] fix | Sanear la base: puntuaciones que nadie podía explicar y alertas de reglas que ya no existen
+Las tandas anteriores arreglaron la entrada de eventos **de aquí en adelante**. Lo que seguía sin tocar era
+lo ya guardado, y al medirlo resultó bastante peor de lo anotado.
+
+**Lo que se encontró.** De los 1.395 eventos de la base, **1.273 (el 91 %) tenían una puntuación de riesgo
+mayor de lo que sus propios motivos justificaban**. El caso típico: un evento marcado con 80 puntos cuyos
+dos motivos apuntados sumaban 50. Los 30 restantes no salían de ningún sitio — eran el rastro de las cuatro
+reglas circulares que se retiraron el día 25 y que subían el riesgo de casi todo sin dejar constancia. Y no
+se quedaba en el rango "alto": llegaba a 85, o sea que había eventos pintados como críticos sin motivo.
+
+Además apareció una segunda mitad que nadie había contado: **5.076 de las 6.681 alertas guardadas (el 76 %)
+pertenecían a esas cuatro reglas retiradas**. El motor ya ni las carga, pero sus registros seguían ahí
+copando el panel de detecciones, el mapa de técnicas de ataque y la narrativa. La consola seguía mintiendo
+sobre el pasado aunque la entrada de datos ya fuera correcta.
+
+**Cómo se arregló, sin inventar nada.** No se volvieron a analizar los eventos viejos: aquellos se
+guardaron antes de que el sistema recogiera ciertos datos de las peticiones web, así que volver a pasarles
+las reglas de hoy habría comparado peras con manzanas. En su lugar se aplicó la regla que usa el sistema
+ahora mismo, pero **usando solo las pruebas que ya estaban guardadas**: el riesgo de cada evento pasa a ser
+la suma de sus propios motivos, o el mínimo que impongan sus alertas supervivientes si es mayor. Todo con
+respaldo previo de la base y en una sola operación reversible.
+
+**Dos cosas que el plan no había previsto y se corrigieron sobre la marcha:**
+- **346 eventos tenían la puntuación correcta pero nada que la explicara.** Filtrar por "el número cambia"
+  los dejaba fuera: son los que el analizador de firmas sube a 85 sin apuntar el motivo. La comprobación
+  final habría dado 346 fallos en vez de cero.
+- **El analizador de firmas no respeta el nivel que declara la regla**: sube al máximo directamente.
+  Deducirlo del nivel guardado habría rebajado a 70 lo que el sistema pone en 85, en más de trescientos
+  registros.
+
+**Lo que queda para que no vuelva a pasar.** Treinta comprobaciones automáticas que fijan una sola frase:
+*la suma de los motivos de un evento es exactamente su puntuación de riesgo*. Si algo sube el riesgo sin
+apuntar por qué, fallan. Conviene contar que **esas comprobaciones nacieron vacías**: el sistema carga las
+reglas al arrancar, y en las pruebas eso no ocurre, así que pasaban sin comprobar nada en realidad. Se
+añadió lo que faltaba para cargarlas, más una comprobación que exige que estén cargadas y otra que exige
+que los casos de prueba sigan disparando de verdad. Se verificó rompiendo el sistema a propósito: fallan.
+
+**Un fallo distinto, encontrado al verificar.** El sistema nunca conseguía leer qué navegador o herramienta
+usaba el atacante. Lo buscaba en un sitio donde el honeypot escribe texto corrido en vez de una lista de
+datos, así que reventaba **en cada visita web** — y el error se descartaba sin dejar rastro. Lo grave no es
+el dato en sí: dentro de ese mismo bloque estaba **el envío de la alerta**, así que llevaba meses sin
+enviarse. Corregido, con diez comprobaciones nuevas, y el error ahora se registra bien visible. Comprobado
+en vivo: la huella de un escáner ya acumula puntuación donde antes no acumulaba nada.
+
+**Resultado comprobado contra la base y en vivo:** ningún evento descuadrado, ninguna alerta de regla
+retirada, ningún registro huérfano y ni un evento perdido. Las alertas pasan de 6.681 a 1.605. El reparto
+de gravedad deja de estar aplastado contra el techo: 830 medias, 197 altas, 368 críticas. Veinticuatro
+eventos **subieron** de riesgo; se revisaron uno a uno y todos son ataques reales que estaban
+infravalorados —cebos disparados, subida de webshell, inyección de comandos, robo de credenciales—.
+Suite en 1132 pruebas verdes. Sin commitear aún. — fable
