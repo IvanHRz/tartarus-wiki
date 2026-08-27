@@ -1832,3 +1832,54 @@ Cerrando Tier 1 + Tier 2 (los 8 P0): 100% MITRE detectable, 100% OWASP y primera
 Las pruebas de mutación hechas restaurando ficheros con `cp` quedaron **contaminadas por bytecode en
 caché**: el `.pyc` de la versión mutada sobrevivía a la restauración. Se repitieron todas limpiando
 `__pycache__`. Si se vuelve a mutar código para validar tests, limpiar el caché entre iteraciones.
+
+---
+
+## 27-ago-2026 (2ª tanda) — Regresión de CSS propia y duplicación entre pestañas
+
+### Regresión introducida por mí, y reparada
+
+El commit `6f7c394` (retirar la barra lateral) quitó **124 líneas y añadió 16**; solo ~40 eran de
+`.side-nav`. Con ellas se fueron reglas sin relación, y cada una rompió algo visible:
+
+| Borrada | Efecto |
+|---|---|
+| `.central-kpis`, `.ck-*` | KPIs del panel central como texto plano vertical («3Flocks», «5/6Sensores activos») |
+| `.flock-spark` | Sin altura fija, la gráfica de 24 h de cada cliente ocupaba media pantalla |
+| `.admin-section { display:none }`, `.as-modal`, `.admin-backdrop` | Auditoría, notificaciones y usuarios visibles en las 4 pestañas y dentro de todos los flocks → se leía como filtración entre clientes |
+| `.gear-menu`, `.gear-item` | El menú ⚙ que las abre como overlay |
+| `.flock-tag` | Etiqueta de cliente en el feed global |
+
+**Comprobación que lo impide repetirse** (`test_ui_navegacion.py`): recorre las clases que `main.js`
+manipula vía `classList.add/toggle/remove` y `querySelectorAll('.x')` y exige que existan en el CSS.
+Habría atrapado también el bug `.view-tabs` / `.view-nav`. Un segundo test obliga a podar la lista de
+excepciones si alguien les da estilo.
+
+**Pendiente heredado**: `.canary-field` y `.canary-report-save` no existen en el CSS **desde antes de
+esta tanda** (verificado en `6f7c394~1`). Están en la lista de excepciones conocidas. P3.
+
+### Una sola entrada por cosa (27 → 25 secciones)
+
+- **`sensorSection` retirada**: repetía la familia 📡 del hub de Despliegue, en la misma pestaña. Lo
+  único que tenía y el hub no —desglose activos/degradados/offline— se llevó al hub
+  (`_pintarContadorSensores`) junto con el subtítulo de umbrales de latido.
+- **Cebos y honey-creds movidos junto al hub**: se desplegaban desde Infraestructura y se
+  administraban en Trampas. Trampas queda con análisis y disfraz.
+- **`geoSection` absorbida** en `attackMapSection` como segundo modo. Salía siempre vacía (0 IPs
+  públicas) y parecía rota; ahora explica por qué no hay nada que situar, consultando
+  `/api/events/geo`, el mismo endpoint que ya usa `geomap.js`.
+
+### Discovered Hosts: lo propio, aparte
+
+`motivo_infraestructura_propia()` en `infra_filter.py`, **aparte de `is_infra_source()` y no en su
+lugar**: en la ingesta el gateway Docker no se ignora a propósito (un ataque NATeado llega con esa
+IP), pero la tabla `hosts` la llena el escáner y ahí el gateway es nuestro. Devuelve el motivo, no un
+booleano, para que la consola diga por qué agrupa. En vivo: 3 hallados, 2 propios, 254 sin señal.
+
+### Nota de método — dos falsos positivos propios
+
+1. **Bytecode en caché** (ya anotado en la tanda anterior): sigue vigente, limpiar `__pycache__` al
+   mutar código para validar tests.
+2. **La consulta de vigilancia del invariante usaba `f->>'weight'`; el campo es `points`.** Sumaba
+   cero y marcaba **1485 de 1485 eventos como descuadrados**. Con el nombre correcto: **0**. Antes de
+   dar por roto un invariante, comprobar el nombre del campo contra `jsonb_pretty(risk_factors)`.

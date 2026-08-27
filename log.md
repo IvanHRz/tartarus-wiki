@@ -985,3 +985,64 @@ usamos; para un honeypot no es un detalle menor, porque **lo delata**: cualquier
 reinicio sabe que la máquina es efímera. Queda anotado.
 
 Suite en 1368 pruebas verdes. — fable
+
+---
+
+## 27 de agosto de 2026 (tarde) — Lo que rompí al quitar la barra lateral
+
+Empiezo por lo importante: **dos de las cuatro cosas que reportaste las rompí yo**, y en el mismo
+sitio. Al retirar la barra lateral por la mañana, el cambio quitó ciento veinticuatro líneas de
+estilos y añadió dieciséis. Solo unas cuarenta eran de la barra. Las demás no tenían nada que ver, y
+cada una se llevó algo por delante:
+
+- La **tira de indicadores del panel central** perdió su formato y pasó a pintarse como texto corrido
+  en vertical: «3Flocks», «5/6Sensores activos». No era que estuviera mal implementada; era que se
+  quedó sin estilos.
+- La **gráfica de cada cliente** perdió su altura fija —treinta píxeles— y sin ese tope se expandió
+  hasta ocupar media pantalla.
+- Y la regla que mantenía **auditoría, notificaciones y usuarios** fuera de la vista, disponibles solo
+  desde el engranaje. Sin ella, esas tres salían en las cuatro pestañas y dentro de todos los
+  clientes. Eso es lo que viste en el cliente IR y lo que, con toda razón, te pareció una filtración.
+
+Es el mismo tipo de fallo que el de la semana pasada: un estilo que el programa aplica pero que ya no
+existe **no da error, simplemente no hace nada**. Por eso ahora hay una comprobación automática que
+recorre todos los estilos que el programa aplica y exige que existan. Habría atrapado este y el
+anterior.
+
+**Por qué se repetían secciones entre pestañas.** Tenías razón aunque el reparto no tuviera ningún
+bloque duplicado: lo que se repetía era el *contenido*. La sección «Remote Sensors» repetía la
+familia de sensores del panel de Despliegue, y estaba en la misma pestaña, justo al lado. Los cebos y
+las credenciales trampa se desplegaban desde Infraestructura pero se administraban en Trampas. Y
+había dos mapas de ataques en pestañas distintas.
+
+Ahora hay **una sola entrada por cosa**: se retiró la sección suelta de sensores llevándose al panel
+lo único que ella tenía y el panel no —saber de un vistazo cuántos están degradados o caídos, porque
+un «3» a secas no distingue tres sensores sanos de tres muertos—; los cebos y las credenciales pasan
+a estar junto al panel desde el que se despliegan; y los dos mapas son ahora uno con dos modos. El
+mapa de origen geográfico salía **siempre vacío** porque no hay ni una sola dirección pública en toda
+la base, así que parecía roto: ahora, cuando no hay nada que situar, lo dice.
+
+De veintisiete secciones a veinticinco. Las dos comprobaciones que vigilan que no se pierda ninguna
+hicieron su trabajo: fallaron en cuanto retiré las dos, y se actualizaron a conciencia.
+
+**Discovered Hosts.** Preguntabas qué aporta. Con el ruido del barrido ya filtrado quedaban cuatro
+equipos, y **dos eran TARTARUS**: el propio motor y la puerta de enlace de su red interna. Los otros
+dos son tu router y un Mac. Ni un solo atacante. Ya existía la pieza que sabe reconocer nuestras
+propias máquinas, pero solo se usaba al recibir ataques, nunca al listar equipos. Ahora lo nuestro se
+agrupa aparte, **diciendo por qué** —«es un contenedor de TARTARUS», «está en la red de Docker»— en
+vez de pedirte que te fíes. El contador pasa a decir tres cifras: hallados, propios y ocultos por
+falta de señal. En un cliente de verdad la sección sí sirve, para mapear su red y saber dónde plantar
+cebos; aquí solo se veía a sí misma.
+
+Un matiz que conviene decir: hay una regla que **a propósito** no ignora la puerta de enlace cuando
+llega un ataque, porque un atacante externo puede aparecer con esa dirección y descartarlo sería
+perder ataques reales. Para la lista de equipos la regla es la contraria. Son dos reglas distintas y
+se han dejado separadas justamente para no romper una arreglando la otra.
+
+**Y un susto que era mío.** La vigilancia automática marcó de golpe los mil cuatrocientos ochenta y
+cinco eventos como incoherentes en su puntuación de riesgo. No lo eran: mi consulta buscaba el campo
+del peso por un nombre equivocado, sumaba cero y por tanto todo le parecía mal. Con el nombre bueno:
+**cero incoherencias**. Queda anotado, porque un cuadro de mando que grita sin motivo es peor que uno
+que calla.
+
+Suite en 1387 pruebas verdes. — fable
