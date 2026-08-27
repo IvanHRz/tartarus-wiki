@@ -424,7 +424,9 @@ lo poco que se ve ya lo cubren tres reglas de `T1105`, que es donde MITRE lo cla
 describe lo que el atacante prepara en **su** infraestructura; un honeypot ve el ataque, no la
 preparación. Queda un test que deja la ausencia como decisión medida y se cae si cambia la cobertura.
 
-Suite **1320 verde**.
+**Ventana de observación cerrada (32 min, 16 muestras):** `password_hash=bcrypt` en las dieciséis —el
+rebuild aguanta—, cero avisos de degradación, cero descuadres, cero detecciones sin táctica y cero
+trazas. Suite **1320 verde**.
 
 #### Octava tanda (27-ago-2026) — ✅ **HECHO**: cerrar TODA la deuda de la auditoría (5 olas)
 
