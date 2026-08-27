@@ -380,6 +380,52 @@ intermitente es el comportamiento normal sin tráfico.
   textos traducidos. Se tradujo lo visible, nunca la clave `factor` (es identificador y el saneado
   agrupa por `f->>'factor'` en SQL).
 
+#### Novena tanda (27-ago-2026) — ✅ **HECHO**: endurecimiento (WebSocket, bcrypt, callback)
+
+Al inventariar lo que quedaba tras cerrar la deuda, **dos pendientes anotados como mejoras de UX o de
+despliegue resultaron ser agujeros de seguridad**.
+
+**1. `/ws/events` era una puerta abierta** (`4bc29b9`). Comprobado en vivo: una conexión **sin
+credenciales** recibía `source_ip`, protocolo, riesgo y los primeros 200 caracteres del `command` de
+los ataques a **cualquier** cliente. Tres cosas lo agravaban:
+- `broadcast_event` mandaba todo a todos, sin scope por flock, y el mensaje ni siquiera llevaba
+  `flock_id` — tampoco se podía filtrar en el navegador.
+- **Activar la autenticación no lo tapaba**: `session_auth_middleware` se registra con
+  `BaseHTTPMiddleware` y Starlette **no aplica ese middleware a conexiones WebSocket**. Habría
+  quedado abierto igual con `TARTARUS_SESSION_AUTH=true`.
+- Nginx enruta `/api/ws/` hacia él, así que era alcanzable desde fuera del contenedor.
+
+Y la UI **ya ni lo usaba**: el Attack Graph se consolidó en el Attack Map y `graph.js` es código
+muerto. Una puerta que no servía a nadie y filtraba datos entre clientes. Arreglado: registro
+`{conexión → flocks permitidos}`, autenticación **en el endpoint** (donde el middleware no llega) y
+cierre con 1008 antes de aceptar. El `flock_id` ya venía resuelto en el evento (`consumer.py:445`):
+el dato estaba, faltaba usarlo. **El guardarraíl importa más que el arreglo**: un test falla si
+aparece cualquier `@app.websocket` que no autentique — el error de fondo no fue olvidar este
+endpoint, fue creer que el middleware llegaba ahí.
+
+**2. Las contraseñas llevaban semanas en SHA-256** (`329c05f`). `bcrypt` estaba en
+`requirements.txt` y el código lo prefería, pero **la imagen no lo tenía**: el `pip install` manual de
+agosto se perdió al recrear el contenedor. La degradación a SHA-256 + sal es deliberada (no dejar a
+nadie fuera del login), pero era **silenciosa**: cero menciones en el log. Imagen reconstruida
+(bcrypt 5.0.0), aviso a WARNING si vuelve a faltar —diciendo qué hacer, no solo que algo va mal— y
+`password_hash` expuesto en `/health`, porque hasta ahora la única forma de saberlo era entrar al
+contenedor. Los hashes viejos siguen valiendo y se migran solos al siguiente login.
+
+**3. El callback de los cebos avisa de ir en claro.** `/canary-tokens/base-url` avisaba de
+`localhost` pero no del caso de HTTP a un host de la LAN. El aviso **no** dice «pon HTTPS»: dice la
+vía según el escenario y advierte de que un certificado **autofirmado rompería el beacon** (Word y
+los EDR rechazan la validación), que sería peor que HTTP. Va en su **propio campo**
+(`https_warning`): meterlo en `warning` —como se hizo primero— rompía un test existente y habría
+hecho que la consola pintara un aviso nuevo donde no lo esperaba.
+
+**4. `Resource Development`: no se escribió la regla, a propósito.** Es la única táctica de las 14 sin
+regla Sigma, pero lo medido dice que escribirla sería cobertura falsa: **cero eventos** con señal, y
+lo poco que se ve ya lo cubren tres reglas de `T1105`, que es donde MITRE lo clasifica. Esa táctica
+describe lo que el atacante prepara en **su** infraestructura; un honeypot ve el ataque, no la
+preparación. Queda un test que deja la ausencia como decisión medida y se cae si cambia la cobertura.
+
+Suite **1320 verde**.
+
 #### Octava tanda (27-ago-2026) — ✅ **HECHO**: cerrar TODA la deuda de la auditoría (5 olas)
 
 Los seis pendientes que fueron dejando las tandas del 25 al 27. Al inventariarlos, **uno estaba ya
@@ -702,15 +748,18 @@ Sigma por aplicabilidad · alertar solo con interacción real.
 - ✅ ~~[10-ago-2026 · P1] Notificaciones por cliente~~ **HECHO** (commit `abd47e2`). Queda solo el
   **selector de cliente en la UI de ajustes de notificación** (el backend ya acepta `?flock_id`) →
   P1 · esfuerzo S · fecha objetivo: siguiente iteración de UI.
-- [10-ago-2026 · P1 · esfuerzo S] **Push WebSocket scopeado por flock.** Hoy el feed en vivo es sondeo
-  (polling) acotado por flock; el WebSocket global existe pero no se usa scopeado. Origen: nota en la
-  sección "HECHO ago-09". Fecha objetivo: por planificar.
+- ✅ ~~[10-ago-2026 · P1] **Push WebSocket scopeado por flock**~~ **HECHO (27-ago)** — y no era una
+  mejora de UX, era una **fuga entre clientes**: `/ws/events` aceptaba conexiones SIN credenciales y
+  emitía TODOS los eventos a TODOS los clientes (IP de origen y comando incluidos). Comprobado en
+  vivo. Peor: activar la autenticación no lo habría tapado, porque `session_auth_middleware` se
+  registra con `BaseHTTPMiddleware` y **Starlette no lo aplica a WebSockets**. Ver la novena tanda.
 - ✅ ~~[10-ago-2026 · P2] Contraseñas con bcrypt~~ **HECHO** (commit `d25e562`). bcrypt opcional + rehash
   transparente; `bcrypt>=4.0.0` en requirements. Se activa del todo al **reconstruir la imagen del engine**
   (hoy instalado a mano en el contenedor para validar) → sub-tarea: rebuild en el próximo despliegue.
-- [10-ago-2026 (sesión autónoma) · P2 · esfuerzo S] **Reconstruir imagen del engine con `bcrypt`.** El
-  código ya lo usa si está; se instaló a mano en el contenedor para la sesión, pero el `pip install` se
-  pierde si se recrea el contenedor. Rebuild para dejarlo permanente. Fecha objetivo: próximo despliegue.
+- ✅ ~~[10-ago-2026 · P2] **Reconstruir imagen del engine con `bcrypt`**~~ **HECHO (27-ago)**. Y era
+  más urgente de lo que parecía: el `pip install` manual se había perdido, así que las contraseñas se
+  llevaban semanas hasheando con SHA-256 **sin que nada lo dijera**. Imagen reconstruida (bcrypt
+  5.0.0), aviso en el arranque si vuelve a faltar, y el algoritmo visible en `/health`.
 - [10-ago-2026 (sesión autónoma) · P2 · esfuerzo S] **Regla `sigma_lite` sin modificador `all`.** Se
   esquivó con bloques combinados en la condición (T1136). Si aparecen más reglas que necesiten "todos los
   términos presentes", conviene añadir soporte de `|all` al evaluador. Fecha objetivo: por planificar.

@@ -811,3 +811,58 @@ Eso era empeorar, no mejorar. Se dejó tolerante: si no hay base, el artefacto s
 Suite en 1292 pruebas verdes. En el roadmap ya no queda deuda de esta auditoría; lo que sigue
 apuntado son las épicas de producto (despliegue, notificaciones, cifrado del canal), que son otra
 cosa. — fable
+
+## [2026-08-27] fix | Dos «mejoras pendientes» que eran agujeros de seguridad
+Cerrada la deuda de la auditoría, tocaba mirar qué quedaba apuntado. Dos de esas notas estaban
+descritas como mejoras de comodidad o de despliegue, y al medirlas resultaron ser otra cosa.
+
+**El canal en vivo estaba abierto de par en par.** El sistema tiene un canal por el que empuja cada
+evento nuevo en tiempo real. Estaba anotado como «pendiente: acotarlo por cliente», sonando a mejora.
+La realidad, comprobada conectándome: **acepta conexiones sin ninguna credencial**, y a quien se
+conecta le manda **los eventos de todos los clientes** — la dirección desde la que atacan y el
+comando que ejecutan. En una plataforma donde cada cliente paga por ver lo suyo, eso es que el
+cliente A ve los ataques que recibe el cliente B.
+
+Tres cosas lo empeoraban. El mensaje ni siquiera decía a qué cliente pertenecía cada evento, así que
+tampoco podría filtrarse en el navegador. Activar el inicio de sesión **no lo habría tapado**: la
+protección de sesión está montada de una forma que, por cómo funciona la librería, no se aplica a
+este tipo de conexiones — estaba cubierta la web y no el canal en vivo. Y el servidor web lo publica
+hacia fuera, así que era alcanzable desde la red.
+
+Lo más llamativo: **la interfaz ya ni lo usaba**. La vista que lo consumía se retiró hace tiempo y su
+código quedó muerto. Era una puerta que no servía a nadie y filtraba datos entre clientes.
+
+Ahora cada conexión se identifica y queda anotada con los clientes que puede ver, y solo recibe esos.
+Sin credenciales válidas se cierra la conexión antes de aceptarla: nada de datos antes de saber quién
+está al otro lado. En el entorno de trabajo diario, donde el inicio de sesión está apagado, todo
+sigue funcionando igual que antes.
+
+**Y una comprobación que vale más que el arreglo:** ahora falla la batería de pruebas si alguien añade
+otro canal en vivo sin identificar a quien se conecta. El fallo de fondo no fue olvidar proteger éste,
+sino dar por hecho que la protección general llegaba hasta ahí. El siguiente nacería igual de abierto.
+
+**Las contraseñas llevaban semanas guardándose de forma más débil.** El sistema prefiere un método de
+cifrado lento y resistente a la fuerza bruta, y si no está disponible baja a uno más simple para no
+dejar a nadie fuera. Eso está bien pensado. Lo que no lo estaba es que **lo hacía sin decir nada**: la
+herramienta buena no estaba instalada en la imagen —una instalación manual de agosto se perdió al
+recrear el contenedor— y ni una línea del arranque lo mencionaba. Reconstruida la imagen, añadido un
+aviso bien visible si vuelve a faltar (diciendo qué hacer, no solo que algo va mal) y el método en uso
+ahora se ve desde fuera, sin entrar al contenedor. Las contraseñas antiguas siguen valiendo y se
+actualizan solas al siguiente inicio de sesión.
+
+**Un aviso más para los cebos.** Los documentos trampa «llaman a casa» al abrirse. El sistema ya
+avisaba si esa dirección era inalcanzable desde otra máquina; ahora avisa también cuando va sin
+cifrar por la red local: funciona, pero un antivirus corporativo puede bloquearlo y no captura
+aperturas fuera de la red del cliente. **El aviso no dice «pon cifrado y ya»**, y es importante: un
+certificado hecho en casa **rompería la trampa** —el procesador de textos lo rechazaría— y sería peor
+que dejarlo como está. Dice qué vía usar según el caso.
+
+**Y algo que decidí no hacer, con sus números.** Faltaba una regla para la única categoría de ataque
+sin cubrir del catálogo MITRE. Al medirla: **cero señales** de ese tipo en toda la base, y lo poco
+parecido que hay ya está clasificado donde el propio MITRE lo pone. Esa categoría describe lo que el
+atacante prepara en *su* infraestructura antes de atacar; una trampa ve el ataque, no la preparación.
+Escribir la regla habría sido aparentar cobertura que no existe — justo el problema que llevamos días
+corrigiendo. Queda una comprobación que deja constancia de que es una decisión medida y no un
+descuido.
+
+Suite en 1320 pruebas verdes. — fable
