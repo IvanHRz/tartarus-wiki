@@ -601,3 +601,46 @@ de gravedad deja de estar aplastado contra el techo: 830 medias, 197 altas, 368 
 eventos **subieron** de riesgo; se revisaron uno a uno y todos son ataques reales que estaban
 infravalorados —cebos disparados, subida de webshell, inyección de comandos, robo de credenciales—.
 Suite en 1132 pruebas verdes. Sin commitear aún. — fable
+
+## [2026-08-27] fix | Las trampas dejaban su rastro para siempre: cerrar el ciclo de vida de los cebos
+Esta salió de tirar de un hilo equivocado. Al revisar por qué el sistema tenía un 87 % de reglas
+marcadas como "críticas" resultó que la alarma era falsa —y que detrás había un problema real, pero
+distinto—.
+
+**Cómo funcionan los cebos.** Cuando se planta una trampa (una credencial falsa, un fichero señuelo),
+el sistema escribe una regla que vigila ese secreto concreto: si alguna vez reaparece en un ataque,
+significa que alguien se lo llevó y lo está usando. Es de lo más valioso que tiene la plataforma,
+porque un acierto ahí no admite duda.
+
+**El problema.** Esa regla se creaba al plantar la trampa y **no se borraba nunca**. El módulo tenía
+la función de registrar y ninguna de retirar. Al eliminar una trampa desde la consola desaparecía su
+ficha, pero la regla se quedaba en el disco. Resultado medido: **382 reglas frente a 20 trampas
+vivas**, acumuladas desde el 14 de julio. Ninguna había disparado jamás, y 140 eran el mismo señuelo
+de pruebas repetido.
+
+No es solo desorden. Cada regla se revisa contra cada cosa que entra, así que el sistema gastaba
+trabajo en vigilar trampas que ya no existen. Y peor: si el secreto de una trampa retirada reaparece,
+salta una alerta **crítica** de algo que ya no está puesto. Una falsa alarma de manual, justo lo que
+estas semanas llevamos corrigiendo.
+
+**Por qué nadie lo había limpiado.** No se podía. La regla se escribía con el secreto, pero en la
+ficha de la trampa se guardaba **otro valor distinto**: el secreto no se apuntaba en ningún sitio. No
+existía forma de saber qué regla pertenecía a qué trampa. La única excepción eran las credenciales
+falsas, que sí guardan su contraseña — de ahí salía la única regla que se pudo emparejar.
+
+**Lo que se hizo.** Primero crear el vínculo que faltaba: al plantar una trampa se apunta en su ficha
+una huella del secreto (**la huella, nunca el secreto**: sirve para encontrar la regla y no convierte
+la base en un almacén de contraseñas). Con eso, borrar la trampa ya retira su regla, en las tres vías
+por las que se puede borrar. Después, un script limpió lo acumulado: **384 reglas retiradas, 1
+conservada**, con copia de seguridad comprimida antes de tocar nada — porque si mañana aparece una
+trampa desplegada que no consta, se puede deshacer.
+
+**Comprobado en vivo, de punta a punta:** plantar una credencial falsa crea su regla y deja la huella
+en la ficha; borrarla contesta "1 regla retirada" y el fichero desaparece. El sistema pasa de vigilar
+465 reglas a 84, y el reparto de gravedad por fin es razonable: 16 medias, 43 altas, 25 críticas
+(antes las críticas eran el 87 %). La entrada de eventos sigue funcionando igual y cada puntuación
+sigue cuadrando con sus motivos. Suite en 1146 pruebas verdes.
+
+**Queda anotado:** los señuelos de tipo "migaja de pan" no se guardan en ninguna tabla, así que sus
+reglas siguen sin poder emparejarse con nada. Cerrar también ese ciclo necesita una tabla nueva y se
+dejó para otra tanda. — fable

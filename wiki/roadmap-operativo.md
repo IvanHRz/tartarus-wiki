@@ -1,7 +1,7 @@
 ---
 tipo: roadmap
 creado: 2026-08-26
-actualizado: 2026-08-26
+actualizado: 2026-08-27
 origen: .agents/ROADMAP.md (repo de código, no versionado)
 tags: [roadmap, respaldo]
 ---
@@ -244,17 +244,81 @@ Nikto acumula 20 puntos en Redis donde antes no se acumulaba nada.
 
 Suite **1132 verde** (+30).
 
-- ⏳ **PENDIENTE nuevo (P1) — el corpus está sesgado a `critical`.** De las **450** reglas que el motor
-  carga de verdad (de 764 ficheros: omite 304 por esquema y 7 deprecadas), **391 son `critical` (87 %)**,
-  43 `high` y 16 `medium`. Con esa distribución casi cualquier acierto empuja el riesgo a 85. Es la misma
-  familia de problemas que la auditoría de FP, un nivel más arriba. Medido el 26-ago; NO se tocó en esta
-  tanda para no contaminar la verificación del saneado.
+- ❌ ~~**PENDIENTE (P1) — el corpus está sesgado a `critical`** (391 de 450, 87 %)~~ **ANOTACIÓN
+  ERRÓNEA, corregida el 27-ago.** La cifra era correcta y **la conclusión era falsa**. Aquellas
+  `critical` eran en su inmensa mayoría reglas `decoy_reuse_*` **autogeneradas, una por cada cebo
+  plantado** — y que el reuso de un cebo sea `critical` es lo correcto (`falsepositives: near-zero`).
+  No inflaban nada: de las 465 reglas cargadas solo **34 habían disparado alguna vez**, y las que
+  disparan son 36 `high`, 5 `medium` y 10 `critical`. El corpus de detección real eran ~83 reglas con
+  distribución sana. Se deja escrito para que nadie planifique trabajo sobre el diagnóstico malo.
+  Lo que sí había detrás era un problema distinto y real — la tanda que sigue.
+
+#### Quinta tanda (27-ago-2026) — ✅ **HECHO**: cerrar el ciclo de vida de las reglas de cebo
+
+Salió de investigar el falso "sesgo `critical`" de arriba. Detrás no había un problema de
+calibración: había una **acumulación silenciosa**, de la misma familia que todo lo demás de esta
+auditoría.
+
+Al plantar un cebo se escribe una regla `decoy_reuse_<hash>.yml` que dispara si ese secreto exacto
+reaparece en un evento. La idea es buena y la regla está bien escrita. Lo que faltaba era **la otra
+mitad**: `decoy_usage.py` tenía `register_decoy()` y **ninguna función de borrado** (cero `unlink`,
+cero `remove`), y `DELETE /canary-tokens` quitaba la fila dejando el `.yml` en disco para siempre.
+
+**Lo medido antes de tocar nada:** **382 reglas** en disco (desde el 14-jul) frente a **20 cebos
+vivos**; **1 sola** correspondía a un secreto vivo; **0** habían disparado jamás; y **140** eran el
+mismo marcador `breadcrumb:prod-backup` repetido (residuos de pruebas).
+
+**Por qué nadie podía limpiarlas, y no era descuido del análisis.** En `canary_router.py:819-826` la
+regla se escribe con `secret` pero en la fila se guarda un `token_value` **distinto**: el secreto
+nunca se persistía, así que **no existía ningún vínculo** entre una regla y su cebo. La única
+excepción era `honey_credentials`, que registra la misma `password` que guarda — de ahí salía la
+única regla vinculable del corpus.
+
+**1. El arreglo estructural** (el ciclo, cerrado):
+- `decoy_usage.unregister_decoy(decoy_hash)` + `retire_decoys(filas)` + `decoy_hash_for(secreto)`.
+  Reciben **el hash, no el secreto**: cuando toca borrar el secreto ya no está a mano, y así no se
+  pasean credenciales por una firma.
+- **El vínculo que nunca existió**: columna `decoy_hash VARCHAR(12)` en `canary_tokens` y
+  `honey_credentials` (`schema.py`, patrón `ADD COLUMN IF NOT EXISTS`). Se guarda el **hash**, jamás
+  el secreto — la tabla no debe volverse un almacén de claves.
+- Las **tres rutas de baja** leen el hash ANTES del `DELETE` (después la fila ya no está) y retiran
+  la regla después, recargando el corpus con `_reload_sigma_safe()`. Es best-effort —que falle un
+  borrado de fichero no puede deshacer un `DELETE` ya hecho— pero se registra a **WARNING con traza**,
+  no en un `debug` mudo.
+
+**2. Los residuos** (`scripts/reconcile_decoy_rules.py`, dry-run por defecto): respalda en
+`backups/decoy_rules_<fecha>.tar.gz` **antes** de borrar. Retiradas **384**, conservada **1**.
+También avisa del fallo contrario: un cebo vivo SIN regla en disco (su reuso no se detectaría).
+
+**3. Guardarraíles** (`test_decoy_lifecycle.py`, 14 tests): que `decoy_usage` exponga las dos
+mitades, que las rutas de baja llamen a `retire_decoys`, que el alta guarde el vínculo y que la
+migración exista. Más los casos feos: hash vacío/None/numérico no puede llevarse una regla por
+delante, y retirar dos veces el mismo cebo es un no-op, no un error.
+
+**Verificado en vivo:** plantar un `aws-keys` crea la regla y deja su `decoy_hash` en la fila;
+borrarlo devuelve `{"status":"deleted","decoy_rules_retired":1}` y el `.yml` desaparece. El corpus
+cargado pasa de **465 a 84** reglas, con distribución por fin sana: **16 medium / 43 high / 25
+critical** (30 %, frente al 87 % anterior). Ingesta sin regresión: `GET /.env` → 85 con factores que
+suman 85; invariante en 0. Suite **1146 verde** (+14).
+
+- ⏳ **PENDIENTE nuevo (P2) — ciclo de vida de los breadcrumbs.** `breadcrumbs_router.py:94` registra
+  la regla del marcador, pero **los breadcrumbs no se guardan en ninguna tabla**: el marcador solo
+  vive en el `.yml`. Así que sus reglas no se pueden vincular a nada y el ciclo sigue abierto para
+  ellos (eran 140 de las 384 retiradas). Requiere tabla nueva + endpoint de borrado. Fuera de alcance
+  el 27-ago por decisión explícita.
 
 - ⏳ **PENDIENTE nuevo (P2) — 921 detecciones de reglas que se reescribieron por estar rotas.**
   `sshlateral003` (222), `netscan017` (188), `c2beacon016` (175), `t4r7-1005-http-scanner-detection` (168)
   y `t4r7-0004-suspicious-ua-honeypot` (168) se generaron con la versión ANTERIOR de esas reglas. No son
   fantasma (la regla existe) pero su evidencia es dudosa. Requiere mirar regla por regla; se dejó fuera
   del saneado a propósito.
+
+- ⏳ **PENDIENTE nuevo (P1) — la explicación del riesgo no llega a la consola.** Todo el trabajo de esta
+  tanda garantiza que `risk_factors` justifica el número, pero **ningún endpoint lo devuelve**: `/events`
+  no lo incluye en su SELECT y la UI ni lo menciona (`grep risk_factors ui/src/js/` → 0). Es decir, el
+  motivo del riesgo existe en la base y es invisible para quien mira la pantalla — justo lo que hacía
+  falta el día que un `GET /` salía en 80 sin que nadie supiera por qué. Falta exponerlo en `/events`
+  (o en un `/events/{id}`) y pintarlo en el detalle del evento. Visto el 26-ago al verificar el saneado.
 
 - ⏳ **PENDIENTE nuevo (P3) — taxonomía MITRE inconsistente en `detections`.** Conviven
   `"TA0007 - Discovery"` y `"discovery"`, `"T1083 - File and Directory Discovery"` y `"T1087"` a secas,
