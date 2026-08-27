@@ -322,6 +322,58 @@ dueño y sin un solo disparo en toda la historia de la base), pero el respaldo e
 depender de eso. Corregido: el nombre lleva fecha **y hora**, y el script aborta antes que
 sobrescribir un respaldo existente.
 
+#### Sexta tanda (27-ago-2026) — ✅ **HECHO**: que el riesgo se explique donde alguien lo lee
+
+Culminación de las dos tandas anteriores. Se habían dedicado a que cada puntuación se pudiera
+explicar —invariante instalado, 0 eventos descuadrados— y **nada de eso llegaba a ninguna pantalla**:
+`/events` no devolvía `risk_factors` (no estaba en su SELECT), la UI ni lo mencionaba
+(`grep risk_factors ui/src/js/` → 0) y el correo decía `⚠️ Riesgo: 85/100` sin una palabra de por qué.
+El dato existía, era correcto y estaba a mano; se quedaba en la base.
+
+**1. Un solo sitio que entiende los factores.** `risk_factors` viaja en **dos formas**: lista de dicts
+desde `analyze()` y cadena JSON en cuanto el consumer la serializa (`consumer.py:449`) — que es como
+le llega al notificador. Cada consumidor lo parseaba a su manera, o no lo parseaba y se quedaba sin el
+dato sin que nada fallara. Ahora `risk_engine.parse_factors()` y `sum_factor_points()` lo resuelven en
+un punto, y `rescore.sum_factors()` **delega** ahí (tres copias de la misma suma es como acaban
+divergiendo).
+
+**2. La API entrega los motivos.** `risk_factors` en el SELECT y en la serialización de `/events`,
+parseado a lista. Coste medido: 573 bytes de media por evento (máx. 933), comparable al `payload` que
+la respuesta ya arrastraba (704).
+
+**3. El correo explica el número.** `notifier._risk_breakdown()` añade el desglose bajo la línea de
+riesgo en las **tres** ramas (cebo abierto, credencial señuelo, interacción). Dos cuidados que el dato
+real exigía: los factores de **0 puntos son notas, no motivos** (`recalibracion_historica`, en 1.284
+eventos — listarlo haría que la suma pareciera no cuadrar), y si los puntos **no** suman el
+`risk_score` se muestra el número a secas: un correo de alerta no es sitio para descubrir que el
+invariante se rompió.
+
+**4. La consola.** El panel `#eventDetail` ya existía y solo volcaba el payload; gana una sección
+"Por qué este riesgo" con los motivos, sus puntos y el total, más las notas aparte. Si la suma no
+cuadra se pinta en rojo (`why-total-mismatch`) en vez de disimularlo. Sin frameworks (regla C3): HTML
+y DOM sobre el panel existente.
+
+**5. El mismo riesgo, la misma severidad en todas las pantallas.** `events_router.py:417` tenía su
+**propia** `risk_to_severity` con umbrales 70/40 y **sin `critical`**: su máximo era "high". Alimenta
+las categorías del Attack Map, así que una categoría de riesgo medio 90 se pintaba "high" mientras el
+resto de la consola la llamaba "critical" — exactamente el defecto que la recalibración del 25-ago
+quiso eliminar (*"un 80 era high al guardarse pero CRITICAL en los tiles"*), sobrevivido en una
+función local. Sustituida por la de `session_scorer`. Un test existente
+(`test_graph_attack_map.py::test_risk_to_severity_thresholds`) **fijaba el comportamiento roto**
+(`risk_to_severity(85) == "high"`); se actualizó dejando escrito por qué cambió.
+
+**Verificado en vivo:** `/events` devuelve los 4 motivos de un `GET /.env` y suman exactamente su 85;
+el correo generado con un evento real de la base muestra el desglose cuadrando; el Attack Map ya
+produce `critical`, que era imposible antes; nginx sirve el HTML, JS y CSS con los cambios. Ingesta
+sin regresión, invariante en 0, cero trazas. Suite **1179 verde** (+31).
+
+- ⏳ **PENDIENTE nuevo (P3) — las descripciones de los factores están en inglés.** La consola es en
+  español pero los textos que ahora se muestran vienen de `risk_engine` en inglés ("Any access to
+  perimeter sensor infrastructure is unauthorized"), mientras los añadidos en agosto sí están en
+  español ("Regla Sigma critical eleva el riesgo a 85"). Se muestran tal cual porque son el dato real
+  y traducirlos toca ~20 textos y sus tests; mezclarlo con esta tanda habría enturbiado la
+  verificación.
+
 - ⏳ **PENDIENTE nuevo (P2) — ciclo de vida de los breadcrumbs.** `breadcrumbs_router.py:94` registra
   la regla del marcador, pero **los breadcrumbs no se guardan en ninguna tabla**: el marcador solo
   vive en el `.yml`. Así que sus reglas no se pueden vincular a nada y el ciclo sigue abierto para
@@ -334,12 +386,8 @@ sobrescribir un respaldo existente.
   fantasma (la regla existe) pero su evidencia es dudosa. Requiere mirar regla por regla; se dejó fuera
   del saneado a propósito.
 
-- ⏳ **PENDIENTE nuevo (P1) — la explicación del riesgo no llega a la consola.** Todo el trabajo de esta
-  tanda garantiza que `risk_factors` justifica el número, pero **ningún endpoint lo devuelve**: `/events`
-  no lo incluye en su SELECT y la UI ni lo menciona (`grep risk_factors ui/src/js/` → 0). Es decir, el
-  motivo del riesgo existe en la base y es invisible para quien mira la pantalla — justo lo que hacía
-  falta el día que un `GET /` salía en 80 sin que nadie supiera por qué. Falta exponerlo en `/events`
-  (o en un `/events/{id}`) y pintarlo en el detalle del evento. Visto el 26-ago al verificar el saneado.
+- ✅ ~~**PENDIENTE (P1) — la explicación del riesgo no llega a la consola**~~ **HECHO (27-ago)**, ver
+  la sexta tanda más abajo.
 
 - ⏳ **PENDIENTE nuevo (P3) — taxonomía MITRE inconsistente en `detections`.** Conviven
   `"TA0007 - Discovery"` y `"discovery"`, `"T1083 - File and Directory Discovery"` y `"T1087"` a secas,

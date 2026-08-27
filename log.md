@@ -662,3 +662,55 @@ script se niega a machacar una copia que ya exista.
 **Queda anotado:** los señuelos de tipo "migaja de pan" no se guardan en ninguna tabla, así que sus
 reglas siguen sin poder emparejarse con nada. Cerrar también ese ciclo necesita una tabla nueva y se
 dejó para otra tanda. — fable
+
+## [2026-08-27] feat | El riesgo ya se explica solo: por qué un evento puntúa lo que puntúa
+Las dos tandas anteriores se dedicaron a que cada puntuación de riesgo se pudiera justificar. Se
+limpió el histórico, se dejó la regla de que **los motivos de un evento suman exactamente su
+puntuación** y treinta comprobaciones automáticas vigilándola. Hoy no hay ni un solo evento en la base
+cuyo número no cuadre con sus motivos.
+
+**Y nada de eso llegaba a ninguna pantalla.** La consola enseñaba el número y, al pulsar una fila, un
+volcado técnico del mensaje original. El correo de alerta decía "Riesgo: 85/100" y punto. El dato
+existía, era correcto y estaba a mano —el propio correo ya lo recibía sin mirarlo— pero se quedaba
+guardado. Justo lo que hizo falta el día que un simple `GET /` empezó a salir en 80 y nadie supo
+decir por qué.
+
+**Lo que se hizo.**
+
+En la **consola**, el panel de detalle ya existía; ahora abre con una sección "Por qué este riesgo"
+que lista cada motivo con sus puntos y el total, que coincide con el número de la fila. Si alguna vez
+no coincidiera, se pinta en rojo en lugar de disimularlo: significaría que algo elevó la puntuación
+sin dejar constancia, que es el fallo original.
+
+En el **correo**, el desglose va justo debajo de la línea de riesgo, en los tres tipos de aviso (cebo
+abierto, credencial señuelo usada, interacción con el honeypot). Queda así:
+
+```
+⚠️ Riesgo:    85/100
+   · Acceso a sensor perimetral        +30
+   · Petición HTTP al honeypot         +20
+   · Ruta de explotación conocida      +25
+   · Escáner conocido detectado        +10
+```
+
+Dos detalles que el dato real obligó a cuidar. Uno: hay motivos que valen cero puntos —por ejemplo la
+marca de que un evento se recalibró en la limpieza del día 26, que está en 1.284 eventos—; son notas,
+no motivos, y van aparte, porque mezclarlos haría que la suma pareciera no cuadrar. Y dos: si los
+motivos no suman la puntuación guardada, el correo enseña el número a secas. Un aviso de madrugada no
+es el sitio para enterarse de que algo va mal por dentro.
+
+**De paso, una incoherencia vieja.** El mapa de ataques calculaba la gravedad **con otros umbrales**
+que el resto del sistema: su máximo era "alta" y nunca llegaba a "crítica". Así que una categoría con
+riesgo medio de 90 se pintaba como alta en esa pantalla y como crítica en todas las demás. Es
+exactamente el problema que la recalibración del día 25 quiso eliminar, escondido en una función
+suelta. Ya usa los mismos cortes que todo lo demás. Curiosamente, **una prueba automática daba por
+buena la versión rota**: afirmaba que 85 era "alta". Se corrigió dejando escrito por qué cambió.
+
+**Comprobado en vivo:** la interfaz devuelve los cuatro motivos de un `GET /.env` y suman su 85
+exacto; el correo generado con un evento real de la base muestra el desglose cuadrando; el mapa de
+ataques ya produce "crítica", que antes era imposible. La entrada de eventos sigue igual y no hay ni
+un evento descuadrado. Suite en 1179 pruebas verdes.
+
+**Queda anotado:** los textos de los motivos vienen en inglés del motor de riesgo, mientras la consola
+es en español. Se muestran tal cual porque son el dato real; traducirlos toca una veintena de textos
+y sus pruebas, y mezclarlo aquí habría enturbiado la comprobación. — fable
