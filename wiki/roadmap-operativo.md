@@ -1,26 +1,3 @@
----
-tipo: roadmap
-creado: 2026-08-26
-actualizado: 2026-08-27
-origen: .agents/ROADMAP.md (repo de código, no versionado)
-tags: [roadmap, respaldo]
----
-
-# Roadmap operativo — copia de respaldo
-
-> **Qué es esto.** Copia literal de `.agents/ROADMAP.md`, el plan operativo detallado que vive en el
-> repo de código. Ese directorio está en `.gitignore` por decisión del proyecto (`.agents/` puede
-> llevar notas internas), así que el original **existe solo en la máquina de trabajo**: si esa máquina
-> falla, se pierde. Esta copia lo respalda en el repo de la wiki, que sí está en GitHub.
->
-> **El original manda.** Se edita `.agents/ROADMAP.md` y se vuelca aquí al cerrar cada sesión; no al
-> revés. Si las dos versiones discrepan, la buena es la del repo de código.
->
-> El roadmap **ejecutivo** (visión de producto, estimaciones, estados) es otro documento y vive en
-> [roadmap.md](roadmap.md).
-
----
-
 # TARTARUS — ROADMAP DETALLADO DE IMPLEMENTACIÓN
 
 **Versión del documento:** 2.0
@@ -1802,3 +1779,56 @@ Cerrando Tier 1 + Tier 2 (los 8 P0): 100% MITRE detectable, 100% OWASP y primera
   - **TE-B3/B4**: LDAP/VNC + OpenCanary en stack raíz; realismo (IP-stack fingerprint, +personalities, AD-DC).
   - **TE-G**: modos VM/OVA + Tailscale (nube al final).
   - Merge del PR #12; loaaan aún sin aceptar invitación (su deploy RPi depende del fix de transporte).
+
+---
+
+## 27-ago-2026 — Separación entre flocks: lo que se cerró y lo que queda
+
+### Cerrado
+
+- **`honeypot_id` era inatribuible.** `consumer.py` leía `raw.get("HandlerName")`, campo que
+  Beelzebub **no emite** (0 de 1473 eventos). `Handler`, el que sí existe, trae `not_found` /
+  `configured_regex` (rutas de matching HTTP), no el honeypot. Ahora se deriva de `dest_port` vía
+  `sensor_registry` (cacheado en `_SENSORES_POR_PUERTO`, refrescado con las asignaciones).
+- **Atribución por sensor.** Cadena: regla del operador → sensor que escucha el puerto → flock por
+  defecto. Un cliente = su sensor en su puerto. Verificado con ataque SSH real.
+- **BUG: detecciones con `flock_id` NULL.** El COALESCE al Default vivía solo en el SQL del INSERT,
+  así que el **diccionario** seguía en None y las detecciones lo heredaban. Una detección NULL no
+  aparece en NINGÚN flock (el Default también filtra por su UUID). El backfill del arranque las
+  reparaba, así que el fallo **duraba solo el uptime del proceso** y no dejaba rastro. Resuelto en
+  Python (`_DEFAULT_FLOCK_ID`).
+- **Backfill histórico:** 1420 eventos rellenados desde `dest_port`. Respaldo previo en el
+  scratchpad. Quedan 22 sin sensor (Prometheus 2113 y Modbus 502, no registrados).
+- **`loaded_rules` global en respuesta por flock** (`detection_router.py`): las 87 reglas del motor
+  se pintaban como detecciones del cliente y encendían el panel como «Activo» con 0 componentes.
+  Añadido `reglas_del_motor_global`; la UI ya no las usa para el banner ni para la casilla.
+- **Ruido de `hosts`:** 254 de 259 filas eran un barrido /24 con `state_reason='reset'`, sin puertos,
+  sin MAC y sin hostname. `ORDER BY last_seen DESC LIMIT 50` las ponía primero. Ahora se ocultan por
+  defecto (`?incluir_sin_senal=true` para verlas), se ordena por señal, y se devuelve
+  `sin_senal_ocultos` para no truncar en silencio.
+- **UI:** honeypots etiquetados «compartidos»; el detalle del evento dice qué sensor lo capturó y de
+  qué cliente es.
+
+### Anotado — NO viable por configuración
+
+- **Clave de host de Beelzebub no persiste** (P2). Se regenera en cada reinicio → salta
+  `REMOTE HOST IDENTIFICATION HAS CHANGED`. Desbloqueo: `ssh-keygen -R "[localhost]:2222"`. No hay
+  opción de configuración en v3.9.0. **Delata el honeypot**: quien vuelva tras un reinicio sabe que
+  la máquina es efímera. Salidas posibles: volumen para las claves si una versión futura lo soporta,
+  o fork.
+- **Beelzebub sin estado de sesión** (`cd` no funciona). Ya documentado el 26-ago.
+
+### Pendiente
+
+- **62 de 91 endpoints GET no aceptan `flock_id`** (informe del 27-ago). Varias secciones que solo se
+  ven DENTRO de un flock se alimentan de ellos. Inventario en el informe; falta decidir cuáles deben
+  acotarse y cuáles son legítimamente globales (y por tanto deben rotularse como tal).
+- **Prometheus (2113) y Modbus (502) sin entrada en `sensor_registry`** → 22 eventos sin sensor.
+- Traducir los 1424 eventos históricos; gráfica de electrocardiograma; error de flock duplicado.
+- LLM del engine sin clave (`provider: template` en silencio) hasta que se cargue en *AI Settings*.
+
+### Nota de método
+
+Las pruebas de mutación hechas restaurando ficheros con `cp` quedaron **contaminadas por bytecode en
+caché**: el `.pyc` de la versión mutada sobrevivía a la restauración. Se repitieron todas limpiando
+`__pycache__`. Si se vuelve a mutar código para validar tests, limpiar el caché entre iteraciones.

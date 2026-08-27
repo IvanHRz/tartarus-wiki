@@ -913,3 +913,75 @@ pedirle que recordara el directorio **se retiró**: pedirle al modelo algo que n
 estorba. Queda anotado como limitación conocida, con las salidas posibles.
 
 Suite en 1348 pruebas verdes. — fable
+
+---
+
+## 27 de agosto de 2026 — La separación entre clientes, de verdad
+
+Volvieron las pestañas. La barra lateral duró poco: las tablas se le montaban encima porque tres
+secciones declaran su propio margen y, en CSS, una clase gana a un selector de elemento. El
+reordenado por momento de uso se conservó —eso no era el problema—, así que ahora hay cuatro
+pestañas sobre esos mismos cuatro grupos.
+
+**La duda de fondo era otra, y era la buena:** «en el flock de Iván no hay nada desplegado, pero
+aparecen canarios desplegados e incluso detecciones». Se midió contra la base: ese cliente tiene **un
+solo evento**, el disparo de su propio cebo, y dos detecciones de ese mismo evento. **No había
+filtración.** Lo que se colaba en su pantalla eran cosas de la plataforma pintadas como si fueran
+suyas: los honeypots de Beelzebub —una única instancia compartida por todos— y, sobre todo, un
+contador de las 87 reglas del motor que se colaba en una respuesta por cliente. La consola encendía
+el panel como «Activo» y ponía ese 87 en la casilla de detecciones de un cliente con cero sensores,
+cero cebos y cero credenciales. Arreglado: el aviso de «sin desplegar» ya no depende de un contador
+global, la casilla muestra las detecciones reales y los honeypots llevan la etiqueta
+**«compartidos»**.
+
+**«Si entro a Beelzebub, ¿a quién estoy atacando?»** La respuesta honesta era: a nadie en concreto.
+Todo el tráfico caía en el cliente por defecto, y no por decisión sino porque **no había ningún dato
+en el evento que permitiera decidir**. El programa que recibe los ataques leía un campo que el
+honeypot nunca ha enviado —cero de mil cuatrocientos setenta y tres eventos lo traían—, así que el
+identificador del honeypot quedaba vacío en mil cuatrocientos cuarenta y dos. El otro campo parecido
+tampoco servía: guarda rutas internas, no el honeypot.
+
+Lo que sí estaba, y en casi todos los eventos, era **el puerto atacado**. Y el registro de sensores ya
+sabía qué sensor escucha cada puerto y de qué cliente es, pero nadie lo consultaba. Ahora sí: puerto
+→ sensor → cliente. Con eso, **un cliente = su sensor en su puerto**, que es el modelo que se había
+elegido. Una regla escrita a mano por el operador sigue mandando por encima; el cliente por defecto
+queda como último recurso. Se comprobó con un ataque real por SSH: el evento llegó etiquetado con su
+sensor y su cliente. Los mil cuatrocientos veinte eventos anteriores se rellenaron a partir del
+puerto, con copia de seguridad previa.
+
+Y la consola ahora lo **dice**: al abrir un evento aparece quién lo capturó —qué sensor, en qué
+puerto— y de qué cliente es, en vez de tener que fiarse de una etiqueta.
+
+**Un fallo silencioso que se borraba solo.** Las detecciones nacían sin cliente asignado. La fila del
+evento sí lo tenía, porque se resolvía dentro de la propia orden a la base; pero lo que heredan las
+detecciones es el dato en memoria, y ahí quedaba vacío. Una detección sin cliente **no aparece en
+ningún cliente**, tampoco en el de por defecto. Lo peor: al reiniciar, una reparación automática las
+arreglaba, así que el fallo duraba justo lo que durase el proceso y no dejaba rastro. Se comprobó al
+revisarlo: las siete detecciones afectadas ya habían desaparecido tras dos reinicios. Ahora la caída
+al cliente por defecto se decide antes, donde sí la heredan las detecciones.
+
+**El ruido de direcciones IP.** De doscientas cincuenta y nueve filas, **doscientas cincuenta y
+cuatro** eran direcciones a las que el router contestó con un rechazo durante un barrido: sin puertos
+abiertos, sin identificador de tarjeta de red y sin nombre. Como la lista se ordenaba por fecha,
+copaban las cincuenta que caben en pantalla y los cuatro equipos útiles no salían nunca. Ahora se
+ocultan por defecto, la lista se ordena por señal antes que por novedad, y **se dice cuántas se
+esconden** con un interruptor para verlas: esconder doscientas cincuenta y cuatro filas sin avisar se
+lee como «la red solo tiene cinco equipos», que es otra mentira distinta.
+
+Aquí hubo un error propio que conviene anotar. El primer filtro incluía la huella de sistema
+operativo como señal válida, y **no escondió nada**: las doscientas cincuenta y ocho filas la tenían.
+Al mirarlas de cerca eran invento del escáner —cuatro direcciones seguidas etiquetadas como la misma
+impresora, sin un solo puerto abierto—. Sin puertos, esa huella no vale. Queda como prueba para que
+no vuelva.
+
+**Sobre las pruebas.** Un rato perdido persiguiendo un fallo que aparecía y desaparecía: era código
+compilado antiguo que quedaba en caché al restaurar los ficheros de respaldo. Las comprobaciones de
+calidad hechas antes de descubrirlo se repitieron todas desde cero.
+
+**Lo que no se pudo hacer.** La identidad del honeypot sigue cambiando en cada reinicio, y por eso
+salta el aviso de «la máquina ha cambiado» al conectarse por SSH. Para desbloquearse:
+`ssh-keygen -R "[localhost]:2222"`. No hay forma de fijarla por configuración en la versión que
+usamos; para un honeypot no es un detalle menor, porque **lo delata**: cualquiera que vuelva tras un
+reinicio sabe que la máquina es efímera. Queda anotado.
+
+Suite en 1368 pruebas verdes. — fable
