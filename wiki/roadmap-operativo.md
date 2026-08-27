@@ -308,6 +308,10 @@ entorno → dir por defecto, resuelto en cada llamada) más un fixture `autouse`
 plante un cebo queda cubierto sin que su autor sepa nada de esto. Comprobado: la suite entera deja el
 árbol igual que lo encontró.
 
+**Ventana de observación cerrada (32 min, 16 muestras):** reglas de cebo estables en 1, corpus en 84,
+`descuadrados=0` y `errores_2min=0` en las dieciséis. El `ingestion: stale` que aparece a ratos es el
+comportamiento normal sin tráfico, no una avería.
+
 **Verificado en vivo:** plantar un `aws-keys` crea la regla y deja su `decoy_hash` en la fila;
 borrarlo devuelve `{"status":"deleted","decoy_rules_retired":1}` y el `.yml` desaparece. El corpus
 cargado pasa de **465 a 84** reglas, con distribución por fin sana: **16 medium / 43 high / 25
@@ -366,6 +370,11 @@ función local. Sustituida por la de `session_scorer`. Un test existente
 el correo generado con un evento real de la base muestra el desglose cuadrando; el Attack Map ya
 produce `critical`, que era imposible antes; nginx sirve el HTML, JS y CSS con los cambios. Ingesta
 sin regresión, invariante en 0, cero trazas. Suite **1179 verde** (+31).
+
+**Ventana de observación cerrada (32 min, 16 muestras):** en las dieciséis, los eventos que devuelve
+`/events` traen motivos que suman su puntuación (`api=5ev/0mal`), `descuadrados=0`, `errores_2min=0` y
+las reglas de cebo estables en 1 — el guardarraíl de la tanda anterior aguanta. El `ingestion: stale`
+intermitente es el comportamiento normal sin tráfico.
 
 - ⏳ **PENDIENTE nuevo (P3) — las descripciones de los factores están en inglés.** La consola es en
   español pero los textos que ahora se muestran vienen de `risk_engine` en inglés ("Any access to
