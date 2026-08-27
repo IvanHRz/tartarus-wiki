@@ -866,3 +866,50 @@ corrigiendo. Queda una comprobación que deja constancia de que es una decisión
 descuido.
 
 Suite en 1320 pruebas verdes. — fable
+
+## [2026-08-27] fix | Primera revisión de la consola: tres fallos reales y tres malentendidos
+Iván revisó la interfaz con calma y mandó capturas. De lo que reportó, tres eran fallos de verdad y
+tres eran cosas que parecían fallos y no lo eran — conviene dejarlo escrito para no volver a
+investigarlo.
+
+**Los tres fallos.** El más molesto: al recargar en una pestaña aparecían secciones de otras, y al
+cambiar de pestaña y volver, desaparecían. La causa resultó ser **una regla de estilo que apuntaba a
+un nombre que no existe**: ocultaba unas pestañas llamadas de una forma cuando en la página se llaman
+de otra. Como no coincidía, la regla no hacía nada — y las pestañas se veían en una pantalla donde el
+diseño decía que no debían estar. Una regla que no encaja con nada no da error: simplemente no
+funciona, y el efecto se ve pero nada en el código lo señala.
+
+Los otros dos: al pulsar una dirección IP, su ficha se dibujaba **encima** del panel de detalle
+porque tenía prioridad de capa; y ese panel de detalle **sobrevivía al cambio de pestaña**, quedándose
+pegado abajo tapando lo que había debajo. Los dos, arreglados.
+
+**Lo que no eran fallos.** El flock de Iván tiene **un solo evento**: el disparo de uno de sus propios
+cebos — justo el arreglo del día anterior funcionando, **no hay fuga de datos**. El "ruido de
+direcciones IP" son **dos** direcciones, ambas de nuestras pruebas. Y el mapa de origen de ataques
+está vacío porque **no hay ninguna dirección pública que localizar**: una es de red interna y la otra
+pertenece a un rango reservado para documentación. Los textos en inglés que veía son los eventos
+antiguos, que guardaron el texto de antes de traducirlo.
+
+**Una sola pantalla.** Las tres pestañas repartían veintisiete secciones y obligaban a recordar qué
+había en cada una. Ahora está todo en una página, ordenado por el momento en que se usa: qué está
+pasando, analizar, infraestructura, trampas. Un índice lateral salta a cada bloque y marca dónde
+estás al desplazarte. El riesgo de mover veintisiete bloques es dejarse uno, así que hay una
+comprobación automática que verifica que están todos, sin duplicados.
+
+**Las personalidades del honeypot.** Ver cómo responde una persona costaba un ciclo entero: editarla,
+aplicarla, reiniciar el honeypot y conectarse a mano. Ahora hay una zona de pruebas dentro de la
+propia pantalla: escribes lo que teclearía el atacante y ves qué contestaría, **con el borrador que
+tienes a medias y sin aplicar nada**. La pantalla además explica qué hace bueno a un prompt y trae un
+ejemplo real. Un detalle importante: si no hay clave del modelo configurada, el sistema responde con
+un texto de reserva; la zona de pruebas **avisa de eso antes de enseñar la respuesta**, porque ajustar
+un disfraz mirando texto inventado es peor que no probar nada.
+
+**Y la primera sesión SSH real contra el honeypot.** Funcionó y quedó registrada. Destapó dos cosas:
+la sesión se cerraba a los dos minutos (era un límite total, no de inactividad) — subido a diez; y que
+**`cd` no cambia de directorio**. Esto último se investigó a fondo y **no tiene arreglo por
+configuración**: la versión del honeypot que usamos evalúa cada comando de forma aislada, sin recordar
+lo anterior. Se comprobó de dos formas distintas. La instrucción que se había añadido al disfraz para
+pedirle que recordara el directorio **se retiró**: pedirle al modelo algo que no puede cumplir solo
+estorba. Queda anotado como limitación conocida, con las salidas posibles.
+
+Suite en 1348 pruebas verdes. — fable

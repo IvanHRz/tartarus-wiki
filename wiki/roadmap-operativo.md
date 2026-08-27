@@ -380,6 +380,65 @@ intermitente es el comportamiento normal sin tráfico.
   textos traducidos. Se tradujo lo visible, nunca la clave `factor` (es identificador y el saneado
   agrupa por `f->>'factor'` en SQL).
 
+#### Décima tanda (27-ago-2026) — ✅ **HECHO**: revisión de la UI (3 bugs, personas, vista única)
+
+Primera revisión real de la consola por parte de Iván, con capturas. De sus hallazgos, **tres eran
+bugs** y tres eran malentendidos que conviene dejar por escrito para no volver a investigarlos.
+
+**Los tres bugs** (`84b5a99`). El primero tenía una causa que no delataba nada: la regla que oculta
+los tabs en el panel central apuntaba a `.view-tabs` y **el contenedor real es `.view-nav`**, así que
+nunca casó. Los tabs se veían donde el diseño dice que no aplican, se podían pulsar, y al hacerlo
+ocultaban el feed que el central quiere visible; al recargar, `applyViewLevel()` lo restauraba. *Un
+selector que no casa con nada no falla: simplemente no hace nada.* Los otros dos: el popover de intel
+tenía más `z-index` que el panel de detalle (200 vs 100) y se montaban; y el panel de detalle
+—`position: fixed`— sobrevivía a la navegación tapando la vista nueva.
+
+**Lo que NO eran fallos, medido:** el flock de Iván tiene **1 evento**, el disparo de un cebo suyo —
+es el arreglo del 26-ago funcionando, **no hay fuga**. El "ruido de IPs" son **dos** direcciones,
+ambas de pruebas. El Attack Origin Map está vacío porque **no hay ninguna IP pública** que
+geolocalizar (una privada y otra de un rango de documentación). Y los motivos en inglés son los
+**1.424 eventos históricos**, que guardaron el texto de antes de traducir.
+
+**Personas** (`b0a610e`, `e0e6aba`). `POST /personalities/{id}/probe` prueba un prompt contra un
+comando **sin aplicar ni reiniciar Beelzebub** — antes ese bucle costaba un reinicio. El prompt va
+como *system* y el comando del atacante como entrada (al revés, el modelo obedecería al atacante). La
+pantalla pasa a explicar qué hace bueno a un prompt, traer un ejemplo real del catálogo y derivar el
+identificador del nombre. **Sin clave de LLM el cliente cae a plantilla en silencio**, así que la
+respuesta declara siempre `provider`/`is_real` y avisa: ajustar un prompt mirando texto inventado es
+peor que un error.
+
+**Vista única** (`1d6fbee`). Fuera las tres pestañas; las 27 secciones en una página por momento de
+uso (qué pasa → analizar → infraestructura → trampas) con índice lateral que marca dónde estás
+(`IntersectionObserver`, sin librerías). El margen va en `body > section` porque las secciones cuelgan
+directas de `body` y no hay contenedor; los modales son `div` y quedan fuera a propósito.
+
+**La sesión SSH, probada de verdad.** Funciona y queda registrada, pero destapó dos cosas:
+- `deadlineTimeoutSeconds` era **120 s en SSH y 60 en Telnet** (límite total, no de inactividad) →
+  subidos a **600**. Esos ficheros están en `.gitignore` (llevan la clave), así que **el cambio no se
+  commitea**: queda anotado aquí.
+- **`cd` no cambia de directorio, y no tiene arreglo por prompt.** Comprobado con dos pruebas:
+  `cd scripts` + `pwd` sigue en `/home/admin`, y `touch /tmp/x` + `ls /tmp` no ve el fichero.
+  **Beelzebub v3.9.0 evalúa cada comando de forma aislada, sin historial de sesión** — y su plugin
+  solo acepta `llmProvider`, `llmModel`, `openAISecretKey` y `prompt`, sin opción de memoria. La
+  instrucción de estado que se había añadido al prompt **se retiró**: pedirle al modelo algo que no
+  puede cumplir gasta tokens y le hace intentar controlar un indicador que pinta Beelzebub. Se dejó
+  solo lo viable por-comando.
+
+**Corrección**: el SSH es **Ubuntu 24.04 (`prod-web-01`)**; el Cisco es el **Telnet**. Se dijo al
+revés por leer la config del servicio equivocado.
+
+Suite **1348 verde**.
+
+- ⏳ **PENDIENTE nuevo (P2) — el honeypot LLM no mantiene estado de sesión.** Límite de Beelzebub
+  v3.9.0, no del prompt. Un atacante que haga `cd` y siga explorando nota que algo va mal. Salidas
+  posibles: actualizar Beelzebub si una versión posterior lo soporta, o mantener el estado fuera
+  (envolver el plugin). Medido el 27-ago con dos pruebas independientes.
+
+- ⏳ **PENDIENTE nuevo (P3) — quedan de la revisión de UI**: los tiles (cebos, alertas, sensores) no
+  dicen de qué flock son; la gráfica de electrocardiograma del flock aporta poco; el error de flock
+  duplicado funciona pero es seco; y el Attack Origin Map debería explicar por qué está vacío en vez
+  de quedarse mudo. Todos se ven mejor ahora que la vista está unificada.
+
 #### Novena tanda (27-ago-2026) — ✅ **HECHO**: endurecimiento (WebSocket, bcrypt, callback)
 
 Al inventariar lo que quedaba tras cerrar la deuda, **dos pendientes anotados como mejoras de UX o de
