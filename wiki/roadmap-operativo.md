@@ -1980,3 +1980,26 @@ comprobar que no asoma nada en los demás flocks, incluidos los 62/91 endpoints 
 ### Observación pendiente
 - **Telnet (:23) devolvió `TIMEOUT_CONNECT`** en la pasada de hoy: no aterrizó ningún evento. Sumar
   al frente de fiabilidad de Beelzebub (junto al canal AMQP colgado y la clave de host no persistida).
+
+---
+
+## 28-ago-2026 (3ª tanda) — Cero real de Beelzebub + botón de borrar flock
+
+### Cerrado
+- **Bug: `flock_assignments` huérfanas al borrar un flock.** `delete_flock` re-hospedaba el
+  inventario al Default pero dejaba las reglas apuntando a un flock inexistente (no hay FK). Ahora
+  el endpoint las BORRA en la misma transacción y recarga el caché del consumer
+  ([flocks_router.py:226](engine/engine/flocks_router.py#L226)). Test nuevo en `test_flocks.py`.
+  Verificado en vivo: creado un flock con regla → borrado por el endpoint → 0 huérfanas.
+  Limpiada además la huérfana que había dejado el borrado viejo de «Cliente Demo 01».
+- **Botón «🗑 Eliminar flock» en el banner del flock** ([main.js:1191](ui/src/js/main.js#L1191)):
+  borrado fácil desde dentro de cualquier pestaña, reusando `deleteFlock()`. Antes solo existía en
+  la tarjeta del panel central. `.btn-danger` añadido al CSS.
+- **Cero real del panel de Salud de honeypots**: el «322» era el contador Prometheus interno de
+  Beelzebub (desde su arranque). Reiniciado el contenedor → Fuente 0 / Persistido 0. Estado final:
+  1 flock (Default), 0 reglas, 0 datos, 7 sensores base.
+
+### Aclaración registrada (no es bug)
+- Los honeypots de Beelzebub se ven en la vista de cualquier flock porque son **infraestructura
+  COMPARTIDA** (rótulo ya presente: «LABORATORIO COMPARTIDO»). El único despliegue por-cliente es su
+  sensor asignado. La verdad para investigación es la BD (Persistido), no el contador de Beelzebub.

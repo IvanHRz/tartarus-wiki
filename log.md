@@ -1123,3 +1123,12 @@ Suite en 1387 pruebas verdes. — fable
 - Observación: Telnet (:23) devolvió `TIMEOUT_CONNECT` — no llegó ningún evento. Sumado al frente de fiabilidad de Beelzebub.
 - Siguiente: integración API de GPT (AI Settings, bug ya diagnosticado) y fiabilidad de Beelzebub.
 — claude
+
+## [2026-08-28] fix | Cero real de Beelzebub + botón para borrar flocks desde el banner
+- Motivo: Iván veía en Infraestructura «aún hay despliegue» (Salud de honeypots 322, DRAS «1 componente») pese a la base en 0. Aclaración: el 322 es el contador Prometheus interno de Beelzebub (desde su arranque), no la base; y los honeypots están rotulados COMPARTIDOS (infraestructura de plataforma, se ven en todo flock). La verdad es la BD (Persistido·BD 0).
+- Arreglo de fondo: al borrar un flock quedaban huérfanas sus reglas de asignación (`flock_assignments` no tiene FK a `flocks`), así que el consumer seguía atribuyendo tráfico a un flock muerto. `delete_flock` ahora las borra en la misma transacción y recarga el caché del consumer. Test nuevo en `test_flocks.py`. Suite: 1388 verdes.
+- Verificado en vivo: creado un flock con regla → borrado por el endpoint arreglado → 0 huérfanas. Limpiada la huérfana que había dejado el borrado previo de «Cliente Demo 01» (ese flock ya lo había borrado el botón viejo, dejando la regla colgando).
+- Botón «🗑 Eliminar flock» añadido al banner del flock (antes solo estaba en la tarjeta del panel central); reusa `deleteFlock()`. `.btn-danger` en el CSS. Se ve con Cmd+Shift+R.
+- Beelzebub reiniciado para poner a 0 el panel de Salud de honeypots. Estado final: 1 flock (Default), 0 reglas, 0 datos, 7 sensores base, embudo 0→0.
+- Pendiente para la siguiente tanda: integración API de GPT (LLM del engine «ninguno configurado») y fiabilidad de Beelzebub (Telnet no llegó, canal AMQP, clave de host).
+— claude
