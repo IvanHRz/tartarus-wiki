@@ -2031,3 +2031,24 @@ comprobar que no asoma nada en los demás flocks, incluidos los 62/91 endpoints 
   facturación). El fix del engine es correcto y hace la llamada real (el 401 lo demuestra), pero para
   ver el Test en verde hace falta **una clave válida nueva**. Esto también afecta al LLM del honeypot:
   con esa key en 401, sus respuestas LLM tampoco saldrían (revisar en la tanda de Beelzebub).
+
+---
+
+## 28-ago-2026 (5ª tanda) — AI Settings: «Test» guarda primero y el error no miente
+
+### Cerrado
+- **UX: «Test Connection» no guardaba la clave.** Test probaba solo el proveedor ya guardado, así que
+  «pego la clave → Test» daba `No AI provider configured` (medido: 3 POST /settings/ai/test y 0
+  POST /settings/ai). Ahora el front extrae `persistKeys()` (compartida) y **Test la llama antes de
+  probar** ([main.js](ui/src/js/main.js)). Save igual, con su sync de Beelzebub aparte.
+- **Honestidad del Test.** `analyze()` se traga los fallos (401, red) y cae a `template`; el endpoint
+  devolvía un `warning` vago. Ahora, si hay proveedor configurado pero la respuesta vino de template,
+  devuelve `error` claro: «El proveedor X está configurado pero la llamada falló (clave inválida, sin
+  saldo o sin acceso al modelo)» ([settings_router.py](engine/engine/settings_router.py)). El front lo
+  muestra tal cual, y distingue «Pega una API key primero» (sin clave) del 401.
+- Tests nuevos en `test_settings_ai.py` (proveedor-configurado-pero-falla → error; ok cuando responde).
+  Suite: 1395 verdes.
+
+### Recordatorio (del lado de Iván)
+- Sigue en pie que **las dos claves de OpenAI del repo dan 401**. Con este arreglo el Test ya lo dice
+  claro en vez de despistar. Para verlo en verde: una **API key válida de platform.openai.com**.

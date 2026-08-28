@@ -1143,3 +1143,10 @@ Suite en 1387 pruebas verdes. — fable
 - Verificado en vivo: clave configurada → `docker restart` del engine → sigue `available:true, persisted:true`. Antes se perdía.
 - **Hallazgo del lado de Iván (no es código):** las DOS claves de OpenAI del repo dan 401 (la de `Entrada/GPT.rtf`, 164 car., y la de los YAML del honeypot, 156 car., son distintas). OpenAI las rechaza. Para ver el Test en verde hace falta una clave válida nueva; esto también afectaría al LLM del honeypot. Dejé el fichero de runtime limpio (sin la clave muerta).
 — claude
+
+## [2026-08-28] fix | AI Settings: «Test» guarda la clave antes de probar, y el error deja de mentir
+- Motivo: Iván pegó la API key, pulsó Test y salió «No AI provider configured». Los logs del engine lo confirmaron: 3 POST /settings/ai/test y 0 POST /settings/ai — o sea, Test no guarda; solo prueba lo ya guardado. Footgun de UX.
+- Arreglo (front): `persistKeys()` compartida por Save y Test; Test la llama primero, así la clave recién pegada sí se prueba. Mensajes: «Pega una API key primero» si no hay clave; el error real si la hay.
+- Arreglo (backend): `analyze()` se traga el 401 y cae a template, así que el Test devolvía un «warning» vago. Ahora, si el proveedor está configurado pero la respuesta vino de template, el endpoint devuelve error claro de clave inválida/sin saldo. Tests nuevos; suite 1395 verdes.
+- Sigue pendiente del lado de Iván: una API key de OpenAI válida (las dos del repo dan 401). El Test ahora lo dice claro.
+— claude
