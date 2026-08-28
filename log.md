@@ -1150,3 +1150,11 @@ Suite en 1387 pruebas verdes. — fable
 - Arreglo (backend): `analyze()` se traga el 401 y cae a template, así que el Test devolvía un «warning» vago. Ahora, si el proveedor está configurado pero la respuesta vino de template, el endpoint devuelve error claro de clave inválida/sin saldo. Tests nuevos; suite 1395 verdes.
 - Sigue pendiente del lado de Iván: una API key de OpenAI válida (las dos del repo dan 401). El Test ahora lo dice claro.
 — claude
+
+## [2026-08-28] feat | Honeypot SSH: el estado de sesión SÍ funciona (cd persiste entre comandos)
+- Motivo: Iván probó `ssh -p 2222`, vio que `cd proyects` no daba error y `ls` siempre respondía igual, y concluyó que la herramienta «aún no funciona bien».
+- Diagnóstico: esas respuestas eran handlers ESTÁTICOS del YAML (no el LLM). El `^cd → ''` se tragaba cualquier cd; solo el catch-all `^(.+)$` va al LLM. Y la clave del honeypot seguía siendo la de 401 (no se había sincronizado la válida del engine).
+- Hallazgo que corrige el roadmap: «Beelzebub v3.9.0 no mantiene estado de sesión» era FALSO. Beelzebub sí pasa el historial al LLM; el problema eran los handlers estáticos. Verificado en vivo: enrutando `cd` y `pwd` al LLM, tras `cd projects` el `pwd` da `/home/admin/projects` y `cd ..` vuelve — el directorio PERSISTE.
+- Hecho: (1) sincronizada la clave válida a SSH y Telnet (`/services/{file}/llm`); (2) quitado el `^cd → ''` estático → cd al LLM (ahora `cd inexistente` da error real); (3) `pwd` al LLM (estado) + prompt mejorado con la lista de directorios existentes; (4) `ls` se deja estático (el LLM lo hacía mal). El prompt mejorado se versionó en `services.example/ssh-22.yaml` (sin clave); el `services/` real está gitignoreado.
+- Límites honestos: el LLM es ~90% consistente (alguna vez erra un cd a un dir real, o mete un espacio); `ls` no refleja el CWD (estático); la clave de host SSH sigue sin persistir (aplazado). Suite 1395 verde.
+— claude

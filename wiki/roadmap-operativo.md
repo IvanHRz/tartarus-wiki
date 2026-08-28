@@ -2052,3 +2052,36 @@ comprobar que no asoma nada en los demás flocks, incluidos los 62/91 endpoints 
 ### Recordatorio (del lado de Iván)
 - Sigue en pie que **las dos claves de OpenAI del repo dan 401**. Con este arreglo el Test ya lo dice
   claro en vez de despistar. Para verlo en verde: una **API key válida de platform.openai.com**.
+
+---
+
+## 28-ago-2026 (6ª tanda) — Honeypot SSH: estado de sesión SÍ funciona (se creía imposible)
+
+### Hallazgo que corrige el roadmap
+- **«Beelzebub v3.9.0 no mantiene estado de sesión (cd no funciona)» era FALSO.** El problema no era
+  el motor: eran los **handlers estáticos** del YAML (`^cd → ''`, `^pwd$ → /home/admin`) que
+  interceptaban antes del LLM. Beelzebub v3.9.0 **sí pasa el historial de la sesión al LLM**.
+  Verificado en vivo: enrutando `cd` y `pwd` al LLM, tras `cd projects` el `pwd` da
+  `/home/admin/projects`, y `cd ..` vuelve — **el directorio persiste entre comandos**.
+
+### Cerrado
+- **Clave válida sincronizada al honeypot** (SSH y Telnet) desde el engine, vía `/services/{file}/llm`.
+  `GET /services` → `backed:true`. El catch-all LLM ya responde de verdad (antes daba 401).
+- **`cd` ya no delata el honeypot**: quitado el `^cd → ''` estático → `cd` cae al LLM. `cd projects` →
+  silencio; `cd carpeta_inexistente` → `bash: cd: …: No such file or directory`. Antes se tragaba todo.
+- **`pwd` al LLM** (estado) + **prompt mejorado** con la lista de directorios que existen y la
+  instrucción de mantener el directorio actual. `ls` se deja ESTÁTICO (el LLM lo maneja mal:
+  respondía «ls: No such file or directory»).
+- Cambios en `services/ssh-22.yaml` (gitignoreado por la clave). El **prompt mejorado** se versionó en
+  `services.example/ssh-22.yaml` (sin clave). Telnet ya era pura-LLM: con la clave válida, su estado
+  también funciona.
+
+### Límites honestos que quedan
+- El LLM es **~90% consistente**, no 100%: alguna vez erra un `cd` a un dir real (p.ej. `/var/log`) o
+  mete un espacio de más. Es la naturaleza del modelo, no configurable a 100%.
+- **`ls` no refleja el directorio actual** (es estático): tras `cd projects`, `ls` sigue mostrando el
+  home. Aceptado como compromiso (el LLM hacía `ls` peor).
+- **Clave de host SSH** sigue sin persistir (Iván lo aplazó): al reiniciar Beelzebub, el próximo login
+  pide aceptar huella.
+- **Deuda de versionado (preexistente):** la config rica del SSH (comandos estáticos) vive solo en el
+  `services/` local gitignoreado, no en el repo. Pendiente: versionar una plantilla keyless completa.
