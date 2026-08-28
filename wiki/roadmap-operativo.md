@@ -1947,3 +1947,36 @@ Ejecutado. Entregables:
 
 **Sigue pendiente (objetivo real):** la verificación de aislamiento a fondo — atacar cada sensor y
 comprobar que no asoma nada en los demás flocks, incluidos los 62/91 endpoints GET sin `flock_id`.
+
+---
+
+## 28-ago-2026 (2ª tanda) — Radar de UX y reinicio de fábrica
+
+### Cerrado hoy
+- **Reinicio de fábrica** (`scripts/reinicio_de_fabrica.sh`): deja la plataforma como instalación
+  nueva (solo Default + flota base de 6 sensores, 0 datos, 0 reglas). Hermano de `puesta_a_cero.sh`
+  (que conserva inventario). Respaldo verificado + verificación de estado.
+- **Onboarding de un cliente por el flujo real**: `POST /flocks` → `POST /flocks/{id}/assignments`
+  (Modbus :502) → `POST /deploy/execute` (cebo) → `POST /flocks/{id}/tokens/{id}`. Verificado el
+  aislamiento en vivo (registro en `wiki/registro-pruebas.md`): el cliente recibió solo sus 10
+  eventos Modbus, 0 fugas; el resto de protocolos cayó en Default.
+
+### Radar de UX — pendiente (feedback de Iván, 28-ago)
+
+- **[P1] Timeline: color por severidad/riesgo por defecto.** Hoy manda el color por protocolo
+  (`PROTO_COLORS`, `ui/src/js/timeline.js:15`), lo que engaña: SSH pintado de rojo parece crítico y
+  una alerta real en verde/azul se ignora. El modo por severidad **ya existe** pero está tras un
+  botón (`SEV_COLORS` + `_sevStack`, `timeline.js:31-42`). Trabajo: invertir el defecto para que el
+  color exprese severidad/riesgo (lo crítico resalta sea cual sea el protocolo); el protocolo pasa a
+  codificación secundaria/toggle. Esfuerzo S/M.
+- **[P1] Timeline: interactividad de drill-down.** El tooltip actual es agregado por bucket
+  (`timeline.js:196-262`). Al señalar/clicar la barra de un protocolo, desglosar **esa interacción
+  concreta** (evento(s), IP de origen, comando, detección asociada), no solo el resumen del
+  intervalo. Esfuerzo M.
+- **[P1/P2] Estética de la consola.** Feedback externo: se ve arcaica / diseño demasiado estándar.
+  Rediseño del sistema visual (tipografía, escala de espaciado, paleta, componentes, densidad).
+  Esfuerzo L/XL — planear en su propia tanda; no tocar `_masterPoll()` ni romper el bind mount.
+
+### Observación pendiente
+- **Telnet (:23) devolvió `TIMEOUT_CONNECT`** en la pasada de hoy: no aterrizó ningún evento. Sumar
+  al frente de fiabilidad de Beelzebub (junto al canal AMQP colgado y la clave de host no persistida).

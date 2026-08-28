@@ -1112,3 +1112,14 @@ Suite en 1387 pruebas verdes. — fable
 - **Hallazgo metodológico:** contar eventos/detecciones por flock con dos `LEFT JOIN` encadenados da un producto cartesiano (vi «100/100» donde había 10). Para conteos por flock, subconsultas correlacionadas.
 - Estado final: plataforma en 0, 8 sensores en `sensor_registry`, lista para la verificación de aislamiento real.
 — claude
+
+## [2026-08-28] tooling | Reinicio de fábrica + onboarding de un cliente desde cero
+- Motivo: Iván quería la plataforma LITERAL de 0 (no solo datos: también los flocks de cliente y la flota de sensores) para recorrer el despliegue de un usuario nuevo y llevar seguimiento fino.
+- Aclaración de fondo: los sensores de `sensor_registry` no son datos sobrantes; reflejan los contenedores de honeypot que corren de verdad. El engine re-siembra la flota base (5 Beelzebub + icmp) al arrancar si la tabla está vacía (`bootstrap_known_sensors`). Son infraestructura de plataforma, no de un cliente.
+- Script nuevo: `scripts/reinicio_de_fabrica.sh` — deja estado de instalación nueva (solo Default + 6 sensores base, 0 datos, 0 reglas). Hermano de `puesta_a_cero.sh` (que conserva inventario). Respaldo `backups/db/tartarus_pre_fabrica_20260828_1552.sql.gz`.
+- Onboarding de «Cliente Demo 01» por el flujo real del producto (API abierta en dev): crear flock → asignar el honeypot Modbus (:502) por regla `honeypot_id` → desplegar y asignar un cebo AWS.
+- Aislamiento verificado en vivo (en `wiki/registro-pruebas.md`): el cliente recibió solo sus 10 eventos Modbus (0 fugas); SSH/TCP/HTTP/Prometheus cayeron todos en Default. Prometheus (2113), antes «sin sensor», ya atribuye.
+- Al roadmap (radar de UX, feedback de Iván): color de timeline por severidad/riesgo por defecto (el mecanismo ya existe, `timeline.js:15-42`, pero el defecto es por protocolo y engaña); drill-down por interacción en la timeline (hoy el tooltip es por bucket); rediseño estético de la consola (se ve arcaica).
+- Observación: Telnet (:23) devolvió `TIMEOUT_CONNECT` — no llegó ningún evento. Sumado al frente de fiabilidad de Beelzebub.
+- Siguiente: integración API de GPT (AI Settings, bug ya diagnosticado) y fiabilidad de Beelzebub.
+— claude
