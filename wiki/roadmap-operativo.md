@@ -1823,7 +1823,7 @@ Cerrando Tier 1 + Tier 2 (los 8 P0): 100% MITRE detectable, 100% OWASP y primera
 - **62 de 91 endpoints GET no aceptan `flock_id`** (informe del 27-ago). Varias secciones que solo se
   ven DENTRO de un flock se alimentan de ellos. Inventario en el informe; falta decidir cuáles deben
   acotarse y cuáles son legítimamente globales (y por tanto deben rotularse como tal).
-- **Prometheus (2113) y Modbus (502) sin entrada en `sensor_registry`** → 22 eventos sin sensor.
+- ✅ ~~**Prometheus (2113) y Modbus (502) sin entrada en `sensor_registry`** → 22 eventos sin sensor.~~ **HECHO (28-ago).** Registrados: `beelzebub-prometheus` (2113→Default) y `modbus-canary-01` (502→**Pruebita**). Los eventos futuros ya cruzan con sensor.
 - Traducir los 1424 eventos históricos; gráfica de electrocardiograma; error de flock duplicado.
 - LLM del engine sin clave (`provider: template` en silencio) hasta que se cargue en *AI Settings*.
 
@@ -1927,18 +1927,23 @@ funcione y el botón falle es coherente, pero la consola no lo explica.
 DEPRECADO en su propio docstring**: escribe en `.env`, y Beelzebub lee la clave **del YAML**, no del
 entorno. Debe llamar a `POST /services/{file}/llm`, que sí escribe en el YAML.
 
-## Pendiente — Puesta a cero para llevar control (propuesta de Iván, 28-ago)
+## ✅ HECHO (28-ago) — Puesta a cero para llevar control
 
-Dejar los flocks a 0, probar con uno o dos y registrar qué aparece dónde. **Cautelas medidas antes de
-ejecutarlo:**
+Ejecutado. Entregables:
 
-- Estado de partida: Default 1486 eventos / 1019 detecciones / 18 cebos / 6 sensores · Iván 1 evento
-  · **IR y Pruebita literalmente a 0** (lo que se veía en IR era el bug de `.admin-section`, ya
-  reparado).
-- **`sensor_registry` NO debe vaciarse**: los 6 sensores de Beelzebub son la tabla que sostiene la
-  atribución por puerto implementada el 27-ago. Sin ella, todo vuelve a caer en Default.
-- **13 tablas llevan `flock_id`**: breadcrumbs, canary_tokens, correlation_sessions, detections,
-  events, flock_assignments, honey_credentials, hosts, kill_chain_traces, notify_config_flock,
-  remote_sensors, sensor_registry, users. Un borrado parcial deja huérfanos.
-- **`make up` NUNCA** (hace `down -v` y borra la base). El borrado debe ser por SQL, con respaldo
-  previo y verificación de recuentos antes/después.
+- **`scripts/puesta_a_cero.sh`**: reproducible (respaldo pg_dump verificado → TRUNCATE de 12 tablas de
+  datos → limpieza de Redis por patrón → reinicio del engine → verificación a 0). Conserva flocks,
+  usuarios, `flock_assignments`, `notify_config` y **`sensor_registry` intacto**. Se ejecuta con
+  `--yes` o pide confirmación en la fase de borrado.
+- **Vaciado también `console_audit`** (623 filas) por decisión de Iván; eliminados 2 `remote_sensors`
+  zombis (smoke-test del 15-jun).
+- **Cliente de prueba Pruebita** con sensor Modbus (:502) en `sensor_registry` + regla
+  `honeypot_id=modbus-canary-01 → Pruebita`. Prometheus (2113) registrado al Default.
+- **Prueba de humo de aislamiento** (en `wiki/registro-pruebas.md`): Modbus→502 = 10 eventos SOLO en
+  Pruebita; HTTP→80 = 5 SOLO en Default; IR e Iván a 0. Aislamiento correcto.
+- Respaldos: `backups/db/tartarus_pre_reset_20260828_1509.sql.gz` y `_1516.sql.gz`.
+- Método: contar por flock con subconsultas correlacionadas, no con `LEFT JOIN` encadenados
+  (producto cartesiano da conteos inflados).
+
+**Sigue pendiente (objetivo real):** la verificación de aislamiento a fondo — atacar cada sensor y
+comprobar que no asoma nada en los demás flocks, incluidos los 62/91 endpoints GET sin `flock_id`.

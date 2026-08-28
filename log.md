@@ -1100,3 +1100,15 @@ Queda escrito un guion de arranque para la sesión siguiente en `wiki/prompt-sig
 el diagnóstico ya hecho para no repetir la investigación.
 
 Suite en 1387 pruebas verdes. — fable
+
+## [2026-08-28] tooling | Puesta a cero reproducible + cliente de prueba con puerto propio
+- Motivo: quedaban restos de sesiones anteriores (cebos desplegados, 1488 eventos, 1020 detecciones, 258 hosts en el Default) que impedían llevar control limpio de las pruebas de aislamiento. Iván pidió empezar de 0.
+- Script nuevo: `scripts/puesta_a_cero.sh` (respaldo pg_dump verificado → TRUNCATE de 12 tablas de datos → limpieza de estado derivado en Redis por patrón → reinicio del engine → verificación a 0). Se distingue de `reset_clean.sh` (conserva cebos) y `clean_attack_audit.sh` (ataca acto seguido).
+- Conserva por diseño: flocks (4), usuarios (1), `flock_assignments`, `notify_config` y `sensor_registry` (la atribución por puerto).
+- Se vació también `console_audit` (623 filas) por decisión de Iván. Se eliminaron 2 `remote_sensors` zombis ("smoke-sensor", 10.0.0.99, de un smoke-test del 15-jun).
+- Cliente de prueba: **Pruebita** recibe el sensor Modbus (:502) en `sensor_registry` + regla explícita `honeypot_id=modbus-canary-01 → Pruebita`. De paso se registró Prometheus (2113 → Default), cerrando parte del pendiente «eventos sin sensor».
+- Prueba de humo de aislamiento (registrada en `wiki/registro-pruebas.md`): ataque Modbus al 502 → 10 eventos SOLO en Pruebita; `curl` HTTP al 80 → 5 eventos SOLO en Default; IR e Iván a 0 en todas las tablas. **Aislamiento correcto.**
+- Respaldos generados: `backups/db/tartarus_pre_reset_20260828_1509.sql.gz` (antes de la prueba) y `_1516.sql.gz` (cierre a 0 absoluto).
+- **Hallazgo metodológico:** contar eventos/detecciones por flock con dos `LEFT JOIN` encadenados da un producto cartesiano (vi «100/100» donde había 10). Para conteos por flock, subconsultas correlacionadas.
+- Estado final: plataforma en 0, 8 sensores en `sensor_registry`, lista para la verificación de aislamiento real.
+— claude
