@@ -1883,3 +1883,62 @@ booleano, para que la consola diga por qué agrupa. En vivo: 3 hallados, 2 propi
 2. **La consulta de vigilancia del invariante usaba `f->>'weight'`; el campo es `points`.** Sumaba
    cero y marcaba **1485 de 1485 eventos como descuadrados**. Con el nombre correcto: **0**. Antes de
    dar por roto un invariante, comprobar el nombre del campo contra `jsonb_pretty(risk_factors)`.
+
+---
+
+## 28-ago-2026 — AI Settings: la clave se guarda donde nadie la lee (P1)
+
+**Síntoma**: metes la clave de OpenAI en *AI Settings*, pulsas **Test** y responde
+`{"status":"error","message":"No AI provider configured"}`.
+
+**Causa, en tres capas** (`engine/engine/settings_router.py`):
+
+1. `ENV_FILE = Path(__file__).parent.parent.parent / ".env"`. Dentro del contenedor el módulo vive en
+   `/app/engine/settings_router.py`, así que tres `.parent` dan `/` → **escribe en `/.env`, la raíz
+   del contenedor**.
+2. **El `.env` del proyecto no está montado** en el engine. Los únicos montajes son
+   `./engine → /app` y `./beelzebub/configurations → /app/bee-config`.
+3. **Nadie lee `/.env`**: `docker compose` lee el `.env` del *host*. Comprobado en vivo — `/.env`
+   dentro del contenedor tiene `OPENAI_API_KEY` de 164 caracteres, y
+   `printenv OPENAI_API_KEY` en ese mismo contenedor devuelve **vacío**.
+
+**Por eso el fallo es intermitente y confunde**: al guardar, `llm.configure()` sí configura el
+cliente **en memoria**, así que funciona hasta el siguiente reinicio del engine. Como hoy se reinició
+varias veces por los cambios, la clave se perdió y quedó `provider: template` en silencio.
+
+**Arreglo propuesto**: montar el `.env` del host en el contenedor (o apuntar `ENV_FILE` a una ruta
+montada y persistente) y, o bien releer el fichero al arrancar, o exponer en la consola que la clave
+solo vive en memoria hasta el siguiente reinicio. Un test debe fijar que `ENV_FILE` cae dentro de una
+ruta montada, no en `/`.
+
+**No confundir los dos LLM** (ver también la memoria `tartarus-llm-honeypot`):
+
+| | Dónde vive la clave | Estado 28-ago |
+|---|---|---|
+| **Honeypot (Beelzebub)** | `beelzebub/configurations/services/*.yaml`, campo `openAISecretKey` | **Funciona.** Verificado: SSH a `:2222` responde como `prod-web-01` |
+| **Engine (AI Settings)** | Debería ser `.env` → hoy `/.env` del contenedor | **Roto**, por lo de arriba |
+
+El botón **Test** de *AI Settings* prueba el LLM **del engine**, no el del honeypot. Que el honeypot
+funcione y el botón falle es coherente, pero la consola no lo explica.
+
+### Bug adyacente: la casilla «Beelzebub sync» no hace nada (P2)
+
+`main.js` llama a `POST /api/settings/beelzebub/ai` cuando se marca. Ese endpoint está **marcado como
+DEPRECADO en su propio docstring**: escribe en `.env`, y Beelzebub lee la clave **del YAML**, no del
+entorno. Debe llamar a `POST /services/{file}/llm`, que sí escribe en el YAML.
+
+## Pendiente — Puesta a cero para llevar control (propuesta de Iván, 28-ago)
+
+Dejar los flocks a 0, probar con uno o dos y registrar qué aparece dónde. **Cautelas medidas antes de
+ejecutarlo:**
+
+- Estado de partida: Default 1486 eventos / 1019 detecciones / 18 cebos / 6 sensores · Iván 1 evento
+  · **IR y Pruebita literalmente a 0** (lo que se veía en IR era el bug de `.admin-section`, ya
+  reparado).
+- **`sensor_registry` NO debe vaciarse**: los 6 sensores de Beelzebub son la tabla que sostiene la
+  atribución por puerto implementada el 27-ago. Sin ella, todo vuelve a caer en Default.
+- **13 tablas llevan `flock_id`**: breadcrumbs, canary_tokens, correlation_sessions, detections,
+  events, flock_assignments, honey_credentials, hosts, kill_chain_traces, notify_config_flock,
+  remote_sensors, sensor_registry, users. Un borrado parcial deja huérfanos.
+- **`make up` NUNCA** (hace `down -v` y borra la base). El borrado debe ser por SQL, con respaldo
+  previo y verificación de recuentos antes/después.

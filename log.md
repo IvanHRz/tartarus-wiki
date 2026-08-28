@@ -1046,3 +1046,57 @@ del peso por un nombre equivocado, sumaba cero y por tanto todo le parecía mal.
 que calla.
 
 Suite en 1387 pruebas verdes. — fable
+
+---
+
+## 28 de agosto de 2026 — Por qué el botón de prueba de la IA no funciona
+
+Cerramos la revisión anterior con veinte minutos de vigilancia y **todo en cero**: ninguna puntuación
+de riesgo incoherente, ninguna detección sin cliente, ningún evento sin cliente, ningún error.
+
+**El botón de prueba de AI Settings.** Metiste la clave, pulsaste probar y te dijo que no hay ningún
+proveedor configurado. No era la clave: **se estaba guardando en un sitio que nadie lee**.
+
+El programa calcula la ruta del fichero de configuración subiendo tres carpetas desde donde está su
+propio código. Dentro del contenedor eso no lleva al fichero del proyecto, sino **a la raíz del
+contenedor**. Y ese fichero, además de no ser el bueno, no lo lee nadie al arrancar: el sistema de
+contenedores lee el del ordenador, no el de dentro. Medido: dentro del contenedor hay una clave de
+ciento sesenta y cuatro caracteres guardada, y la variable correspondiente está **vacía**.
+
+Eso explica por qué el fallo despista tanto. Al guardar, la clave **sí queda cargada en memoria**, así
+que funciona hasta que el motor se reinicia. Como ayer se reinició varias veces por los cambios, se
+perdió por el camino y volvió al modo de reserva sin decir nada.
+
+**Y una confusión que conviene deshacer**, porque hay dos inteligencias artificiales distintas y solo
+una está rota:
+
+- La **del honeypot** —la que habla con el atacante y le da vida a las personas— **funciona**.
+  Comprobado: al conectarse por SSH responde como `prod-web-01`. Su clave vive en los ficheros de
+  configuración del honeypot.
+- La **del motor** —la que analiza los eventos— es la rota, y es la que prueba ese botón.
+
+Queda apuntado con su arreglo: que la clave persista de verdad entre reinicios, una comprobación
+automática que impida que la ruta vuelva a apuntar fuera de sitio, y que la consola avise cuando algo
+solo vive en memoria. De paso hay que arreglar la casilla de «sincronizar con Beelzebub», que llama a
+una función **marcada como obsoleta en su propio código**: escribe donde el honeypot no mira.
+
+**Sobre dejar los clientes a cero para llevar control.** Es buena idea y así lo haremos, pero antes de
+borrar nada conviene saber tres cosas que medimos hoy:
+
+- **IR y Pruebita ya están a cero.** Lo que se veía dentro de IR era el fallo de estilos de ayer, ya
+  reparado. No hay nada que limpiar ahí.
+- La tabla de sensores **no se puede vaciar**. Sus seis filas son lo que permite decir de qué cliente
+  es cada ataque; sin ellas, todo vuelve a caer en el cliente por defecto y perdemos lo construido.
+- **Trece tablas** llevan la marca del cliente. Un borrado a medias deja restos sueltos.
+
+Así que la limpieza se hará con un guion reproducible —copia de seguridad, borrado, verificación de
+recuentos antes y después—, no a mano, para poder repetirla cada vez que empiece una tanda de
+pruebas. Y con confirmación previa, porque es un borrado masivo.
+
+La prueba que de verdad importa viene después: **atacar el sensor de un cliente y comprobar que no
+aparece nada en los demás**. Para eso hace falta darle a cada cliente de prueba su propio puerto.
+
+Queda escrito un guion de arranque para la sesión siguiente en `wiki/prompt-siguiente-sesion.md`, con
+el diagnóstico ya hecho para no repetir la investigación.
+
+Suite en 1387 pruebas verdes. — fable
