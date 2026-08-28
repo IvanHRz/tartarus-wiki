@@ -2003,3 +2003,31 @@ comprobar que no asoma nada en los demás flocks, incluidos los 62/91 endpoints 
 - Los honeypots de Beelzebub se ven en la vista de cualquier flock porque son **infraestructura
   COMPARTIDA** (rótulo ya presente: «LABORATORIO COMPARTIDO»). El único despliegue por-cliente es su
   sensor asignado. La verdad para investigación es la BD (Persistido), no el contador de Beelzebub.
+
+---
+
+## 28-ago-2026 (4ª tanda) — AI Settings: la clave del engine ya persiste
+
+### Cerrado (punto 1 del roadmap)
+- **Bug de la ruta:** `ENV_FILE` caía en `/.env` (raíz del contenedor, no montada, que nadie lee).
+  Ahora `AI_ENV_FILE = /app/.ai_runtime.env` (= host `engine/.ai_runtime.env`, **gitignoreado**), en
+  ruta montada RW ([settings_router.py](engine/engine/settings_router.py)).
+- **Persistencia real:** nuevo `load_ai_env()` que el engine llama al arrancar
+  ([main.py:104](engine/main.py#L104)) — vuelca las claves de IA del fichero a `os.environ` ANTES de
+  construir el `LLMClient`. Docker no relee el `.env` en un `restart`; con esto la clave sobrevive.
+  **Verificado en vivo:** configurada la clave → `docker restart tartarus-engine` → sigue
+  `available:true, persisted:true`. Antes volvía a `template`.
+- **La consola no miente:** `GET /settings/ai` expone `persisted`; el modal avisa "solo en memoria" si
+  la clave activa no está en fichero.
+- **Beelzebub sync arreglado:** el front ya no llama al endpoint deprecado `/settings/beelzebub/ai`
+  (escribía `.env`, no-op); ahora empuja la key al YAML de cada honeypot con LLM vía
+  `/services/{file}/llm` y avisa del reinicio de Beelzebub ([main.js](ui/src/js/main.js)).
+- Test nuevo `engine/tests/test_settings_ai.py` (5 casos): fija que `AI_ENV_FILE` no cae en `/`, que
+  el cargador inyecta claves, y que `persisted` se reporta bien. Suite: 1393 verdes.
+
+### Hallazgo que queda del lado de Iván (no es código)
+- **Las DOS claves de OpenAI del repo dan `401 Unauthorized`**: la de `Entrada/GPT.rtf` (164 car.) y la
+  de los YAML del honeypot (156 car., son **distintas**). OpenAI las rechaza (expiradas/revocadas/
+  facturación). El fix del engine es correcto y hace la llamada real (el 401 lo demuestra), pero para
+  ver el Test en verde hace falta **una clave válida nueva**. Esto también afecta al LLM del honeypot:
+  con esa key en 401, sus respuestas LLM tampoco saldrían (revisar en la tanda de Beelzebub).

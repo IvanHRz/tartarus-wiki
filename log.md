@@ -1132,3 +1132,14 @@ Suite en 1387 pruebas verdes. — fable
 - Beelzebub reiniciado para poner a 0 el panel de Salud de honeypots. Estado final: 1 flock (Default), 0 reglas, 0 datos, 7 sensores base, embudo 0→0.
 - Pendiente para la siguiente tanda: integración API de GPT (LLM del engine «ninguno configurado») y fiabilidad de Beelzebub (Telnet no llegó, canal AMQP, clave de host).
 — claude
+
+## [2026-08-28] fix | AI Settings: la clave del engine ya persiste al reinicio (punto 1 del roadmap)
+- Motivo: se metía la clave de OpenAI en AI Settings, Test respondía «No AI provider configured», y tras reiniciar volvía a `template` en silencio.
+- Causa confirmada en vivo: `ENV_FILE` caía en `/.env` (raíz del contenedor, no montada, que nadie lee) y el `LLMClient` lee las claves de `os.getenv` al arrancar; el guardado solo tocaba memoria. Además el `.env` de host ni siquiera tenía `OPENAI_API_KEY`.
+- Arreglo: `AI_ENV_FILE=/app/.ai_runtime.env` (host `engine/.ai_runtime.env`, gitignoreado) en ruta montada RW; nuevo `load_ai_env()` que el engine llama al arrancar y vuelca las claves a `os.environ` antes de construir el cliente. Enfoque «releer al arrancar» — funciona con `docker restart`, sin `up` (sin riesgo para la BD).
+- La consola no miente: `GET /settings/ai` expone `persisted`; el modal avisa «solo en memoria» si la clave no está en fichero.
+- Beelzebub sync: el front dejó de llamar al endpoint deprecado (escribía `.env`, no-op) y ahora empuja la key al YAML de cada honeypot con LLM vía `/services/{file}/llm`, avisando del reinicio de Beelzebub.
+- Test nuevo `test_settings_ai.py` (5 casos). Suite: 1393 verdes.
+- Verificado en vivo: clave configurada → `docker restart` del engine → sigue `available:true, persisted:true`. Antes se perdía.
+- **Hallazgo del lado de Iván (no es código):** las DOS claves de OpenAI del repo dan 401 (la de `Entrada/GPT.rtf`, 164 car., y la de los YAML del honeypot, 156 car., son distintas). OpenAI las rechaza. Para ver el Test en verde hace falta una clave válida nueva; esto también afectaría al LLM del honeypot. Dejé el fichero de runtime limpio (sin la clave muerta).
+— claude
