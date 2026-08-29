@@ -1327,6 +1327,14 @@ el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
 
+## [2026-08-29] plan | Parte B (Fase B2): constructor visual por árbol + catálogo industria×departamento
+Plan aceptado archivado en [[planes/2026-08-29]]. Siguiente fase de la Parte B: editor VISUAL del árbol
+(estilo Thinkst) con shell de prueba al lado (ya existe, pega a B1), desplegables industria×departamento
+(8×6, confirmado), plantillas curadas + IA rellena. El texto del prompt sigue siendo la fuente de verdad:
+el editor parsea/serializa el bloque FILESYSTEM sin tocar el motor B1. B3 (canary real en el árbol) queda
+para la siguiente ronda (el nodo lleva flag canary preparado). Repo al momento: `64e64da`.
+— claude
+
 ## [2026-08-29] bitacora | Parte B · Fase B1 HECHA: filesystem determinista, verificado en vivo
 Implementado y verificado por SSH real. Nuevos `engine/engine/shell_brain.py` (parser del árbol + FHS base
 + replay del cwd + resolutor determinista + cache de contenido en Redis + fallback) y
