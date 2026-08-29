@@ -1271,3 +1271,11 @@ carpeta, clave de host, latencia sin cambiar modelo, ancho del editor estilo Thi
 - Pendiente: Parte B (constructor visual por árbol; navegación determinista; cebo→canary token real).
 - Páginas: `wiki/roadmap-operativo.md` sincronizado; plan en `wiki/planes/2026-08-29.md`.
 — claude
+
+## [2026-08-29] plan | Parte A.4: última pasada al shell LLM + UI + persona Windows
+Plan aceptado archivado en [[planes/2026-08-29]]. Arreglar por prompt los bugs discretos del shell
+(token suelto→command not found no «cd:», fechas reales, idioma solo en contenido, consistencia,
+cobertura de comandos + búsqueda), entorno menos predecible (usuarios aleatorios, cebo enterrado/sutil,
+coherencia de negocio), persona Windows rica, y UI (un botón de guardar, quitar campo industria, prompt
+más grande). El filesystem determinista (cwd/consistencia al 100%) queda para la Parte B.
+— claude
