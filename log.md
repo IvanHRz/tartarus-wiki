@@ -1213,3 +1213,21 @@ Plan aceptado archivado en [[planes/2026-08-28]]. Cierra seis "tells" del honeyp
 clave de host de Beelzebub (parche + imagen local), inyectar las reglas del shell al aplicar/probar,
 volcado de binarios, editores/pagers, locale por país/industria, serverName a medida y época de ficheros.
 — claude
+
+## [2026-08-28] ingest | Parte A ejecutada: realismo del shell SSH (6 ítems + refactor)
+- Repo Tartarus: commits `da5497b` (clave de host) y `b9e93b9` (realismo del shell). Suite 1418 verde.
+- **Clave de host persistente**: Beelzebub v3.9.0 no lo admite por config → parche mínimo
+  (`beelzebub/build/beelzebub.patch`) + imagen local `tartarus-beelzebub:v3.9.0-hostkey`; claves
+  ed25519+rsa en el host (`make ensure-hostkeys`), distintas por nodo; `push-to-rpi.sh` blindado.
+  Verificado: huella estable tras 2 reinicios; reconexión estricta sin «REMOTE HOST IDENTIFICATION
+  HAS CHANGED».
+- **Reglas inyectadas, no congeladas**: módulo `engine/engine/ssh_rules.py`; la persona guarda solo el
+  escenario, `apply`/`probe` anteponen reglas frescas. Gate `rules_profile: bash` protege las personas
+  SSH no-bash. Ítems cubiertos: binarios (`%PDF`), editores/pagers + toolkit (0 «command not found»),
+  locale español por industria, `serverName` a medida (`mariana@hr-dept-srv01`), época/TIMELINE.
+- Pendientes anotados: techo ~90-95% del LLM (glitches `less (END)` / «Is a directory» esporádicos →
+  Parte B), tells que necesitan más parche (`:~$` fijo, usuario del prompt = login), y que el SSH vivo
+  quedó con la persona hospital aplicada.
+- Páginas: `wiki/roadmap-operativo.md` (sincronizado con `.agents/ROADMAP.md`), `wiki/planes/2026-08-28.md`
+  (plan archivado antes de ejecutar).
+— claude

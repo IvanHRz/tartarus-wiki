@@ -47,11 +47,59 @@ Cada ítem: **Objetivo** (qué queda resuelto) · **Cómo hacerlo** (archivos/t�
 > perder el hilo. Rama `feature/tier0-deployment-readiness` (PR #12). Fuentes:
 > auto-memoria `backlog-cebos-y-ui`, `tierf-completo-9-bloqueado`. Suite en 969 pass / 4 skip.
 
+### ✅ PARTE A — Realismo del shell SSH (28-ago-2026) — HECHO (6 ítems + refactor)
+
+Plan archivado en `wiki/planes/2026-08-28.md`. Suite **1418 verde** (+18). Todo verificado en vivo.
+
+- **Ítem 1 — clave de host SSH persistente (el tell #1).** Beelzebub v3.9.0 NO admite ruta de clave
+  por config (crea el `ssh.Server` de gliderlabs sin `HostSigners` → RSA-2048 efímera por arranque).
+  Solución: parche mínimo (`beelzebub/build/beelzebub.patch`, 3 hunks: campo `hostKeyPaths` en el
+  parser + `server.SetOption(ssh.HostKeyFile)` en ssh.go + propiedad en el JSON Schema) + imagen local
+  `tartarus-beelzebub:v3.9.0-hostkey` (`scripts/build_beelzebub_hostkey.sh`, contexto en clon temporal,
+  NO `./beelzebub`). Claves ed25519+rsa generadas en el HOST (`make ensure-hostkeys`, gitignoreadas,
+  distintas por nodo). `push-to-rpi.sh` blindado (excluye `keys/` y quita `hostKeyPaths` → no correla
+  honeypots por fingerprint, no rompe el sensor sin parche). **Verificado:** huella idéntica tras 2
+  reinicios (antes cambiaba); reconexión SSH estricta sin `REMOTE HOST IDENTIFICATION HAS CHANGED`;
+  ahora presenta ed25519 + rsa-3072 (antes solo rsa-2048).
+- **Refactor 0-bis — reglas del shell inyectadas al aplicar/probar, ya no congeladas.** Módulo nuevo
+  `engine/engine/ssh_rules.py` (`SSH_RULES`, `META_SSH`, `compose_ssh_prompt`, `split_scenario`,
+  `wants_bash_rules`, `hostname_from_scenario`). La persona guarda solo el ESCENARIO; `apply`/`probe`
+  anteponen las reglas frescas del código. **Gate por `rules_profile: bash`** (o marcador presente):
+  protege las 5 personas SSH no-bash (cisco/fortigate/jenkins/synology/windows) de recibir reglas bash.
+  Arregla el bug del salto de línea (`… BEHAVIOR RULES` pegado). `ubuntu-server.yml` migrada.
+- **Ítem 2 — binarios.** `cat`/`head`/`strings` de PDF/docx/xlsx/ELF vuelcan bytes (`%PDF-1.7`, `PK…`),
+  nunca meta. Verificado: `cat *.pdf` → `%PDF-1.7` + bytes.
+- **Ítem 3 — editores/pagers + toolkit.** `nano`/`vi`/`less` abren y vuelven al prompt; `sudo`,
+  `systemctl`, `crontab -l`, `ps aux`, `ip a`… coherentes. Verificado: **0 «command not found»** en 8
+  comandos del toolkit.
+- **Ítem 4 — locale/industria.** `META_SSH` infiere país/idioma del contexto (español para México),
+  respeta el SO del input (ya no fuerza Ubuntu), exige que TODO directorio tenga su fila. Verificado:
+  laboratorio de GDL → árbol y usuarios en español coherentes.
+- **Ítem 5 — serverName a medida.** `generate-scenario` extrae el hostname; la UI lo guarda en
+  `protocols.ssh.serverName`; fallback en `apply` que lo deriva del escenario. Verificado por SSH real:
+  el prompt pasó de `mariana@prod-web-01` a **`mariana@hr-dept-srv01:~$`**.
+- **Ítem 6 — época/timestamps.** `generate-scenario` acepta `era`; `META_SSH` genera sección
+  `TIMELINE`; regla de fechas coherentes. Campo «Época» en la UI. Verificado: era 2018-2020 →
+  `resultados_2018/2019/2020.xlsx`.
+
 ### 🧾 PENDIENTES IMPLÍCITOS (auto) — capturados por la skill `pendientes-roadmap`
 
 > Lo que se dejó de lado en cada sesión, para que nada se pierda. Actualizado por la skill
 > `pendientes-roadmap` al cerrar sesión. No duplicar: si un ítem ya vive en otra sección, se
 > referencia en vez de repetir.
+
+- [28-ago-2026 · **P2**] **Techo ~90-95% del LLM (residual del shell).** Glitches puntuales medidos
+  en vivo: `less <log>` a veces muestra solo `(END)` en vez del contenido; `cat` de un fichero que el
+  árbol declara como fichero puede devolver «Is a directory» de forma esporádica. Son fallos de
+  determinismo del LLM, no de las reglas — los cierra la **Parte B** (árbol estático como estructura
+  de datos, `ls`/`cd`/`cat` deterministas). No requiere acción hasta la Parte B.
+- [28-ago-2026 · **P3**] **Tells que necesitan MÁS parche a Beelzebub.** (a) El prompt del shell es
+  siempre `usuario@host:~$` — el `:~$` no refleja el `cd` (Beelzebub lo arma con `buildPrompt`, no el
+  LLM). (b) El usuario del prompt es el LOGIN del atacante, no el usuario del escenario. Ambos requieren
+  ampliar `beelzebub/build/beelzebub.patch`; se dejan como decisión aparte.
+- [28-ago-2026 · nota de estado] Al verificar el ítem 5 se **aplicó `ubuntu-server` al servicio SSH
+  vivo** (banner `hr-dept-srv01`, persona hospital CDMX) y se reinició Beelzebub. Si se quiere otra
+  persona activa, aplicarla desde la consola.
 
 - [25-ago-2026 · **P0** · esfuerzo M] **AUDITORÍA DE FALSOS POSITIVOS (ruido de alertas).** Iván reporta
   correos CRITICAL constantes sin que nadie ataque. Diagnóstico: **~97% del tráfico ingerido es de la
