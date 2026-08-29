@@ -1327,6 +1327,15 @@ el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
 
+## [2026-08-29] bitacora | Parte B · Fase B3 HECHA: canary REAL en el árbol, ambos disparos
+Implementado y verificado end-to-end por SSH real. Nuevo `engine/engine/canary_tree.py` (aprovisiona al
+aplicar: secreto único + regla `decoy_reuse` + fila en consola + siembra en Redis); `shell_brain._content`
+sirve el honeytoken; `apply_personality` recibe `request` y llama a provision (`canaries_armed`). Verificado:
+`cat /opt/app/.env` muestra `CANARY-DECOY-JWT-<uid>`; el reuso (curl) dispara CRÍTICO y la LECTURA también
+(Beelzebub mete la respuesta en el payload) — ambos sin código extra; notificación por el consumer. Suite
+1493 verde. Detalle en [[roadmap-operativo]] (29-ago, Fase B3). Registrada Fase B4 (filetree ZIP) como P1.
+— claude
+
 ## [2026-08-29] plan | Parte B (Fase B3): canary REAL en el árbol del honeypot
 Plan aceptado archivado en [[planes/2026-08-29]]. Vuelve REALES los nodos marcados canary en B2: al
 aplicar la persona, cada uno siembra un secreto único (que el `cat` sirve vía Redis) y registra la regla

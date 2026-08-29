@@ -2463,3 +2463,30 @@ prueba al lado (que ya pega al motor determinista B1). Plan íntegro en `planes/
   de render/interacción del árbol (colapsar, botones de nodo).
 - **B3 — Canary en el árbol** (siguiente ronda): consumir `protocols.ssh.canaries` para acuñar token/
   credencial con secreto único + regla `decoy_reuse` en la ruta marcada, y que el `cat` sirva ese secreto.
+
+## 29-ago-2026 (Parte B · Fase B3) — Canary REAL en el árbol del honeypot SSH
+
+Los nodos marcados canary en B2 ya son cebos REALES: al aplicar la persona, cada uno lleva un secreto
+único que el `cat` sirve, y su reuso (o lectura) dispara una detección CRÍTICA con notificación. Plan en
+`planes/2026-08-29.md`.
+
+### Cerrado
+- **Aprovisionador** (`engine/engine/canary_tree.py`): al aplicar, por cada ruta de
+  `protocols.ssh.canaries` acuña secreto único (`_gen_cred` según el nombre del fichero), registra la
+  regla `decoy_reuse` (recarga Sigma en caliente), inserta fila en `canary_tokens` (consola) con
+  `decoy_hash`, y siembra el cuerpo en Redis `sb:canary:{fingerprint}:{sha1(ruta)}` (sin TTL). Re-aplicar
+  retira lo previo (sin reglas huérfanas). Best-effort: no rompe el apply.
+- **`shell_brain._content`** sirve ese cuerpo ANTES del cache/LLM → `cat` del cebo muestra el secreto
+  único, estable. El secreto nunca va al prompt/LLM (solo Redis + `decoy_hash` en BD).
+- **`apply_personality`** recibe `request` y llama `canary_tree.provision(...)`; devuelve `canaries_armed`.
+- **AMBOS disparos, automáticos y verificados en vivo por SSH real**: `cat /opt/app/.env` muestra
+  `JWT_SECRET=CANARY-DECOY-JWT-<uid>`; el `curl` reusando el secreto dispara `decoy_reuse` CRÍTICO
+  (`sel_cmd`+`sel_payload`), y leer el cebo también dispara (`sel_payload`, porque Beelzebub mete la
+  respuesta en el payload) — fire-on-access sin código extra. La notificación llega sola (consumer). Suite
+  1493 verde. Honeypot restaurado y artefactos de prueba limpiados.
+
+### Pendiente
+- **Fase B4 (registrada, P1)**: llevar el mismo canary al filetree por industria (ZIP de plantado físico):
+  `deception_filetree._filler_bytes` usa cuerpo estático → cambiar a `_gen_cred`+`register_decoy`.
+- Pulidos: marcar el TIPO de cebo por nodo en el editor; enlazar `decoy_reuse` → `triggered_count` del
+  token para que la consola marque el canary como disparado (hoy la alerta vive en detecciones).
