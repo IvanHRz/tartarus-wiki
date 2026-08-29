@@ -125,6 +125,30 @@ Plan en `wiki/planes/2026-08-29.md`. Commit `2402aa5`. Suite **1427 verde**. Ver
 - **UI**: editor de persona ancho (`min(1040px,96vw)`) con metadatos a dos columnas (estilo Thinkst);
   prompt del banco sin el punto de más (`mariana@`, no `mariana.@`).
 
+### ✅ PARTE A.4 — Última pasada al shell LLM + UI + Windows (29-ago-2026) — HECHO
+
+Plan en `wiki/planes/2026-08-29.md`. Commit `d6a0c61`. Suite **1429 verde**. Verificado en vivo.
+
+- **Comandos del shell bash (SSH_RULES).** Solo un comando que empieza por `cd` da errores de cd; un
+  token/nombre suelto o `..` → `command not found` (antes salía `cd: Not a directory`). Seguimiento
+  riguroso del directorio actual; fechas siempre concretas (no el literal `fecha_modificación`); salida
+  de herramientas/errores en inglés estándar (el idioma del cliente solo en el CONTENIDO); consistencia
+  dura (un fichero listado existe para todos los comandos; usuarios en minúscula); cobertura ampliada de
+  análisis/búsqueda (which/whereis/awk/sed/cut/sort/lsof/strings/tree/du…). Verificado en vivo.
+- **Entorno menos predecible.** El **engine impone un número ALEATORIO de usuarios (2-6)** porque gpt-4o
+  gravitaba a 3 (verificado: 5/2/4/6/5). Cebo enterrado con nombres mundanos (nada de `documentos_privados`
+  al top); coherencia de negocio estricta (un RH hospitalario no tiene `gatos`).
+- **Persona Windows RICA.** Árbol `C:\` real, usuarios de dominio, cebo Windows (unattend.xml con
+  password, web.config con cadena de conexión, historial de PowerShell, SAM/SYSTEM) y reglas
+  PowerShell/cmd embebidas (cwd, cobertura dir/type/net user/reg query/Select-String, consistencia).
+  Verificado en vivo. Repaso ligero de cisco/fortigate/jenkins/synology (cláusula de consistencia).
+- **UI.** Un solo botón de guardar (Cancelar + Guardar y aplicar); quitado el campo «Industria»
+  redundante del generador con labels claros (caja1=describe, caja2=archivo/ruta/fecha concreta);
+  textarea del prompt más grande (rows 14); mini-terminal 360px; `?v=44`. (El editor YA era ancho en
+  código; lo angosto era caché — Cmd+Shift+R.)
+- **Nota honesta**: el cwd/consistencia mejora pero sigue ~85-90% (techo del LLM). El 100% es la Parte B
+  (filesystem determinista: engine como «host» LLM de Beelzebub, `cd`/`ls`/`pwd`/`find` en código).
+
 ### 🧾 PENDIENTES IMPLÍCITOS (auto) — capturados por la skill `pendientes-roadmap`
 
 > Lo que se dejó de lado en cada sesión, para que nada se pierda. Actualizado por la skill

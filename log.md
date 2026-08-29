@@ -1279,3 +1279,19 @@ cobertura de comandos + búsqueda), entorno menos predecible (usuarios aleatorio
 coherencia de negocio), persona Windows rica, y UI (un botón de guardar, quitar campo industria, prompt
 más grande). El filesystem determinista (cwd/consistencia al 100%) queda para la Parte B.
 — claude
+
+## [2026-08-29] ingest | Parte A.4: última pasada al shell LLM + UI + persona Windows
+- Repo Tartarus: commit `d6a0c61`. Suite 1429 verde. Verificado en vivo.
+- **Comandos bash**: solo `cd` da errores de cd (token suelto/`..` → command not found); cwd riguroso;
+  fechas concretas (no `fecha_modificación`); herramientas/errores en inglés (idioma solo en contenido);
+  consistencia dura; cobertura ampliada de búsqueda/análisis.
+- **Aleatoriedad**: el engine impone nº de usuarios 2-6 (gpt-4o gravitaba a 3). Cebo enterrado y sutil;
+  coherencia de negocio estricta.
+- **Windows**: persona rica (árbol C:\, dominio, cebo unattend.xml/web.config/PS history/SAM, reglas
+  PowerShell/cmd). Repaso ligero de los otros appliances.
+- **UI**: un botón de guardar (Cancelar + Guardar y aplicar); quitado el campo industria redundante;
+  prompt más grande.
+- Nota honesta: cwd/consistencia mejora pero ~85-90% (techo LLM); el 100% es la Parte B (filesystem
+  determinista, engine como host LLM de Beelzebub).
+- Páginas: `wiki/roadmap-operativo.md` sincronizado; plan en `wiki/planes/2026-08-29.md`.
+— claude
