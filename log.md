@@ -1327,6 +1327,17 @@ el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
 
+## [2026-08-29] bitacora | Parte B · Fase B4 HECHA: el shell se siente real
+Implementado y verificado en vivo por SSH real. `cd` ya no deja línea en blanco y el prompt sigue la ruta
+(`admin@srv:~/documentos$`): ambos requerían parchear Beelzebub — nuevo `beelzebub-shell-prompt.patch` que
+aplica en cadena tras el de clave de host (imagen `v3.9.0-tartarus`; fingerprint intacto). El cwd lo manda
+el engine fuera de banda, NEGOCIADO, para no filtrarlo a sensores sin parchear (0 eventos con el marcador).
+Contraseña de entrada configurable desde la UI (4 modos, `passwordRegex`, con escape verificado). Carpetas
+base pobladas y ficheros de sistema con contenido horneado del escenario (sin LLM, coherentes con `id`) y
+permisos canónicos. Suite 1539 verde. Detalle en [[roadmap-operativo]] (29-ago, Fase B4). B5 registrada:
+personalidades no-Linux + filetree ZIP.
+— claude
+
 ## [2026-08-29] plan | Parte B (Fase B4): el shell se siente real (prompt, cd, contraseña, carpetas base)
 Plan aceptado archivado en [[planes/2026-08-29]]. Cuatro fallos vistos en vivo: `cd` imprime línea en
 blanco y el prompt no sigue la ruta (ambos son de Beelzebub: `ssh.go:155` y el `:~$` literal de

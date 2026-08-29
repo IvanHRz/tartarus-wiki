@@ -2490,3 +2490,35 @@ Los nodos marcados canary en B2 ya son cebos REALES: al aplicar la persona, cada
   `deception_filetree._filler_bytes` usa cuerpo estático → cambiar a `_gen_cred`+`register_decoy`.
 - Pulidos: marcar el TIPO de cebo por nodo en el editor; enlazar `decoy_reuse` → `triggered_count` del
   token para que la consola marque el canary como disparado (hoy la alerta vive en detecciones).
+
+## 29-ago-2026 (Parte B · Fase B4) — «El shell se siente real»
+
+Cuatro fallos que Iván vio al probar el honeypot en vivo. Reparto decidido por él: B4 = lo que se ve al
+entrar por SSH; B5 = las otras personalidades + el filetree ZIP. Plan en `planes/2026-08-29.md`.
+
+### Cerrado
+- **`cd` ya no deja una línea en blanco** y **el prompt sigue el directorio** (`admin@srv:~/documentos$`,
+  `:/var/log$`…). Ambos eran de Beelzebub, no del engine: escribía un `\n` aunque la respuesta fuera vacía,
+  y su `buildPrompt` tenía el `:~$` LITERAL usando el login del atacante. Se amplió el parche de la imagen
+  (`beelzebub-shell-prompt.patch`), que aplica EN CADENA tras el de clave de host — verificado que ambos
+  aplican limpio, compilan y los tests de upstream pasan. La imagen pasa a llamarse `v3.9.0-tartarus`.
+- **El directorio lo manda el ENGINE** (una sola fuente de verdad; el prompt no puede desincronizarse de
+  `pwd`): viaja pegado a la respuesta tras un centinela invisible que Beelzebub extrae y nunca imprime.
+  Va **negociado** (Beelzebub lo pide en la petición) para que un sensor con la imagen sin parchear jamás
+  lo reciba y se lo pinte al atacante. Verificado: 0 eventos en la base contienen el marcador.
+- **Contraseña de entrada configurable desde la UI** (modal «Configurar servicio»): cualquiera / una
+  concreta / sin contraseña / lista de típicas. Sale del `passwordRegex` de Beelzebub, sin parchear nada;
+  la contraseña se escapa (verificado: con `Tartarus.2026*` entra esa y no entra `Tartarusx2026x`).
+  Aplicar una persona NO cambia la contraseña.
+- **Carpetas base ricas**: `/opt`, `/srv`, `/home` y los subdirs de `/var`,`/etc`,`/usr` estaban VACÍOS;
+  ahora están poblados y `/tmp` tiene basura runtime real. Los ficheros de sistema (`/etc/passwd`,
+  `hosts`, `os-release`, `/proc/cpuinfo`…) pasan a tener **contenido horneado derivado del escenario**:
+  instantáneos (antes ~1.7 s cada uno por ir al LLM) y coherentes con `id`/`whoami`. Permisos canónicos
+  (`shadow` 640, `sudoers` 440, binarios 755 — antes 644, un delator inmediato).
+- Suite **1539 verde**. El fingerprint de la clave de host no cambió tras reconstruir la imagen.
+
+### Pendiente (Fase B5, registrada)
+- **B5a — Personalidades no-Linux**: cisco/fortigate/jenkins/synology son un párrafo, sin árbol ni cebo;
+  no existe un equivalente a las reglas bash para IOS/FortiOS/DSM. Windows sí está rico.
+- **B5b — Canary en el filetree ZIP**: fillers estáticos → secreto único + `decoy_reuse`; y exponer en la
+  UI los endpoints de generación/descarga, que hoy son código muerto.
