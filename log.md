@@ -1177,3 +1177,11 @@ Suite en 1387 pruebas verdes. — fable
 - Modal: Host/endpoint + API key bajo toggle «Avanzado» (ocultos por defecto). Test de UI actualizado. Suite 1395 verde.
 - Nota: el YAML real (con clave y comandos estáticos) sigue gitignoreado; se versiona el prompt en la persona y la plantilla `services.example` (sin clave).
 — claude
+
+## [2026-08-28] feat | Entornos de deception generados por IA (a medida del cliente)
+- Motivo: Iván quiere explotar la ventaja de la IA para crear entornos completamente creíbles y personalizados al cliente (como el File Share de Thinkst, que lo hace estático). Ref: `Archivos_ejemplo/Canary Console opciones en protocolos.pdf`.
+- Hecho: `POST /personalities/generate-scenario` — describes al cliente (industria, datos) y gpt-4o genera un prompt de shell SSH a medida (hostname, árbol de ficheros del negocio, contenidos, reglas con estado + anti-detección). No aplica nada: se prueba con el banco `probe`, se ajusta y se guarda como persona. UI: botón «✨ Generar entorno con IA» en el editor de personas. Añadido override de modelo en `llm_client.analyze(model=)`.
+- Verificado en vivo: contexto «ACME Electrónica, sensores industriales» → entorno con sensor_firmware/, plc_configs/, scada_dashboards/, bom_october.pdf, supplier_contracts/. Base enriquecida: `cat backup.sh` → script realista; `cat auth.log` → log con timestamps.
+- Realidad honesta: el SSH es compartido, así que el escenario es global (un tema a la vez). Per-cliente simultáneo necesita un SSH por flock en su puerto (rango pre-publicado + flujo «+ Añadir») — agendado en diseno-despliegue §9, es la tanda de despliegue.
+- Test nuevo `test_generate_scenario.py`. Suite 1400 verde. El generador NO toca claves; el YAML real sigue gitignoreado; el prompt (sin clave) se versiona en la persona y en services.example.
+— claude

@@ -125,3 +125,34 @@ Criterio: **una acción principal por vista**; lo avanzado, detrás de un click.
 
 Se conservan **estáticos** los comandos que no dependen del directorio y que son cebo exacto
 (`cat /etc/passwd`, `cat /opt/app/.env` con honeytoken, `uname`, `ps`, `netstat`, …).
+
+---
+
+## 9. Entornos a medida generados por IA (28-ago) + per-cliente
+
+**Nuestra ventaja sobre Thinkst:** Thinkst deja crear un árbol de ficheros a medida pero **estático**
+(y un botón «Generate industry-specific file tree»). Nosotros lo **generamos por IA** y el contenido
+(config, logs, código) sale al vuelo, consistente con el negocio.
+
+**Generador (hecho):** `POST /personalities/generate-scenario` — el operador describe al cliente
+(empresa, industria, datos sensibles) y el LLM (**gpt-4o**) devuelve un prompt de shell SSH a medida:
+hostname realista, árbol de ficheros propio del negocio (p.ej. electrónica → `sensor_firmware/`,
+`plc_configs/`, `scada_dashboards/`, `bom_october.pdf`, `supplier_contracts/`), usuarios, y las reglas
+de shell con estado + anti-detección + contenido. En la UI: botón **«✨ Generar entorno con IA»** en
+el editor de personas; se **prueba** con el banco (`probe`), se ajusta y se **guarda como persona**.
+No aplica nada solo. Verificado en vivo con el caso de electrónica.
+
+**Entorno base enriquecido (hecho):** el Ubuntu por defecto ahora genera `cat` creíble (config/logs/
+código) y consistente por sesión, además del árbol con estado.
+
+**Per-cliente (agendado — necesita la tanda de despliegue):** como el SSH es compartido, para que cada
+flock tenga su propio entorno *a la vez* hace falta **un servicio SSH por cliente en su puerto**.
+Beelzebub corre varios servicios (`ssh-2222`, `ssh-2223`, …), cada uno con su persona. Plan:
+1. Pre-publicar un **rango de puertos** (p.ej. 2222-2231) en docker-compose (cambio único, recreate de
+   Beelzebub — sin tocar la BD).
+2. El flujo «+ Añadir» asigna a un flock: puerto libre del rango + su persona (la generada por IA) +
+   reinicia Beelzebub.
+3. La atribución por puerto (`sensor_registry`) ya existe: cada puerto → su flock.
+
+Mientras tanto, el generador crea las **personas por cliente** (reutilizables); el SSH compartido se
+tematiza con una a la vez para el engagement actual.

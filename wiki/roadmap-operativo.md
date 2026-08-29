@@ -2136,3 +2136,25 @@ comprobar que no asoma nada en los demás flocks, incluidos los 62/91 endpoints 
   reinicio de Beelzebub lo resetea; IPs distintas aisladas.
 - **gpt-4o cuesta ~15× más** que mini por llamada (asumible en honeypot; decisión consciente).
 - **Cowrie / motor determinista**: agendado si se necesita 100% de fidelidad.
+
+---
+
+## 28-ago-2026 (9ª tanda) — Entornos de deception generados por IA (a medida del cliente)
+
+### Cerrado
+- **Generador de entornos por IA**: `POST /personalities/generate-scenario` — el operador describe al
+  cliente (industria, datos) y el LLM (**gpt-4o**) genera un prompt de shell SSH a medida (hostname,
+  árbol de ficheros propio del negocio, contenidos, reglas con estado + anti-detección). No aplica
+  nada: se prueba (`probe`), se ajusta y se guarda como persona. UI: botón **«✨ Generar entorno con
+  IA»** en el editor de personas. Verificado en vivo (caso electrónica → `sensor_firmware/`,
+  `plc_configs/`, `scada_dashboards/`, `bom_october.pdf`, `supplier_contracts/`).
+- **Override de modelo en `llm_client.analyze(..., model=)`** (el generador usa gpt-4o aunque el global
+  sea gpt-4o-mini); corregido de paso el reporte del modelo realmente usado.
+- **Entorno base enriquecido**: `cat` de config/logs/código genera contenido creíble y consistente por
+  sesión (verificado: `cat backup.sh` → script realista; `cat auth.log` → entradas con timestamp).
+- Test nuevo `test_generate_scenario.py` (5 casos). Suite 1400 verde.
+
+### Agendado
+- **Despliegue per-cliente**: SSH por-flock en su puerto (rango 2222-2231 en compose + flujo «+
+  Añadir» que asigna puerto+persona). Spec en `wiki/diseno-despliegue.md` §9. Es la tanda de despliegue.
+- Generar entornos para otras personas (Windows/Cisco) con el mismo generador.
