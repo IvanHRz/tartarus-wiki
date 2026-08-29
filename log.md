@@ -1167,3 +1167,13 @@ Suite en 1387 pruebas verdes. — fable
 - Diferido (especificado): construir el flujo «Añadir» + activación opt-in de protocolos; recortar ruido de pestañas; persistir clave de host SSH; versionar la config rica keyless.
 - Nota: la config real `services/ssh-22.yaml` está gitignoreada (clave), así que el arreglo de `ls` no se commitea ahí; queda en local.
 — claude
+
+## [2026-08-28] feat | Honeypot SSH con estado real: cd/ls/pwd coherentes
+- Motivo: tras `cd projects`, `ls` seguía mostrando el home (ls era estático; cd/pwd sí tenían estado). Iván: «debería actuar como Ubuntu real». Y las casillas Host/API key del modal confundían.
+- Causa de que el prompt «se revirtiera» antes: al «Aplicar a este servicio» se copia el prompt de la PERSONA (`personalities/ubuntu-server.yml`, versionada) al YAML, machacando ediciones a mano. Solución: el prompt bueno va en la persona.
+- Lo que funcionó (verificado en vivo, varias sesiones frescas): enrutar cd/pwd/ls al LLM (quitados los handlers estáticos de ls) + prompt con árbol de ficheros explícito + regla de cd PERMISIVA desacoplada del árbol + regla de arranque en /home/admin + modelo gpt-4o. gpt-4o-mini NO era capaz (rechazaba cd válidos, fallaba ls). `apply` conserva modelo/clave.
+- Resultado: pwd=/home/admin al entrar; cd projects → ls muestra webapp/api-gateway/...; cd /var/log → sus logs; cd proyects → error. Coherente.
+- Límites honestos: ~95% (glitch puntual, sobre todo el 1er comando); el estado se arrastra entre reconexiones de la MISMA IP (Beelzebub guarda historial por IP, reinicio lo resetea; IPs distintas aisladas); gpt-4o cuesta ~15× más que mini. Para 100% determinista → Cowrie (agendado).
+- Modal: Host/endpoint + API key bajo toggle «Avanzado» (ocultos por defecto). Test de UI actualizado. Suite 1395 verde.
+- Nota: el YAML real (con clave y comandos estáticos) sigue gitignoreado; se versiona el prompt en la persona y la plantilla `services.example` (sin clave).
+— claude

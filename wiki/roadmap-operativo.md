@@ -2109,3 +2109,30 @@ comprobar que no asoma nada en los demás flocks, incluidos los 62/91 endpoints 
 - **Deuda de versionado (preexistente):** la config rica de `services/ssh-22.yaml` (incluidos los
   handlers de `ls`) vive solo local (gitignoreada por la clave). Falta versionar una plantilla keyless
   completa; hoy solo el prompt está en `services.example`.
+
+---
+
+## 28-ago-2026 (8ª tanda) — Shell SSH con ESTADO real (cd/ls/pwd coherentes)
+
+### Cerrado
+- **`ls` ahora refleja el directorio actual.** Antes `ls` era estático (siempre el home) mientras
+  `cd`/`pwd` sí tenían estado → inconsistencia que rompía la credibilidad. Ahora `cd`/`pwd`/`ls` van
+  al LLM y son coherentes: `cd projects` → `ls` = contenido de projects; `cd /var/log` → sus logs;
+  `cd proyects` → error. Verificado en varias sesiones frescas.
+- **Cómo:** prompt con **árbol de ficheros explícito** + regla de `cd` **permisiva desacoplada** +
+  regla de **arranque en /home/admin** + modelo **gpt-4o** (gpt-4o-mini NO era capaz). El prompt vive
+  en `personalities/ubuntu-server.yml` (versionado); `apply` conserva modelo/clave
+  ([personality_engine.py:52](engine/engine/personality_engine.py#L52)).
+- **Causa del "se revirtió" anterior:** al «Aplicar a este servicio» se copia el prompt de la persona;
+  como la persona tenía el prompt viejo, machacaba mis ediciones del YAML. Solucionado poniendo el
+  prompt bueno en la persona.
+- **Modal de config más limpio:** Host/endpoint + API key por-honeypot ahora bajo un toggle
+  **«Avanzado»** (ocultos por defecto), con explicación de cuándo usarlos.
+- Test `test_ui_navegacion` actualizado al rótulo opt-in nuevo. Suite 1395 verde.
+
+### Límites honestos / agendado
+- El shell LLM es **~95%**, no 100%: glitch puntual posible (sobre todo el 1er comando).
+- **Estado se arrastra entre reconexiones de la misma IP** (Beelzebub guarda historial por IP);
+  reinicio de Beelzebub lo resetea; IPs distintas aisladas.
+- **gpt-4o cuesta ~15× más** que mini por llamada (asumible en honeypot; decisión consciente).
+- **Cowrie / motor determinista**: agendado si se necesita 100% de fidelidad.

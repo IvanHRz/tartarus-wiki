@@ -92,3 +92,36 @@ Criterio: **una acción principal por vista**; lo avanzado, detrás de un click.
   separación visual opt-in (lab compartido vs cliente); este documento.
 - **Siguiente:** construir el flujo «+ Añadir» guiado (§4) y la activación opt-in de protocolos;
   aplicar los recortes de pestañas (§6); persistir la clave de host SSH.
+
+---
+
+## 8. Shell del honeypot SSH — cómo se logró el estado (28-ago, actualización)
+
+**Objetivo:** que el SSH actúe como Ubuntu real (`cd`, `ls`, `pwd` coherentes entre sí).
+
+**Lo que funcionó (verificado en vivo):**
+- `cd` / `pwd` / `ls` van al **LLM** (se quitaron los handlers estáticos de `ls`). El LLM mantiene el
+  directorio actual por la sesión.
+- **Prompt con árbol de ficheros explícito** (qué contiene cada directorio) + regla de `cd`
+  **permisiva y desacoplada del árbol** (acepta casi cualquier ruta, solo rechaza typos evidentes) +
+  regla de **arranque** («la sesión empieza en /home/admin»).
+- **Modelo `gpt-4o`** — clave. `gpt-4o-mini` **no era capaz**: rechazaba `cd` válidos y fallaba `ls`.
+  Coste: gpt-4o es ~15× más caro por llamada que mini; para un honeypot (poco volumen) es asumible,
+  pero es una decisión de coste consciente.
+- El prompt vive en **`personalities/ubuntu-server.yml`** (versionado). Al «Aplicar persona» se copia
+  al servicio **conservando modelo y clave** (`personality_engine.apply` protege esos campos).
+
+**Resultado:** sesión fresca → `pwd` = /home/admin; `cd projects` → `ls` = webapp/api-gateway/...;
+`cd /var/log` → `ls` = auth.log/syslog/...; `cd proyects` → error. Consistente entre sesiones frescas.
+
+**Límites honestos (el techo del enfoque LLM):**
+- **~95%, no 100%.** Puede haber un glitch puntual (un `ls` raro), sobre todo en el primerísimo
+  comando; se mitigó mucho con la regla de arranque, pero no se elimina del todo.
+- **El estado se arrastra entre reconexiones de la MISMA IP** dentro del mismo proceso de Beelzebub
+  (mantiene el historial por IP): si te reconectas, retomas el directorio donde quedaste. Un reinicio
+  de Beelzebub lo resetea; IPs de atacantes distintos están aisladas.
+- Para **100% determinista** (un filesystem falso real que nunca se contradice) haría falta otro motor
+  tipo **Cowrie** — **agendado** como opción si el ~95% no basta.
+
+Se conservan **estáticos** los comandos que no dependen del directorio y que son cebo exacto
+(`cat /etc/passwd`, `cat /opt/app/.env` con honeytoken, `uname`, `ps`, `netstat`, …).
