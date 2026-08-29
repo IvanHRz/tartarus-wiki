@@ -1295,3 +1295,12 @@ más grande). El filesystem determinista (cwd/consistencia al 100%) queda para l
   determinista, engine como host LLM de Beelzebub).
 - Páginas: `wiki/roadmap-operativo.md` sincronizado; plan en `wiki/planes/2026-08-29.md`.
 — claude
+
+## [2026-08-29] plan | Parte A.5: FHS real + personas estándar/reset + falsos positivos
+Plan aceptado archivado en [[planes/2026-08-29]]. Que el shell trate el honeypot como un Ubuntu REAL
+(todo el FHS existe; el árbol de negocio se añade encima) — arregla el bug raíz de que rechazaba
+/tmp, /home, /var. Personas estándar genéricas por default + botón «Reset a estándar» (el editor
+sobrescribía el catálogo). Más contenido y requisitos quirúrgicos. Falsos positivos: correr la purga
+del ruido histórico (dry-run) + cerrar la sonda del health worker sobre :8080 + filtrar el recon pelado
+del timeline. Filesystem determinista sigue siendo Parte B.
+— claude
