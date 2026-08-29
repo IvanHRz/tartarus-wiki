@@ -1327,6 +1327,13 @@ el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
 
+## [2026-08-29] plan | Parte B (Fase B3): canary REAL en el árbol del honeypot
+Plan aceptado archivado en [[planes/2026-08-29]]. Vuelve REALES los nodos marcados canary en B2: al
+aplicar la persona, cada uno siembra un secreto único (que el `cat` sirve vía Redis) y registra la regla
+`decoy_reuse`; el reuso dispara detección CRÍTICA + notificación (ya llega sola por el consumer). Ambos
+disparos (reuso + al leer). El filetree ZIP se registra como Fase B4 (no se abandona). Repo: `0d37e2d`.
+— claude
+
 ## [2026-08-29] bitacora | Parte B · Fase B2 HECHA: constructor visual por árbol
 Implementado y verificado end-to-end. Nuevos `engine/engine/filetree_serde.py` (parse⇄serialize del árbol,
 round-trip estable, preserva cebo/Users verbatim) y `filetree_templates.py` (4 plantillas curadas);
