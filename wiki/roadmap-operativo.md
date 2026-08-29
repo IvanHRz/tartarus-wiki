@@ -2158,3 +2158,27 @@ comprobar que no asoma nada en los demás flocks, incluidos los 62/91 endpoints 
 - **Despliegue per-cliente**: SSH por-flock en su puerto (rango 2222-2231 en compose + flujo «+
   Añadir» que asigna puerto+persona). Spec en `wiki/diseno-despliegue.md` §9. Es la tanda de despliegue.
 - Generar entornos para otras personas (Windows/Cisco) con el mismo generador.
+
+---
+
+## 28-ago-2026 (10ª tanda) — `ls` consistente + modal SSH como hub de personalidades
+
+### Cerrado
+- **`ls` vs `ls -lsa` ya coinciden.** El árbol del prompt no marcaba tipos; ahora marca **carpetas con
+  `/`** y ficheros sin barra, con la regla «el conjunto de entradas de un directorio es FIJO — todos
+  los formatos de `ls` muestran las MISMAS entradas». Además `cd` a un fichero → `Not a directory`.
+  Se mantuvo `cd` **permisivo** (multinivel `cd projects/infra`, `cd ..`, absolutos). Verificado por
+  SSH: `ls`/`ls -lsa` iguales, `cd terraform` entra y da sus `.tf`, `cd docker-compose.yml` → Not a
+  directory.
+- **Modal «Configurar SSH» = hub de personalidades.** Además de elegir persona y «Editar prompt…»,
+  ahora tiene **«✨ Generar personalidad a medida (IA)»** inline: describes al cliente + nombre →
+  genera el entorno (gpt-4o) → crea la persona → la selecciona → «Aplicar». Resuelve el «no se ve la
+  personalidad»: se genera y aplica ahí mismo. Reusa `_idDesdeNombre` y `_loadServicePersonas`
+  (factorizada). Verificado E2E (generar→crear→probar `ls` tematizado).
+- Suite 1400 verde (sin cambios de backend).
+
+### Honesto / pendiente
+- El shell LLM sigue siendo ~90–95% (algún glitch puntual). En `ls` plano se muestran los `/` de
+  carpeta (como `ls -F`) — leve, no se tocó para no romper la consistencia recién lograda.
+- Trampas se deja como está (decisión de Iván); HTTP y sus personalidades, a probar después.
+- Despliegue per-cliente (SSH por flock en su puerto) sigue agendado.

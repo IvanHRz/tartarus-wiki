@@ -1185,3 +1185,10 @@ Suite en 1387 pruebas verdes. — fable
 - Realidad honesta: el SSH es compartido, así que el escenario es global (un tema a la vez). Per-cliente simultáneo necesita un SSH por flock en su puerto (rango pre-publicado + flujo «+ Añadir») — agendado en diseno-despliegue §9, es la tanda de despliegue.
 - Test nuevo `test_generate_scenario.py`. Suite 1400 verde. El generador NO toca claves; el YAML real sigue gitignoreado; el prompt (sin clave) se versiona en la persona y en services.example.
 — claude
+
+## [2026-08-28] fix+feat | ls consistente y modal SSH como hub de personalidades
+- Motivo: Iván vio que `ls` y `ls -lsa` mostraban entradas distintas (p.ej. `ansible` aparecía en uno y no en otro) y que la personalidad a medida no se veía; y pidió que el modal de configurar SSH sea el sitio para ver/elegir/generar/editar/aplicar las personalidades de SSH.
+- ls: el árbol del prompt ahora marca carpetas con `/` y ficheros sin barra, con la regla de que las entradas de un directorio son FIJAS entre formatos; `cd` a fichero da `Not a directory`; `cd` sigue permisivo (multinivel, `..`, absolutos). Verificado: ls/ls -lsa iguales, cd entra en carpetas y falla en ficheros.
+- Modal SSH: nuevo bloque «✨ Generar personalidad a medida (IA)» — describes al cliente + nombre → genera (gpt-4o) → crea la persona → la selecciona → Aplicar. Reusa el generador, `POST /personalities`, `_idDesdeNombre` y `_loadServicePersonas`. Verificado E2E (ls tematizado a electrónica).
+- Trampas se deja como está por ahora (decisión de Iván). HTTP a probar después. Suite 1400 verde. El prompt se versiona en la persona y en services.example; el YAML real sigue gitignoreado.
+— claude
