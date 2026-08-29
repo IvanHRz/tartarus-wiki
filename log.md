@@ -1207,3 +1207,9 @@ Suite en 1387 pruebas verdes. — fable
 - Visión de producto de Iván: constructor de entornos por ÁRBOL — menús desplegables de industria+departamento (catálogo definido por nosotros) + una barra de personalización; vista de árbol editable + shell de prueba al lado; plantillas base por industria/departamento; integración con canary tokens (ubicarlos en el árbol para que el atacante los recolecte); control de timestamps; máximo realismo.
 - Se cierra para continuar en una conversación nueva. Prompt de arranque detallado en `wiki/prompt-siguiente-sesion.md`; pendiente ordenado en `.agents/ROADMAP.md` (Parte A realismo, Parte B constructor por árbol); plan archivado en `wiki/planes/2026-08-28.md`.
 — claude
+
+## [2026-08-28] plan | Parte A: realismo del shell SSH
+Plan aceptado archivado en [[planes/2026-08-28]]. Cierra seis "tells" del honeypot SSH: persistir la
+clave de host de Beelzebub (parche + imagen local), inyectar las reglas del shell al aplicar/probar,
+volcado de binarios, editores/pagers, locale por país/industria, serverName a medida y época de ficheros.
+— claude
