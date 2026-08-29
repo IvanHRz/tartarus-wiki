@@ -101,6 +101,30 @@ Plan en `wiki/planes/2026-08-28.md`. Commit `0558613`. Suite **1425 verde**. Ver
   («Entorno IA — <hostname>»); etiquetas por pasos. Verificado: `nomina_marzo_2019.xlsx` en
   `/home/juan/finanzas` con fecha 2019.
 
+### ✅ PARTE A.3 — Entorno con cebo + pulido de realismo (29-ago-2026) — HECHO
+
+Plan en `wiki/planes/2026-08-29.md`. Commit `2402aa5`. Suite **1427 verde**. Verificado en vivo.
+
+- **Entorno RICO y con CEBO (lo que más pidió Iván).** `META_SSH` genera árboles densos (4-12 entradas
+  por carpeta, varios usuarios) con **malas prácticas evidentes**: credenciales en claro (`.env`,
+  `config.php`, `id_rsa`, `.aws/credentials`), datos joya (`dump.sql`, backups, PII), rastro de recon
+  (`.bash_history` con `mysql -uroot -p..`, `scp id_rsa..`), persistencia (cron con secretos). Archivos
+  que se **referencian entre sí**. Taxonomía de interés (básico/experto/IA). Presupuesto 2800→4500,
+  `max_tokens` 1800→2600. Verificado: despacho contable → 34 filas de árbol con todo el cebo.
+- **Búsqueda con cebo + adaptación (SSH_RULES).** `find`/`locate`/`grep -r` sacan el cebo a la luz;
+  si el atacante busca algo plausible que no está, se inventa un hit coherente y estable. Verificado:
+  `find id_rsa`→ruta real; `grep -ri password`→credenciales en `.env`/`config.php`/`wp-config.php`.
+- **cd exitoso = salida VACÍA** (mata el bug de que respondía «ls»). Verificado: `cd X` → `""`.
+- **Binarios acotados** (cabecera + ≤8 líneas) y **sin tokens internos** (se colaba `<|disc_score|>`).
+- **Tipo fichero/carpeta FIJO por sesión** (no más `RH_Doctores` a veces fichero, a veces carpeta).
+- **Latencia**: reglas de interacción condensadas + salidas cortas, sin cambiar de modelo (gpt-4o).
+  ~0.7-1.4s por comando en la prueba.
+- **Clave de host robusta**: `up`/`up-quick` ya NO corren `clean-ssh` (la huella persiste, se acepta
+  UNA vez) + guardia `check-bee-image` que avisa si Beelzebub no corre la imagen parcheada. (Iván había
+  visto la clave vieja `zTbHeA` = contenedor en la imagen SIN parche durante una transición.)
+- **UI**: editor de persona ancho (`min(1040px,96vw)`) con metadatos a dos columnas (estilo Thinkst);
+  prompt del banco sin el punto de más (`mariana@`, no `mariana.@`).
+
 ### 🧾 PENDIENTES IMPLÍCITOS (auto) — capturados por la skill `pendientes-roadmap`
 
 > Lo que se dejó de lado en cada sesión, para que nada se pierda. Actualizado por la skill

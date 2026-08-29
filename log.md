@@ -1255,3 +1255,19 @@ de verdad (denso, malas prácticas evidentes, archivos que se relacionan, find/g
 adaptación) + arreglar los tells que quedan (cd→«ls», fugas `<|disc_score|>` en binarios, archivo-vs-
 carpeta, clave de host, latencia sin cambiar modelo, ancho del editor estilo Thinkst).
 — claude
+
+## [2026-08-29] ingest | Parte A.3: entorno con cebo + pulido de realismo
+- Repo Tartarus: commit `2402aa5`. Suite 1427 verde. Verificado en vivo.
+- **Entorno con cebo**: META_SSH genera árboles densos (4-12 entradas/carpeta, varios usuarios) con
+  malas prácticas evidentes (id_rsa, .env/config.php con credenciales, dump.sql, .bash_history con
+  `mysql -uroot -p..`/`scp id_rsa`, cron con secretos), archivos que se referencian entre sí, y
+  taxonomía de interés (básico/experto/IA). find/grep/locate sacan el cebo a la luz y se adaptan.
+- **Tells**: cd exitoso ahora es salida vacía (no «ls»); binarios acotados y sin `<|disc_score|>`;
+  tipo fichero/carpeta fijo por sesión.
+- **Latencia**: reglas condensadas + salidas cortas, sin cambiar de gpt-4o (~0.7-1.4s/comando).
+- **Clave de host**: up/up-quick ya no corren clean-ssh (la huella persiste) + guardia check-bee-image.
+- **UI**: editor de persona ancho (estilo Thinkst) con metadatos a 2 columnas; prompt del banco sin el
+  punto de más.
+- Pendiente: Parte B (constructor visual por árbol; navegación determinista; cebo→canary token real).
+- Páginas: `wiki/roadmap-operativo.md` sincronizado; plan en `wiki/planes/2026-08-29.md`.
+— claude
