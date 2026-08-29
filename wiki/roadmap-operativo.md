@@ -2182,3 +2182,30 @@ comprobar que no asoma nada en los demás flocks, incluidos los 62/91 endpoints 
   carpeta (como `ls -F`) — leve, no se tocó para no romper la consistencia recién lograda.
 - Trampas se deja como está (decisión de Iván); HTTP y sus personalidades, a probar después.
 - Despliegue per-cliente (SSH por flock en su puerto) sigue agendado.
+
+---
+
+## 28-ago-2026 (11ª tanda) — Que la persona a medida SÍ se aplique + dirección del árbol
+
+### Cerrado
+- **«Aplicar» reinicia Beelzebub SOLO.** Antes escribía el YAML pero el reinicio era un botón aparte
+  fácil de olvidar → el cambio no cargaba (la shell seguía prod-web-01). Ahora `applyPersona`,
+  `applyPersonaToService` y `saveServiceLlm` llaman a `restartBeelzebub()` (watchdog, ≤60 s). Verificado
+  E2E: tras aplicar una persona RH, `hostname` = RH-Server-Electro, `whoami` = jlopez, `ls` = árbol RH.
+- **Generador robusto**: `generate-scenario` ahora compone ESCENARIO (LLM: hostname + árbol + usuarios +
+  negocio) + REGLAS FIJAS afinadas (cd permisivo multinivel, consistencia de `ls`, tipos, contenido,
+  anti-detección). Así toda persona generada trae comportamiento sólido; ya no «los mismos errores».
+- **SSH LLM-first (puente)**: quitados los 61 handlers estáticos que fijaban prod-web-01 y chocaban con
+  cualquier persona a medida. El prompt de la persona controla todo (hostname/usuarios/ficheros).
+- **Contexto documentado**: el generador guarda el `scenario_context` en la descripción de la persona
+  («Generado para: …»), visible en el editor.
+- Suite 1400 verde.
+
+### Dirección de fondo (diseñada, a construir): árbol «estáticos + a medida»
+- Árbol de ficheros ESTÁTICO editable (determinista, ahorra tokens) + LLM encima (contenido/interacción)
+  + plantillas por industria/departamento (IT/Seguridad/RH…), estilo Thinkst pero con IA. Diseño y
+  fases en `wiki/diseno-despliegue.md` §10.
+
+### Pendiente menor
+- El banner SSH usa `serverName` del YAML (no cambia con la persona) → hostname del banner ≠ hostname
+  del comando. Tematizar `serverName` al aplicar/construir la persona.

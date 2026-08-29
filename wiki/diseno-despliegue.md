@@ -156,3 +156,34 @@ Beelzebub corre varios servicios (`ssh-2222`, `ssh-2223`, …), cada uno con su 
 
 Mientras tanto, el generador crea las **personas por cliente** (reutilizables); el SSH compartido se
 tematiza con una a la vez para el engagement actual.
+
+---
+
+## 10. Árbol «estáticos + a medida» — la dirección de fondo (propuesta de Iván, 28-ago)
+
+Idea de Iván (mezcla lo mejor de Thinkst + nuestra IA): **una estructura de árbol de ficheros
+ESTÁTICA y editable** (determinista, ahorra tokens, siempre consistente) con el **LLM trabajando
+ENCIMA** (contenido de ficheros e interacción). «Estáticos + a medida».
+
+- **Modelo de árbol por persona**: carpetas/ficheros como datos (no solo texto en el prompt). Fuente
+  de verdad de `ls`/`cd` → consistencia garantizada y menos tokens (no se regenera el listado).
+- **Plantillas precargadas por industria/departamento** (IT, Seguridad, RH, Finanzas, OT/industrial…),
+  como el «file tree» de Thinkst, listas para elegir y editar.
+- **Editor de árbol en la UI**: desplegable de carpetas/ficheros, añadir/editar/quitar (como Thinkst
+  «Files to Share»).
+- **LLM encima**: genera el CONTENIDO de los ficheros (`cat`) y entretiene al atacante sobre la
+  estructura fija; también puede **generar/afinar** una plantilla para una industria concreta.
+- **Integración Beelzebub**: el árbol se vuelca al prompt como filesystem explícito (lo que ya hacemos,
+  pero desde una estructura de datos editable) y/o como handlers; el LLM solo rellena contenido.
+
+**Fases sugeridas:**
+1. Modelo de árbol (datos) + 2-3 plantillas (IT/RH/OT) + volcado al prompt de la persona.
+2. Editor de árbol en la UI (desplegable editable).
+3. Generar/afinar plantilla por IA (el generador actual produce el árbol; el editor lo ajusta).
+4. Determinismo real de `ls`/`cd` desde el árbol (evaluar Cowrie si se necesita 100%).
+
+**Estado actual (puente, 28-ago):** SSH va **LLM-first** (el prompt de la persona controla todo el
+entorno, incluidos hostname/usuarios/ficheros), con las **reglas afinadas fijas** en el generador. Es
+~90-95% y funciona a medida ya; el árbol estático lo hará determinista. Pendiente menor: el banner SSH
+usa `serverName` del YAML (no cambia con la persona) — al construir el árbol/persona conviene que
+`serverName` también se tematice.

@@ -1192,3 +1192,11 @@ Suite en 1387 pruebas verdes. — fable
 - Modal SSH: nuevo bloque «✨ Generar personalidad a medida (IA)» — describes al cliente + nombre → genera (gpt-4o) → crea la persona → la selecciona → Aplicar. Reusa el generador, `POST /personalities`, `_idDesdeNombre` y `_loadServicePersonas`. Verificado E2E (ls tematizado a electrónica).
 - Trampas se deja como está por ahora (decisión de Iván). HTTP a probar después. Suite 1400 verde. El prompt se versiona en la persona y en services.example; el YAML real sigue gitignoreado.
 — claude
+
+## [2026-08-28] fix+feat | La persona a medida ya se aplica de verdad + dirección del árbol
+- Motivo: Iván generó una persona (RH electrónica), guardó y aplicó, y la shell no la reflejaba (seguía prod-web-01, mismos errores).
+- Causas: (1) «Aplicar» no reiniciaba Beelzebub (paso aparte); (2) 61 comandos estáticos fijaban prod-web-01 y ganaban sobre el LLM; (3) el prompt generado no llevaba las reglas afinadas.
+- Hecho: (1) Aplicar/Guardar reinician Beelzebub solos (watchdog ≤60s); (2) SSH LLM-first: quitados los 61 estáticos, el prompt de la persona controla todo; (3) generador robusto = escenario (LLM) + reglas fijas afinadas; (4) el contexto de generación se guarda en la persona («Generado para: …»). Verificado E2E: persona RH → hostname RH-Server-Electro, whoami jlopez, ls = árbol RH, ls==ls -lsa. Suite 1400 verde.
+- Dirección de fondo (de Iván): árbol de ficheros estático editable + plantillas por industria/departamento + LLM encima («estáticos + a medida», Thinkst con IA). Diseñado en diseno-despliegue §10, a construir por fases.
+- Pendiente menor: el banner SSH usa serverName del YAML (no cambia con la persona) → tematizarlo también.
+— claude
