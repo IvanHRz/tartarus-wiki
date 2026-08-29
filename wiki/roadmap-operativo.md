@@ -2085,3 +2085,27 @@ comprobar que no asoma nada en los demás flocks, incluidos los 62/91 endpoints 
   pide aceptar huella.
 - **Deuda de versionado (preexistente):** la config rica del SSH (comandos estáticos) vive solo en el
   `services/` local gitignoreado, no en el repo. Pendiente: versionar una plantilla keyless completa.
+
+---
+
+## 28-ago-2026 (7ª tanda) — Cimientos del despliegue: honeypot que funciona + opt-in + diseño
+
+### Cerrado
+- **Honeypot SSH robusto**: `ls -las`/`ls -ltr`/`ls -ls`/`ls -lh` ya no dan «command not found».
+  Añadidos dos handlers deterministas en `services/ssh-22.yaml`: `^ls\s+-\S*l\S*$` → listado largo,
+  `^ls\s+-\S+$` → nombres. Verificado por SSH (batería completa) + estado de sesión con `cd`/`pwd`.
+- **Flock opt-in (primer paso)**: en el hub de Despliegue, los honeypots de Beelzebub se rotulan como
+  **«Laboratorio compartido» (plataforma, no del cliente)** y los remotos como **«Sensores de este
+  cliente»**; el badge de cabecera dice **«Opt-in · nada por defecto»**. Un flock nuevo deja de
+  parecer que despliega Beelzebub por defecto. (`ui/src/index.html`, `main.js` `_updateDeployFlockName`.)
+- **Documento de diseño** `wiki/diseno-despliegue.md`: modelo (lab compartido + asignación + canary/
+  hardware por-flock, por C4), **manual vs recomendado** (botón Desplegar), **spec del flujo «+
+  Añadir» tipo Thinkst**, elección de personalidad, y **recortes de ruido de las 4 pestañas**.
+
+### Diferido (especificado en el diseño)
+- Construir la UI del flujo «+ Añadir» guiado y la **activación opt-in de protocolos** de Beelzebub.
+- Aplicar los recortes de ruido de las pestañas (§6 del diseño).
+- Persistir la clave de host SSH (aplazado).
+- **Deuda de versionado (preexistente):** la config rica de `services/ssh-22.yaml` (incluidos los
+  handlers de `ls`) vive solo local (gitignoreada por la clave). Falta versionar una plantilla keyless
+  completa; hoy solo el prompt está en `services.example`.

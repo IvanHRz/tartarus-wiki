@@ -1158,3 +1158,12 @@ Suite en 1387 pruebas verdes. — fable
 - Hecho: (1) sincronizada la clave válida a SSH y Telnet (`/services/{file}/llm`); (2) quitado el `^cd → ''` estático → cd al LLM (ahora `cd inexistente` da error real); (3) `pwd` al LLM (estado) + prompt mejorado con la lista de directorios existentes; (4) `ls` se deja estático (el LLM lo hacía mal). El prompt mejorado se versionó en `services.example/ssh-22.yaml` (sin clave); el `services/` real está gitignoreado.
 - Límites honestos: el LLM es ~90% consistente (alguna vez erra un cd a un dir real, o mete un espacio); `ls` no refleja el CWD (estático); la clave de host SSH sigue sin persistir (aplazado). Suite 1395 verde.
 — claude
+
+## [2026-08-28] feat | Cimientos del despliegue: honeypot SSH que funciona + flock opt-in + diseño
+- Motivo: Iván probó SSH y `ls -las` daba «command not found»; y planteó un tema de producto mayor: Beelzebub aparece «desplegado por default» sin preguntar, cuando quizá solo quiere canary tokens. Quiere un flujo opt-in guiado estilo Thinkst y menos ruido en pestañas. «No soltarlo hasta que funcione.»
+- Realidad de fondo (aterrizada en el diseño): Beelzebub es UNA instancia compartida; el engine no puede crear contenedores por cliente (C4). «Desplegar en un flock» = asignar puertos del lab compartido + cebos/honey-creds por-flock + sensores remotos enrolados.
+- Hecho: (1) honeypot SSH robusto — dos handlers de `ls` deterministas (largo si flags con `l`, simple si no); verificado por SSH con estado de sesión (`cd`/`pwd`). (2) Separación opt-in en el hub: «Laboratorio compartido (Beelzebub)» vs «Sensores de este cliente»; badge «Opt-in · nada por defecto»; un flock nuevo no aparenta desplegar Beelzebub. (3) `wiki/diseno-despliegue.md`: modelo, manual vs recomendado, spec del flujo «+ Añadir» tipo Thinkst, personalidad del sensor, y recortes de ruido de las 4 pestañas.
+- Decisiones de Iván: flock vacío/opt-in; esta tanda cimientos+diseño; mantener 4 pestañas quitando ruido.
+- Diferido (especificado): construir el flujo «Añadir» + activación opt-in de protocolos; recortar ruido de pestañas; persistir clave de host SSH; versionar la config rica keyless.
+- Nota: la config real `services/ssh-22.yaml` está gitignoreada (clave), así que el arreglo de `ls` no se commitea ahí; queda en local.
+— claude
