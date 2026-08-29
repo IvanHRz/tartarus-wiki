@@ -1319,3 +1319,10 @@ del timeline. Filesystem determinista sigue siendo Parte B.
   no al honeypot). Pendiente: política del gateway .1 y taxonomía TCP/TCP-HTTP.
 - Páginas: roadmap-operativo sincronizado; plan en planes/2026-08-29.
 — claude
+
+## [2026-08-29] plan | Parte B (Fase B1): engine como cerebro determinista del honeypot
+Plan aceptado archivado en [[planes/2026-08-29]]. Arranca la Parte B: el engine se vuelve el «host» LLM
+de Beelzebub y resuelve `cd`/`ls`/`pwd`/`find`/`cat` EN CÓDIGO desde el árbol (parseado del escenario);
+el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de todas las rondas: la
+consistencia del filesystem. Repo al momento: `bf003de`.
+— claude
