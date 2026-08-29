@@ -1248,3 +1248,10 @@ volcado de binarios, editores/pagers, locale por país/industria, serverName a m
   `TOKEN_CATALOG`).
 - Páginas: `wiki/roadmap-operativo.md` sincronizado; plan en `wiki/planes/2026-08-28.md`.
 — claude
+
+## [2026-08-29] plan | Parte A.3: entorno con cebo, pulido de realismo, latencia y ancho de UI
+Plan aceptado archivado en [[planes/2026-08-29]]. Enriquecer el entorno del honeypot para que sea cebo
+de verdad (denso, malas prácticas evidentes, archivos que se relacionan, find/grep/locate con morbo y
+adaptación) + arreglar los tells que quedan (cd→«ls», fugas `<|disc_score|>` en binarios, archivo-vs-
+carpeta, clave de host, latencia sin cambiar modelo, ancho del editor estilo Thinkst).
+— claude
