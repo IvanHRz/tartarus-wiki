@@ -2434,3 +2434,32 @@ Es el fix de RAÍZ de la queja #1 de las cinco rondas anteriores: la **consisten
   editable + shell de prueba al lado, la IA genera/afina hacia el modelo de árbol, persistencia por persona.
 - **B3 — Canary en el árbol**: marcar un nodo como canary → token documento (beacon) o credencial con
   secreto único + regla `decoy_reuse` en la ruta elegida; el atacante lo recolecta → alerta.
+
+## 29-ago-2026 (Parte B · Fase B2) — Constructor visual por árbol + catálogo industria×departamento
+
+El árbol de ficheros del honeypot deja de ser texto crudo: ahora se edita VISUALMENTE, con la shell de
+prueba al lado (que ya pega al motor determinista B1). Plan íntegro en `planes/2026-08-29.md`.
+
+### Cerrado
+- **Serialización canónica** (`engine/engine/filetree_serde.py`): `parse_scenario` (texto del escenario →
+  árbol anidado) y `serialize_scenario` (árbol → texto), con la MISMA gramática que el motor B1 (el
+  listado del padre decide el tipo). Round-trip estable y **preserva verbatim** el cebo/Users/Network/
+  TIMELINE. El texto del prompt sigue siendo la fuente de verdad (sin esquema nuevo).
+- **Endpoints** `POST /personalities/filetree/parse` y `/serialize` (sin estado). El JS no duplica la
+  gramática.
+- **Editor visual** en el editor de persona: árbol colapsable con añadir/renombrar/borrar/marcar-canary y
+  toggle «texto crudo ⇄». Al editar re-serializa al `<textarea>` ssh, así el probe y el guardado siguen
+  igual. Solo personas bash. `main.js?v=46`, `tartarus.css?v=17`.
+- **Catálogo industria×departamento** (8×6, confirmado por Iván): desplegables que alimentan el generador
+  IA (`generate-scenario` acepta `department` → rol del servidor, usuarios, carpetas). Verificado:
+  Salud×RH → nómina/expedientes/contratos; Tec×IT → deploy/.env/k8s.
+- **Plantillas base curadas** (4: Salud×RH, Tec×IT, Manuf×OT, Fin×Dirección) con botón «📁 Plantilla
+  base» (carga instantánea sin IA) + endpoints `GET/POST /filetree/template(s)`. «Curadas + IA rellena».
+- Verificado end-to-end por API (mismo camino que el navegador): plantilla → árbol → añadir `vault.env`
+  canary → serializar → la shell resuelve `cd`/`ls`/`pwd`/`cat` con el nodo nuevo. Suite **1485 verde**.
+
+### Pendiente
+- **Prueba visual en el navegador** (Cmd+Shift+R): la lógica de datos está verificada; falta el smoke test
+  de render/interacción del árbol (colapsar, botones de nodo).
+- **B3 — Canary en el árbol** (siguiente ronda): consumir `protocols.ssh.canaries` para acuñar token/
+  credencial con secreto único + regla `decoy_reuse` en la ruta marcada, y que el `cat` sirva ese secreto.

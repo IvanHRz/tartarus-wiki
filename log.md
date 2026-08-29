@@ -1327,6 +1327,16 @@ el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
 
+## [2026-08-29] bitacora | Parte B · Fase B2 HECHA: constructor visual por árbol
+Implementado y verificado end-to-end. Nuevos `engine/engine/filetree_serde.py` (parse⇄serialize del árbol,
+round-trip estable, preserva cebo/Users verbatim) y `filetree_templates.py` (4 plantillas curadas);
+endpoints `/personalities/filetree/{parse,serialize,template,templates}` + `department` en generate-scenario.
+UI: editor visual de árbol en el editor de persona (colapsable, añadir/renombrar/borrar/canary, toggle
+texto crudo), desplegables industria×departamento (8×6) y botón «Plantilla base». El texto del prompt
+sigue siendo la fuente de verdad; el motor B1 no se tocó. Suite 1485 verde. Detalle en [[roadmap-operativo]]
+(29-ago, Fase B2). Pendiente: smoke test visual en navegador y B3 (canary real en el árbol).
+— claude
+
 ## [2026-08-29] plan | Parte B (Fase B2): constructor visual por árbol + catálogo industria×departamento
 Plan aceptado archivado en [[planes/2026-08-29]]. Siguiente fase de la Parte B: editor VISUAL del árbol
 (estilo Thinkst) con shell de prueba al lado (ya existe, pega a B1), desplegables industria×departamento
