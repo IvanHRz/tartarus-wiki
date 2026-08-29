@@ -149,6 +149,38 @@ Plan en `wiki/planes/2026-08-29.md`. Commit `d6a0c61`. Suite **1429 verde**. Ver
 - **Nota honesta**: el cwd/consistencia mejora pero sigue ~85-90% (techo del LLM). El 100% es la Parte B
   (filesystem determinista: engine como «host» LLM de Beelzebub, `cd`/`ls`/`pwd`/`find` en código).
 
+### ✅ PARTE A.5 — FHS real + personas estándar/reset + falsos positivos (29-ago-2026) — HECHO
+
+Plan en `wiki/planes/2026-08-29.md`. Commit `bf003de`. Suite **1431 verde**. Verificado en vivo.
+
+- **El shell trata el honeypot como un Ubuntu REAL** (SSH_RULES): todo el FHS existe con contenido
+  estándar aunque no esté en el árbol de negocio (arregla el bug raíz de que `/home`, `/tmp`, `/var`,
+  `/etc` «no existían»). `/tmp` ya no sale vacío. `cd ..` sube (desde `/` se queda en `/`). Regla GLOBAL
+  de no fugar tokens internos (`<|...|>`). Pipes/redirecciones. Verificado: `cd /home`+`pwd`, `ls /tmp`
+  con contenido, `/var/log` y `/etc` reales. **OJO**: `cd ..` hacia arriba AÚN falla a veces (prior
+  terco de gpt-4o) — el 100% es la Parte B.
+- **META_SSH**: `/home/<user>` con dotfiles + Desktop/Documents + trabajo (no 2 ficheros); SPECIFIC
+  REQUIREMENTS QUIRÚRGICOS (fecha/ruta solo al archivo nombrado).
+- **Personas ESTÁNDAR por default + botón «Reset a estándar»**: `ubuntu-server` pasa a ser un Ubuntu
+  genérico (`srv-app-01`), no el hospital RH. Baselines en `personalities/_standard/`; endpoint
+  `GET /personalities/{id}/standard`; botón que repone el prompt genérico; la personalización por IA en
+  el editor ya NO pisa el baseline (crea persona derivada `ubuntu-server-<slug>`).
+- **Falsos positivos** (auditado + arreglado en parte):
+  - La purga de ruido INTERNO (`.2-.10`, `scripts/purge_infra_noise.sh`) da **0** — la BD ya está limpia
+    (se recreó en algún punto). El ruido actual son handshakes pelados del gateway `.1` (Nmap de prueba
+    + los `ssh-keyscan` de verificación del propio asistente + conexiones de prueba), indistinguibles del
+    ataque real por IP.
+  - **Health worker**: Beelzebub ya NO sondea los puertos de ATAQUE (`:8080/:22/:80`) — solo métricas
+    `:2112`; deja de crear «New TCP Session» falsas.
+  - **Timeline/histograma**: oculta por defecto los handshakes pelados (`command LIKE 'New %'`, sin
+    interacción) — eran el grueso del ruido de recon (toggle `include_handshakes`). Verificado: 360 sin
+    handshakes vs 531 con.
+  - Los **correos ya no se disparaban** (recon = LOW/MEDIUM sin interacción). El asistente NO registra sus
+    cambios de código como ataques (pega al engine `:9001`, no al honeypot); lo único suyo que sí llegaba
+    eran los `ssh-keyscan`.
+  - **Pendiente FP**: política fina para el gateway `.1` (distinguir operador/prueba vs atacante real —
+    p.ej. tag/ventana de test), y la doble taxonomía `TCP` vs `TCP/HTTP`.
+
 ### 🧾 PENDIENTES IMPLÍCITOS (auto) — capturados por la skill `pendientes-roadmap`
 
 > Lo que se dejó de lado en cada sesión, para que nada se pierda. Actualizado por la skill

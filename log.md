@@ -1304,3 +1304,18 @@ sobrescribía el catálogo). Más contenido y requisitos quirúrgicos. Falsos po
 del ruido histórico (dry-run) + cerrar la sonda del health worker sobre :8080 + filtrar el recon pelado
 del timeline. Filesystem determinista sigue siendo Parte B.
 — claude
+
+## [2026-08-29] ingest | Parte A.5: FHS real + personas estándar/reset + falsos positivos
+- Repo Tartarus: commit `bf003de`. Suite 1431 verde. Verificado en vivo.
+- **Shell = Ubuntu REAL**: todo el FHS existe con contenido estándar (arregla que /home,/tmp,/var,/etc
+  «no existían»); /tmp con contenido; cd .. sube; sin fugas <|...|>; pipes. (cd .. hacia arriba aún
+  falla a veces = techo LLM → Parte B.)
+- **Personas estándar + Reset**: ubuntu-server ahora genérico (srv-app-01); baselines en _standard/;
+  endpoint /{id}/standard; botón «Reset a estándar»; la IA en el editor crea persona derivada, no pisa
+  el base.
+- **Falsos positivos**: purga interna ya da 0 (BD limpia); health worker deja de sondear los puertos de
+  ataque de Beelzebub (solo métricas :2112); histograma oculta handshakes pelados (New %) por defecto
+  (360 vs 531). Los correos ya no se disparaban; el asistente no registra sus cambios (pega al engine,
+  no al honeypot). Pendiente: política del gateway .1 y taxonomía TCP/TCP-HTTP.
+- Páginas: roadmap-operativo sincronizado; plan en planes/2026-08-29.
+— claude
