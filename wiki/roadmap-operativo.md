@@ -82,12 +82,37 @@ Plan archivado en `wiki/planes/2026-08-28.md`. Suite **1418 verde** (+18). Todo 
   `TIMELINE`; regla de fechas coherentes. Campo «Época» en la UI. Verificado: era 2018-2020 →
   `resultados_2018/2019/2020.xlsx`.
 
+### ✅ PARTE A.2 — Correcciones y UX tras probar (28-ago-2026) — HECHO
+
+Plan en `wiki/planes/2026-08-28.md`. Commit `0558613`. Suite **1425 verde**. Verificado en vivo.
+
+- **Shell de prueba NAVEGABLE.** El banco era de un solo comando (`analyze` mandaba solo system+user,
+  sin memoria) → `cd` y luego `ls` no navegaban. Ahora `llm_client.analyze` acepta `history`; el
+  endpoint `/probe` lo recibe/sanea; la UI es un mini-terminal que acumula la sesión y la reenvía.
+  Verificado: `cd finanzas` → `ls -l` lista finanzas con fecha 2019.
+- **Diálogos propios en TODA la app.** Fuera los `confirm/alert/prompt` nativos (los feos «localhost:8888
+  dice…»): `confirmDialog`/`promptDialog` (modal estilizado) + `showToast`; reemplazados ~44 usos.
+- **Menos clics al aplicar + causa del «se cae la sesión sola».** Botón «Guardar y aplicar» (un paso);
+  `applyPersonality` avisa que reinicia y cierra las sesiones SSH, y hace UN solo reinicio. La caída de la
+  sesión a los ~18 s NO era timeout (`deadlineTimeoutSeconds: 600`): Beelzebub se reinició por el flag de
+  la UI mientras el usuario estaba conectado.
+- **Generador más claro.** Campo «Detalles / archivos y fechas» → `SPECIFIC REQUIREMENTS` (pedir un
+  archivo en una ruta con una fecha; ~90-95%); la descripción corta ya no vuelca el contexto entero
+  («Entorno IA — <hostname>»); etiquetas por pasos. Verificado: `nomina_marzo_2019.xlsx` en
+  `/home/juan/finanzas` con fecha 2019.
+
 ### 🧾 PENDIENTES IMPLÍCITOS (auto) — capturados por la skill `pendientes-roadmap`
 
 > Lo que se dejó de lado en cada sesión, para que nada se pierda. Actualizado por la skill
 > `pendientes-roadmap` al cerrar sesión. No duplicar: si un ítem ya vive en otra sección, se
 > referencia en vez de repetir.
 
+- [28-ago-2026 · **P1**] **Parte B — constructor por árbol determinista.** El campo «Detalles /
+  archivos y fechas» (A.2) lo aproxima por IA (~90-95%: p.ej. pedí fecha 2019-03-15 y salió 2019-03-05).
+  El control 100% es el árbol editable: desplegables de industria/departamento sobre `INDUSTRY_SEEDS`
+  (`engine/engine/deception_filetree.py:40-102`) + `TOKEN_CATALOG` (`ui/src/js/deploy_hub.js:220-238`),
+  vista de árbol editable con **ruta y fecha por archivo** e integración de canary tokens. Antes de
+  construir: proponer a Iván el catálogo de industrias/departamentos y la maqueta del árbol.
 - [28-ago-2026 · **P2**] **Techo ~90-95% del LLM (residual del shell).** Glitches puntuales medidos
   en vivo: `less <log>` a veces muestra solo `(END)` en vez del contenido; `cat` de un fichero que el
   árbol declara como fichero puede devolver «Is a directory» de forma esporádica. Son fallos de

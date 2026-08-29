@@ -1231,3 +1231,20 @@ volcado de binarios, editores/pagers, locale por país/industria, serverName a m
 - Páginas: `wiki/roadmap-operativo.md` (sincronizado con `.agents/ROADMAP.md`), `wiki/planes/2026-08-28.md`
   (plan archivado antes de ejecutar).
 — claude
+
+## [2026-08-28] ingest | Parte A.2: correcciones y UX tras probar (shell navegable, diálogos, generador)
+- Repo Tartarus: commit `0558613`. Suite 1425 verde.
+- **Shell de prueba navegable**: `llm_client.analyze` acepta `history`; `/probe` la reenvía; la UI es un
+  mini-terminal con estado. `cd`/`ls`/`cat` navegan de verdad (antes cada comando era aislado).
+- **Diálogos propios en toda la app**: fuera los `confirm/alert/prompt` nativos; `confirmDialog`,
+  `promptDialog`, `showToast` (~44 reemplazos).
+- **Aplicar en un clic**: botón «Guardar y aplicar»; `applyPersonality` avisa que el reinicio cierra las
+  sesiones SSH y hace un solo reinicio. La sesión que se caía «sola» a los ~18 s era ese reinicio (no
+  timeout: `deadlineTimeoutSeconds` es 600).
+- **Generador más claro**: campo «Detalles / archivos y fechas» → `SPECIFIC REQUIREMENTS`; descripción
+  corta ya no vuelca el contexto entero; etiquetas por pasos. Verificado en vivo: `nomina_marzo_2019.xlsx`
+  en `/home/juan/finanzas` con fecha 2019.
+- Pendiente P1 anotado: Parte B (árbol determinista con ruta/fecha por archivo; base `INDUSTRY_SEEDS` +
+  `TOKEN_CATALOG`).
+- Páginas: `wiki/roadmap-operativo.md` sincronizado; plan en `wiki/planes/2026-08-28.md`.
+— claude
