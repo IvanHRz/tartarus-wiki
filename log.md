@@ -1327,6 +1327,16 @@ el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
 
+## [2026-08-29] plan | Parte B (Fase B4): el shell se siente real (prompt, cd, contraseña, carpetas base)
+Plan aceptado archivado en [[planes/2026-08-29]]. Cuatro fallos vistos en vivo: `cd` imprime línea en
+blanco y el prompt no sigue la ruta (ambos son de Beelzebub: `ssh.go:155` y el `:~$` literal de
+`buildPrompt` → se amplía el parche de la imagen); no se puede fijar la contraseña (`passwordRegex` ya
+soporta los 3 modos); y las carpetas base están vacías (sin `/opt`, `/srv`, `/home`, `/tmp` pobre, y
+ningún fichero de sistema con contenido horneado). El prompt se sincroniza con un marcador fuera de banda
+NEGOCIADO (para no filtrarlo a sensores con imagen sin parchear). B5 registrada: personalidades no-Linux
++ filetree ZIP. Repo: `3e4476e`.
+— claude
+
 ## [2026-08-29] bitacora | Parte B · Fase B3 HECHA: canary REAL en el árbol, ambos disparos
 Implementado y verificado end-to-end por SSH real. Nuevo `engine/engine/canary_tree.py` (aprovisiona al
 aplicar: secreto único + regla `decoy_reuse` + fila en consola + siembra en Redis); `shell_brain._content`
