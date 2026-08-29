@@ -2209,3 +2209,34 @@ comprobar que no asoma nada en los demás flocks, incluidos los 62/91 endpoints 
 ### Pendiente menor
 - El banner SSH usa `serverName` del YAML (no cambia con la persona) → hostname del banner ≠ hostname
   del comando. Tematizar `serverName` al aplicar/construir la persona.
+
+---
+
+## 28-ago-2026 (cierre de sesión) — Pendiente: realismo del shell + constructor por árbol
+
+Se cierra la sesión aquí para continuar en una nueva. Prompt de arranque detallado en
+`wiki/prompt-siguiente-sesion.md`. Pendiente, en orden:
+
+### Parte A — Realismo del shell SSH (empezar por aquí)
+- **[P0] Persistir la clave de host SSH de Beelzebub** — mata el «REMOTE HOST IDENTIFICATION HAS
+  CHANGED» (delator grave, agravado porque «Aplicar» reinicia). Investigar soporte en Beelzebub v3.9.0
+  (ruta de clave fija + volumen escribible; hoy el mount es `:ro`). Requiere tocar compose (recreate,
+  sin `down -v`). Si no hay soporte por config → evaluar fork/otra vía y consultar a Iván.
+- **[P1] `cat`/`head`/`tail` de binario/PDF/docx** → volcar contenido, nunca meta/servicial.
+- **[P1] Editores y pagers** (`nano`, `vi`, `vim`, `less`, `more`) → «abren» el fichero y vuelven al
+  prompt, para retener al atacante. Cubrir todos los comandos que usaría un atacante.
+- **[P1] Locale**: contenido en el idioma del país/empresa (español para México) y estructuras
+  coherentes por industria (la de hospital CDMX salió en inglés y sin sentido).
+- **[P2] serverName a medida** al aplicar la persona (banner == hostname).
+- **[P2] Timestamps**: permitir fijar la época/fechas de los ficheros desde el prompt.
+
+### Parte B — Constructor de entornos por árbol (visión de producto)
+- Menús desplegables de **industria + departamento** (catálogo definido por nosotros) + 1 barra de
+  personalización. Confirmar el catálogo con Iván antes de construir.
+- **Vista/editor de árbol** de carpetas/archivos junto a la **shell de prueba** (probe).
+- **Plantillas base** por industria/departamento, coherentes y en idioma correcto.
+- **Integración canary tokens**: crear credenciales trampa y ubicarlas en el árbol (ruta indicada);
+  el atacante las recolecta → alerta. Conectar con cebos / `/deploy/execute`.
+- **Determinismo** del árbol (estructura de datos) para `ls`/`cd`; evaluar Cowrie si se necesita 100%.
+
+Ver diseño en `wiki/diseno-despliegue.md` §9-10.

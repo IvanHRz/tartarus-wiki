@@ -1200,3 +1200,10 @@ Suite en 1387 pruebas verdes. — fable
 - Dirección de fondo (de Iván): árbol de ficheros estático editable + plantillas por industria/departamento + LLM encima («estáticos + a medida», Thinkst con IA). Diseñado en diseno-despliegue §10, a construir por fases.
 - Pendiente menor: el banner SSH usa serverName del YAML (no cambia con la persona) → tematizarlo también.
 — claude
+
+## [2026-08-28] cierre | Fin de sesión: honeypot SSH creíble; pendiente realismo + constructor por árbol
+- Resumen de la sesión (larga): puesta a cero + reinicio de fábrica reproducibles; despliegue opt-in (lab compartido vs cliente); AI Settings arreglado (clave persiste, Test honesto); honeypot SSH con estado real (cd/ls/pwd, ls==ls -lsa) LLM-first con gpt-4o; sistema de personas + generador de entornos por IA (escenario + reglas fijas); «Aplicar» reinicia Beelzebub solo. Suite 1400 verde. Sin push (todo local).
+- Iván probó y detectó tells de realismo: la clave de host SSH cambia en cada reinicio (REMOTE HOST IDENTIFICATION HAS CHANGED); `cat` de PDF salió meta; `nano` no existía; una empresa hospitalaria CDMX generó documentos en inglés y estructuras sin sentido; el banner sigue prod-web-01.
+- Visión de producto de Iván: constructor de entornos por ÁRBOL — menús desplegables de industria+departamento (catálogo definido por nosotros) + una barra de personalización; vista de árbol editable + shell de prueba al lado; plantillas base por industria/departamento; integración con canary tokens (ubicarlos en el árbol para que el atacante los recolecte); control de timestamps; máximo realismo.
+- Se cierra para continuar en una conversación nueva. Prompt de arranque detallado en `wiki/prompt-siguiente-sesion.md`; pendiente ordenado en `.agents/ROADMAP.md` (Parte A realismo, Parte B constructor por árbol); plan archivado en `wiki/planes/2026-08-28.md`.
+— claude
