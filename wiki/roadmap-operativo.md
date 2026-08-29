@@ -2393,3 +2393,44 @@ Se cierra la sesión aquí para continuar en una nueva. Prompt de arranque detal
 - **Determinismo** del árbol (estructura de datos) para `ls`/`cd`; evaluar Cowrie si se necesita 100%.
 
 Ver diseño en `wiki/diseno-despliegue.md` §9-10.
+
+## 29-ago-2026 (Parte B · Fase B1) — El engine como cerebro determinista del honeypot
+
+Es el fix de RAÍZ de la queja #1 de las cinco rondas anteriores: la **consistencia del filesystem**
+(cwd, `cd ..`, `pwd`, contenido). Se sacó el ESTADO del LLM y se puso en CÓDIGO. Plan íntegro en
+`planes/2026-08-29.md`.
+
+### Cerrado
+- **El engine se volvió el «host» LLM de Beelzebub.** Nuevo endpoint OpenAI-compatible
+  `POST /v1/chat/completions` (`engine/engine/openai_shim_router.py`): recibe el request OpenAI completo
+  que manda Beelzebub y responde `choices[0].message.content`. Ignora la cabecera `Authorization` (nunca
+  se loguea) y `stream:true`. Se cableó `services/ssh-22.yaml` con
+  `set_llm(host="http://engine:8000/v1/chat/completions")` conservando clave y prompt.
+- **Cerebro determinista** (`engine/engine/shell_brain.py`): parsea el árbol que ya viaja en el escenario,
+  superpone un **FHS base** (los directorios estándar SIEMPRE existen) y reconstruye el `cwd` replayando
+  los `cd` del history (stateless). Resuelve en código `cd`, `pwd`, `ls` (`-a/-l/-la`), `cat`, `head`,
+  `tail`, `wc`, `stat`, `file`, `find`, `tree`, `which`, `whoami`, `id`, `hostname`. El resto (uname, ps,
+  apt, grep -r, pipes…) y las personas no-bash → passthrough al LLM. Cualquier error → passthrough: el
+  shell nunca se rompe.
+- **`cat` estable**: el contenido lo genera el LLM UNA vez y se cachea en Redis (`sb:content:*`, TTL 24 h)
+  → da lo MISMO siempre (antes cambiaba en cada lectura). Se pide con una directiva explícita («el fichero
+  EXISTE, genera solo su contenido, nunca un error»): el motor decide la existencia, el LLM solo rellena.
+- **Parseo en dos pasadas**: el tipo de cada nodo lo decide el listado de su padre, no una fila propia.
+  Arregla el bug real de que una fila-prosa (`rh_pacientes.txt : (descripción…)`) volviera el fichero un
+  directorio. Homes enriquecidos con `.bashrc`/`.profile`/`.bash_history` cat-ables.
+- **El banco de prueba usa el MISMO cerebro** (`probe` → `shell_brain.resolve`): banco y producción ya no
+  divergen.
+- **Verificado en vivo por SSH real**: navegación de 3 niveles con `pwd` correcto SIEMPRE (100%); `cd ..`
+  desde `/` se queda en `/` (el prior terco de gpt-4o, ahora en código); `ls`/`cat` idénticos entre
+  llamadas; `rh_pacientes.txt` es fichero y su `cat` es estable; `cat .bashrc` coherente con `ls`.
+  **Latencia**: `cd`/`ls`/`pwd` **2.5–5 ms** (sin LLM, antes ~1-2 s); `cat` nuevo ~1.7 s una vez, luego
+  **~11 ms** cacheado. Suite **1466 verde**. Ingesta intacta.
+
+### Pendiente
+- **B1 menor**: toggle en la UI de AI Settings para activar/desactivar el cerebro (hoy se revierte con
+  `set_llm(host="")`). Riesgo documentado: acopla el shell SSH a que el engine esté vivo (ya es servicio
+  core); el fallback interno cubre errores de resolución, no un engine caído.
+- **B2 — Constructor visual por árbol**: desplegables industria × departamento (8×6, matriz curada), árbol
+  editable + shell de prueba al lado, la IA genera/afina hacia el modelo de árbol, persistencia por persona.
+- **B3 — Canary en el árbol**: marcar un nodo como canary → token documento (beacon) o credencial con
+  secreto único + regla `decoy_reuse` en la ruta elegida; el atacante lo recolecta → alerta.

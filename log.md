@@ -1326,3 +1326,14 @@ de Beelzebub y resuelve `cd`/`ls`/`pwd`/`find`/`cat` EN CÓDIGO desde el árbol 
 el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de todas las rondas: la
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
+
+## [2026-08-29] bitacora | Parte B · Fase B1 HECHA: filesystem determinista, verificado en vivo
+Implementado y verificado por SSH real. Nuevos `engine/engine/shell_brain.py` (parser del árbol + FHS base
++ replay del cwd + resolutor determinista + cache de contenido en Redis + fallback) y
+`engine/engine/openai_shim_router.py` (`POST /v1/chat/completions`, ignora Authorization/stream). El banco
+(`probe`) usa el mismo cerebro; `services/ssh-22.yaml` apunta al engine (`set_llm`). Resultado: navegación
+100% consistente (incl. `cd ..` desde `/`), `ls`/`cat` idénticos entre llamadas, `cat` cacheado; latencia
+de `cd`/`ls`/`pwd` 2.5–5 ms (antes ~1-2 s). Suite 1466 verde. Detalle en [[roadmap-operativo]] (29-ago,
+Fase B1). Pendiente: toggle de UI (hoy se revierte con `set_llm(host="")`), fases B2 (constructor visual)
+y B3 (canary en el árbol).
+— claude
