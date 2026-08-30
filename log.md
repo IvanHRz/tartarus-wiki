@@ -1327,6 +1327,16 @@ el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
 
+## [2026-08-29] plan | Parte B (Fase B7b): el motor de comandos de Windows
+Plan aceptado archivado en [[planes/2026-08-29]]. Segunda mitad de B7: que `cd`/`dir`/`type` se resuelvan
+en código para Windows, con carpetas base propias, verbos de sistema y el prompt `PS C:\...>` (que obliga
+a ampliar el parche de Beelzebub y reconstruir su imagen). El inventario destapó cuatro trampas: `dir` ya
+está registrado apuntando al `ls` de Linux (en cuanto el gate distinga dialectos imprimiría formato POSIX
+dentro de un Windows); las carpetas base de Ubuntu se siembran sin condición; el índice del árbol no
+pliega mayúsculas (`cd c:\users` fallaría, y afecta a la clave del canario); y `pushd`/`popd` romperían
+el contrato que consumen 16 manejadores. Repo: `ebc2f6d`.
+— claude
+
 ## [2026-08-29] bitacora | Parte B · Fase B7a HECHA: cimientos de Windows + editor de config
 Implementada y verificada. Nuevo `tree_grammar.py`: la gramática del árbol vivía duplicada en dos módulos
 (~174 líneas) y ya había divergido; ahora es una sola, con sabor POSIX o Windows, y se comprobó byte a
