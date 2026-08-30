@@ -2803,3 +2803,116 @@ ninguna era un borrado.
 - **El ping**, con la decisión ya tomada e investigada.
 - **El honeypot web**, incluida una regresión: el laberinto anti-escáner se borró el 29 de agosto y
   con él quedó muerto todo el código que lo usa.
+
+---
+
+## 30-ago-2026 (Fase B9, bloque 2) — La fuga entre clientes, cerrada
+
+El punto más grave que quedaba: que un cliente pudiera ver los datos de otro. Antes de tocar nada se
+midió el estado real contra el sistema en marcha, mirando el **contenido** de las respuestas y no si
+respondían bien — la lección que costó una sesión entera dos días antes.
+
+La base tenía dos clientes: «Default» con 910 eventos e «Iván» con **cero**. Eso hace la prueba
+inapelable: pedir cualquier cosa como «Iván» y ver un número distinto de cero es una fuga demostrada,
+sin discusión posible.
+
+### Lo primero que cambió fue el diagnóstico
+
+Cuatro de los puntos del plan de partida **ya estaban resueltos** en el motor: el informe de
+engagement ya aceptaba cliente, las notificaciones ya tenían configuración propia por cliente, el
+canal en vivo ya autenticaba y ya filtraba, y la consola ya limpiaba la pantalla al cambiar de
+cliente. **El agujero se había mudado a la interfaz.** De las 127 llamadas que hace la consola, solo
+27 decían de qué cliente pedían — y el informe que se ENTREGA al cliente era una de las que no.
+
+Dicho de otro modo: el motor filtraba bien, pero nadie le decía por quién filtrar.
+
+### Lo que se veía y lo que se ve ahora
+
+Todo pedido como el cliente «Iván», que no tiene ni un evento:
+
+| Lo que se pedía | Antes | Ahora |
+|---|---|---|
+| El informe que se entrega al cliente | **910 eventos de otro** | 0 |
+| Indicadores de compromiso | 100 hashes, 100 comandos, 12 direcciones, **50 credenciales** | vacío |
+| Detecciones | 434 | 0 |
+| Registro de auditoría | 587 acciones de todos | 0 |
+| Historial de una dirección atacante | 910 | 0 |
+| Pendientes por revisar | 910 | 0 |
+| Mapa de técnicas MITRE | 13 casillas, una con 565 eventos | vacío |
+| Relato cronológico | 50 tramos | vacío |
+| Resumen de correlación | 1 sesión, 10 grupos, la dirección más activa | vacío |
+| Estadísticas de eventos | «909 ingeridos» | ya no se enseña |
+| Configuración de avisos | el correo y el Telegram reales del proveedor | enmascarada |
+
+De las 185 rutas del sistema, las que declaran a qué cliente pertenecen pasan de **56 a 91**.
+
+### La red, antes que los arreglos
+
+Sin esto el trabajo se deshace solo en dos semanas, así que se hizo primero:
+
+- **Un único criterio** para acotar una consulta a un cliente. Había **tres conviviendo** para la
+  misma pregunta, así que cada ruta nueva elegía uno al azar. El módulo nuevo incluye una variante
+  que **falla de cara** si le falta el cliente, en vez de devolver los datos de todos en silencio:
+  es exactamente el error que ya mordió una vez.
+- **Dos guardarraíles automáticos**, uno para el motor y otro para la consola. Recorren las rutas y
+  las llamadas de verdad —no una lista escrita a mano— y fallan si alguna lee datos de un cliente sin
+  decir de cuál. Llevan una lista de excepciones donde cada una tiene su motivo escrito, para que
+  añadir una sea un acto consciente y se vea en la revisión.
+- **La auditoría viva pasa de 19 superficies a 39.** Vigilaba solo lo que se arregló en agosto, así
+  que daba verde mientras la ruta de indicadores soltaba 50 credenciales del vecino.
+- **Se comprobó que la red sirve**, no solo que da verde: se quitó a mano un filtro y la auditoría lo
+  cazó en las dos direcciones. Un guardarraíl que nunca ha fallado no está probado.
+
+**Las dos listas de pendientes quedan vacías.** A partir de ahora, una ruta nueva que lea datos de un
+cliente sin acotarse rompe las pruebas.
+
+### Lo que apareció por el camino y nadie esperaba
+
+- **Un gestor podía borrar el cliente de otro.** El control de permisos comprobaba si el rol puede
+  modificar cosas, pero nunca **sobre qué cliente** actúa. Con eso solo, el gestor del cliente A
+  podía renombrar el cliente B, **borrarlo**, emitirle credenciales de alta, tocar sus reglas y mover
+  sus cebos. La función que faltaba llamar existía desde hacía meses, escrita justo para esto, y no
+  la usaba nadie.
+- **Dos clientes no podían tener el mismo cebo.** Las reglas de unicidad de la base no incluían el
+  cliente, así que `ssh/admin/admin123` solo cabía una vez en todo el sistema. Y no fallaba de cara:
+  el segundo cliente recibía **el identificador del cebo del primero**. Creía tener un cebo suyo y,
+  si alguien lo abría, la alerta le llegaba al otro. Comprobado en vivo antes y después.
+- **Probar un canal de avisos escribía.** Sin cliente, «probar» modificaba y **activaba** el canal en
+  la configuración global de todos; con cliente, copiaba dentro de ese cliente los secretos del
+  proveedor que solo estaba heredando.
+- **Las notas del analista eran una sola libreta compartida.** Listarlas volcaba las de todos los
+  clientes, y escribir una nota sobre una dirección **pisaba** la que el analista de otro cliente
+  tenía sobre esa misma dirección. Borrarlas, además, no comprobaba el permiso: un usuario de solo
+  lectura podía destruirlas.
+- **Dos fallos de atribución en las detecciones**: al reescanear nacían sin dueño y se colaban en la
+  vista del cliente por defecto, y se podían colgar detecciones inventadas del evento de otro.
+
+### Lo que se decidió y por qué
+
+Cuatro decisiones, todas de Iván:
+
+1. **La auditoría se migra de verdad.** La causa raíz estaba en la escritura, no en la lectura: el
+   cliente no se guardaba, así que filtrar al leer era imposible. Se añadió la columna y quien
+   registra las acciones ahora la rellena. Las 587 filas viejas se quedan sin dueño, visibles solo
+   para el administrador: no se reasigna ni se borra nada.
+2. **Los contadores del proceso se omiten** cuando la petición es de un cliente. No se pueden repartir
+   —cuentan lo que ha entrado en el sistema entero— y un cliente con cero eventos veía 909 y deducía
+   el volumen del vecino.
+3. **El canal en vivo sale del bloque.** Ya autentica y ya filtra, pero **la consola no lo usa**: el
+   código que lo abría está muerto y no hay ni una conexión. Se documenta y se deja.
+4. **La configuración de avisos heredada se enmascara.** El cliente ve qué canales están activos, pero
+   no a quién avisan. Los avisos siguen saliendo igual.
+
+### Lo honesto que queda
+
+- **El recorte por rol sigue siendo teoría.** La variable que enciende las sesiones no está puesta en
+  ningún sitio, así que todo el mundo entra como administrador y el recorte nunca llega a actuar. Hoy
+  el aislamiento descansa entero en que el navegador diga de qué cliente pide. Todo lo de este bloque
+  está construido para que encenderla sea configuración y no programación, pero **hasta que se
+  encienda no está probado en uso real**. Es el siguiente paso natural si esto se vende.
+- Los nueve constructores de consultas duplicados siguen ahí. El criterio único ya rige para todo lo
+  nuevo, pero migrar los viejos se dejó fuera a propósito: tocarlos cambia consultas que hoy
+  funcionan y que la auditoría viva vigila.
+- Dos tablas siguen sin cliente, pero están muertas: nadie escribe ni lee de ellas.
+
+Pruebas: **1762 en verde** (1734 al empezar). Auditoría viva: **0 fugas** en 39 superficies.

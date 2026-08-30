@@ -275,3 +275,94 @@ Por qué callan los que callan:
      2×  riesgo 60, le faltan 5; táctica 'Execution' no es peligrosa
      1×  riesgo 60, le faltan 5; táctica 'Reconnaissance' no es peligrosa
      1×  riesgo 50, le faltan 15; táctica 'Discovery' no es peligrosa
+
+---
+
+## 2026-08-30 · Aislamiento entre clientes: la medición antes y después (Fase B9, bloque 2)
+
+Antes de tocar una línea se midió qué veía un cliente que **no tiene ni un evento**. La base tenía
+dos: «Default Flock» con **910 eventos** e «Iván» con **cero**. Con esa asimetría la prueba no admite
+interpretación: cualquier número distinto de cero pedido como «Iván» es un dato de otro cliente.
+
+Se miró siempre el **contenido** de la respuesta, nunca el código de estado. Un aviso que salió de la
+propia sesión: un `curl` mal montado devuelve **200 con el saludo del motor** y parece que todo va
+bien. Si la comprobación mira solo el código, da verde con el cuerpo equivocado.
+
+### Lo que veía el cliente vacío
+
+| Ruta | Antes | Después | Qué se escapaba |
+|---|---|---|---|
+| `POST /report/engagement` *(como lo pedía la consola)* | 910 | 0 | el informe que se ENTREGA, con eventos, IPs y credenciales de otro |
+| `GET /iocs/extract` | 100 hashes, 100 comandos, 12 URLs, 50 credenciales | vacío | lo peor de la lista |
+| `GET /detections` | 434 | 0 | detecciones con id de evento |
+| `GET /detections/severity-distribution` | 434 (221 altas, 42 críticas) | 0 | volumen y gravedad |
+| `GET /detections/by-technique` | 25 técnicas | 0 | |
+| `GET /audit` | 587 acciones | 0 | quién hizo qué, y desde qué IP |
+| `GET /alert-ux/related/{ip}` | 910 | 0 | historial de una IP atacante |
+| `GET /alert-ux/acknowledge/count` | 910 | 0 | pendientes de revisar |
+| `GET /alert-ux/memo/{ámbito}` | todas las notas | solo las suyas | notas del analista del vecino |
+| `GET /mitre/heatmap` | 13 casillas (T1059.004: 565 eventos) | vacío | |
+| `GET /mitre/evidence-map` | 45 técnicas | vacío | |
+| `GET /mitre/kill-chain` | 3 cadenas | vacío | |
+| `GET /timeline/narrative` | 50 tramos con descripción | vacío | el relato del ataque ajeno |
+| `GET /timeline/unified` | 1 IP lateral, 8 carriles | vacío | |
+| `GET /timeline/protocol/SSH` | 13 cubos con datos | vacío | |
+| `GET /correlation/summary` | 1 sesión, 10 grupos, la IP más activa | vacío | |
+| `GET /correlation/clusters` | 10 | 0 | |
+| `GET /correlation/micro-chains` | 18 | 0 | |
+| `GET /correlations/by-protocol` | 8 protocolos | vacío | |
+| `GET /events/stats` | `consumer_ingested: 909` | omitido | el volumen del vecino, por deducción |
+| `GET /notifications/config` | correo y Telegram reales del proveedor | enmascarado | datos personales |
+| `GET /analyze/stats` | cuota compartida a la vista | omitida | |
+| `POST /detections/rescan` | escaneaba los eventos de todos | solo los suyos | |
+
+Rutas que ya estaban bien y se confirmaron sin tocar: `/events`, `/sessions`, `/hosts`,
+`/kill-chain/traces`, `/credentials/stats`, `/graph/attack-map`, `/events/attack-summary`. Y
+`/v1/soc/*`, que se acota por el cliente del propio token.
+
+### Las dos colisiones, medidas
+
+**Credencial trampa repetida.** El cliente A planta `ssh/PRUEBA_COLISION/admin123` en `/srv/a`. El
+cliente B planta la misma en `/srv/b`:
+
+```
+A: 1f292941-f3f5-4721-8960-e5f112e03d29
+B: 1f292941-f3f5-4721-8960-e5f112e03d29   ← el MISMO, y la fila está en /srv/a con el cliente A
+```
+
+B creía tener su cebo. No tenía ninguno: le habíamos dado el identificador del de A. Si alguien
+abriera ese cebo, la alerta iría a A. Después del arreglo:
+
+```
+A: 65535ad5-6e92-41e2-9a35-9bc69c82a30b
+B: 0a6fbe27-5352-4c05-96b6-93881e2a972e   ← cada uno el suyo
+```
+
+Y repetir el alta dentro del mismo cliente sigue devolviendo el suyo, que era el motivo por el que la
+regla de unicidad existía.
+
+**Un fallo escondido detrás del anterior**: al arreglar la regla, repetir el alta en B seguía
+devolviendo el identificador de A. La consulta de reserva —la que recupera «la que ya existe» cuando
+salta el conflicto— buscaba sin el cliente. La regla estaba bien y el dato se filtraba por otra
+puerta. Solo se vio porque se comprobó en vivo después del cambio, no antes.
+
+### La prueba de que la red sirve
+
+La auditoría automática (`scripts/audit_flock_isolation.py`, ampliada de 19 a 39 superficies) da 0
+fugas. Para asegurarse de que no es un verde vacío, se quitó a mano el filtro de una ruta y se volvió
+a correr:
+
+```
+✗ 2 FUGAS:
+  - [iocs] vista de flock B contiene marcador '10.77.0.1' del flock A
+  - [iocs] vista de flock A contiene marcador '10.88.0.2' del flock B
+```
+
+Lo cazó en las dos direcciones. Restaurado el filtro, vuelve a 0.
+
+### Lo que esta medición NO prueba
+
+El recorte por rol —que un gestor no pueda pedir el cliente de otro— **no se ejerció en vivo**,
+porque la variable que enciende las sesiones no está puesta y todo el mundo entra como administrador
+global. Está cubierto por pruebas automáticas, pero en uso real sigue sin estrenar. Mientras siga
+así, el aislamiento descansa entero en que el navegador diga de qué cliente pide.

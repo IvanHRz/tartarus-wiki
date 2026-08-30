@@ -74,3 +74,40 @@ informe que se entrega al cliente puede llevar datos de otro), el ping —con la
 y tomada— y el honeypot web. Detalle en [[roadmap-operativo]] (30-ago) y el arranque de la siguiente
 sesión en [[prompt-siguiente-sesion]].
 — claude
+
+## [2026-08-30] bitacora | Fase B9 bloque 2 — la fuga entre clientes, cerrada
+Lo más grave que quedaba: que un cliente pudiera ver los datos de otro. Lo primero que cambió fue el
+diagnóstico. Cuatro de los cinco puntos que se daban por rotos **ya estaban arreglados en el motor**
+—el informe, las notificaciones, el canal en vivo y el repintado de la pantalla—: el agujero se había
+mudado a la interfaz, que de sus 127 llamadas solo decía de qué cliente pedía en 27. El motor
+filtraba bien y nadie le decía por quién filtrar. El informe que se ENTREGA al cliente traía 910
+eventos de otro; pidiéndolo con el cliente puesto, 0.
+
+Medido con dos clientes en la base, uno con 910 eventos y otro con cero, así que cualquier número
+distinto de cero era una fuga demostrada. Lo peor suelto: la ruta de indicadores de compromiso, con
+100 comandos y 50 credenciales del vecino. También 434 detecciones, 587 acciones de auditoría, el
+relato cronológico del ataque ajeno y el correo real del proveedor dentro de la configuración de
+avisos de un cliente. De 185 rutas, las que declaran cliente pasan de 56 a 91.
+
+Antes de arreglar nada se puso la red, porque este trabajo se deshace solo: un criterio único para
+acotar consultas (había tres conviviendo), dos guardarraíles que recorren las rutas y las llamadas de
+verdad y fallan si alguna lee datos sin decir de quién, y la auditoría viva ampliada de 19 a 39
+superficies. Y se comprobó que la red sirve quitando un filtro a mano: lo cazó en las dos
+direcciones. Las dos listas de pendientes quedan vacías.
+
+Por el camino aparecieron cosas que no estaban en el plan y eran peores que varias fugas de lectura:
+un gestor podía **borrar el cliente de otro** (el control miraba el rol pero nunca sobre qué cliente
+se actúa, y la función que faltaba llamar llevaba meses escrita sin usar); dos clientes no podían
+tener el mismo cebo, y el segundo recibía **el identificador del cebo del primero**, creyendo tener
+uno que no era suyo; probar un canal de avisos **escribía** en la configuración global; y las notas
+del analista eran una libreta compartida donde uno pisaba las del otro.
+
+Lo honesto que queda: el recorte por rol sigue sin estrenar en uso real, porque la variable que
+enciende las sesiones no está puesta en ninguna parte. Hoy el aislamiento descansa entero en que el
+navegador diga de qué cliente pide. Todo está construido para que encenderla sea configuración y no
+programación, pero hasta entonces esa mitad es teoría.
+
+Pruebas 1762 en verde (1734 al empezar). Auditoría viva: 0 fugas. Detalle en [[roadmap-operativo]]
+(30-ago, bloque 2), la medición completa en [[registro-pruebas]] y el plan verbatim en
+[[planes/2026-08-30]]. Repo: `6a6c82b`.
+— claude
