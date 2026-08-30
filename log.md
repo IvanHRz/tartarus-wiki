@@ -1327,6 +1327,18 @@ el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
 
+## [2026-08-29] plan | Parte B (Fase B7a): cimientos de Windows + editor de configuración
+Plan aceptado archivado en [[planes/2026-08-29]]. B7 va en dos partes; esta ronda son los CIMIENTOS
+(el motor de comandos queda para B7b). Incluye un bloqueante que nadie había visto: `shlex.split` trata
+la barra invertida como escape, así que `cd C:\Users\x` llega al motor como `C:Usersx` — sin arreglarlo
+nada de Windows funciona. También se unifica la gramática duplicada (~174 líneas repetidas, ya con
+divergencia real) ANTES de extenderla, sin cambiar un byte de la salida POSIX para no invalidar los
+canarios de B3. Y se corrige una trampa introducida en B6: `canary_tree` usa «empieza por /» para decidir
+si un canario es de árbol o de aparato, así que una ruta Windows caería en la rama del router — no falla,
+aprovisiona mal. De paso se cierra el pendiente de B6: el editor visual de configuración en la interfaz.
+Repo: `dff6531`.
+— claude
+
 ## [2026-08-29] bitacora | Parte B · Fase B6 HECHA: la config del aparato como «árbol»
 Implementada y verificada. Lo primero fue medir: `show running-config` estaba ROTO (respondía comando
 inválido incluso con privilegios) y la tabla de interfaces cambiaba entre llamadas, porque el escenario
