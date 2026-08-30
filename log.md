@@ -1490,3 +1490,29 @@ verdad, omitir los contadores globales cuando hay cliente, dejar el WebSocket fu
 ya no lo usa: 0 conexiones) y enmascarar la configuración de avisos heredada. Suite de partida: 1734 verde.
 Repo: `0633b61`.
 — claude
+
+## [2026-08-30] plan | B9 bloques 3 y 4: el ping y el honeypot web
+Plan aceptado archivado en [[planes/2026-08-30]]. Al medir contra el sistema antes de planear, **dos
+premisas del plan de partida se cayeron**, y no eran detalles. El **respondedor ARP con scapy no
+existía**: no está en el árbol, ni en el historial, ni en ninguna de las 21 ramas, ni en el stash, ni
+dentro del contenedor — así que no hay nada que «recuperar», hay que escribirlo. Y el **laberinto
+anti-escáner tampoco era una regresión del 29-ago**: `MazeHoneypot` no aparece en ningún YAML
+commiteado en toda la historia del repo, y la propia auditoría del proyecto lo lista como «no usado».
+Lo que sí existe son las 119 líneas de `maze_tagger.py` detectando hits contra un plugin que no está.
+
+Las dos cosas encajan en el mismo patrón —se probaron en vivo y no se commitearon— y en el caso del
+laberinto hay un mecanismo que lo explica y sigue activo: aplicar una persona HTTP borra el bloque
+`commands` entero, así que cualquier cosa añadida al YAML desaparece en el siguiente apply. Por eso
+ese arreglo va primero: sin él, lo demás se vuelve a perder igual.
+
+Medido: el ping a la IP señuelo se pierde al 100% porque nadie contesta el ARP (por eso el sensor
+lleva desde su creación con cero eventos); dentro del contenedor `ip_forward=1` y `send_redirects=1`,
+que es lo que causaba el bucle de 227 paquetes y no el ARP; y las cuatro rutas del honeypot web
+(`/`, `/admin`, `/.env`, `/wp-admin`) devuelven **el mismo cuerpo byte a byte**, igual que el señuelo
+de Prometheus. En la base, 82 eventos en el puerto 80 contra 1 en el 443, porque el HTTPS se detecta
+por un campo que llega vacío cuando el cliente se conecta por IP.
+
+Cuatro decisiones tomadas: construir el laberinto por primera vez, fusionar en vez de sustituir en
+`personality_engine`, escribir el respondedor ARP desde cero, y que el señuelo de Prometheus sirva
+métricas falsas creíbles. Repo: `6a6c82b`.
+— claude
