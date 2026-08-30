@@ -2916,3 +2916,103 @@ Cuatro decisiones, todas de Iván:
 - Dos tablas siguen sin cliente, pero están muertas: nadie escribe ni lee de ellas.
 
 Pruebas: **1762 en verde** (1734 al empezar). Auditoría viva: **0 fugas** en 39 superficies.
+
+---
+
+## 30-ago-2026 (Fase B9, bloques 3 y 4) — El ping que sí llega y un honeypot web que no se delata
+
+Los dos últimos bloques de la fase. Y lo primero que pasó fue que **dos de las premisas de partida se
+cayeron al comprobarlas**, lo cual cambió el trabajo antes de empezarlo.
+
+### Dos cosas que se creían perdidas y en realidad nunca existieron
+
+El plan decía «recuperar el respondedor ARP, que ya funcionaba» y «el laberinto anti-escáner
+desapareció el 29 de agosto». Ninguna de las dos se sostiene: ni el respondedor ni el laberinto
+aparecen en el árbol, ni en el historial completo, ni en ninguna de las veintiuna ramas, ni dentro de
+los contenedores. La documentación del propio proyecto, de hecho, listaba el laberinto como «no
+usado».
+
+Las dos encajan en el mismo patrón: **se probaron en vivo y no se guardaron**. Y en el caso del
+laberinto hay un mecanismo que lo explica y que seguía activo — aplicar una personalidad borraba de
+un plumazo toda la configuración de rutas del honeypot. Se probó algo, funcionó, alguien aplicó una
+personalidad y se lo llevó por delante. Como no estaba guardado, se perdió del todo.
+
+Por eso lo primero que se arregló fue eso, y no las rutas: sin ello, todo lo demás se habría vuelto a
+perder igual.
+
+### El honeypot web
+
+**Se identificaba como honeypot en la primera petición.** Había una sola regla que devolvía la misma
+página, con el mismo código, a cualquier cosa que se pidiera: la portada, `/admin`, `/.env` y
+`/wp-admin` daban las cuatro exactamente los mismos bytes. Un escáner automático lo detecta al primer
+intento, porque un servidor de verdad no contesta «todo bien» a un fichero de contraseñas.
+
+Ahora hay once rutas con las páginas de error reales que devolvería un servidor: 404 donde toca, 403
+en lo prohibido, 401 en la zona de administración, y una pantalla de acceso creíble donde sí interesa
+que el atacante insista y deje credenciales. Lo que no casa con nada cae en el laberinto, que le hace
+dar vueltas por un árbol de directorios infinito.
+
+**Y ahora hay cebos.** El mecanismo llevaba tiempo construido y **no lo llamaba nadie**: la fachada se
+servía sin uno solo. Se siembran dos cosas distintas: una baliza invisible que se dispara sola cuando
+algo descarga la página —dice «alguien pasó por aquí»— y un comentario en el código fuente que promete
+un volcado de la base de datos olvidado. Ese segundo no salta solo: hay que leer el fuente y decidir
+ir a mirar. Cuando salta, la señal ya no es «pasó alguien» sino «alguien está buscando a conciencia»,
+que vale mucho más para quien responde al incidente.
+
+**El tráfico cifrado se contaba mal.** Se distinguía HTTPS de HTTP por un dato que solo llega cuando
+el cliente pide el sitio por su nombre; quien entra por dirección IP —lo normal en un barrido— no lo
+manda. Resultado medido: 82 visitas guardadas en el puerto equivocado y una sola en el correcto.
+Ahora se usa una señal que llega siempre.
+
+**El señuelo de Prometheus** servía también la página de nginx. Ahora devuelve métricas con formato
+real y un inventario de seis equipos que no existen: nombres, direcciones, servicios y versiones. Es
+un mapa envenenado — el atacante cree estar descubriendo la red y está siguiendo un rastro fabricado.
+
+**Y `make up` ha dejado de ser una trampa.** Borraba la base de datos entera sin avisar y, de paso,
+borraba también la configuración del honeypot cifrado sin nada que la restaurase. Ahora explica lo que
+va a hacer y exige escribir BORRAR. Comprobado con los datos delante: 1035 eventos antes, 1035
+después de cancelar.
+
+### El ping
+
+**El sensor llevaba desde que se creó sin registrar un solo aviso.** El motivo no era que no alertase:
+es que el ping no le llegaba. Cuando un equipo quiere hablar con una dirección de su propia red,
+pregunta primero «¿quién tiene esta dirección?». Como no la tenía nadie, no contestaba nadie, y el
+ping no llegaba a salir del equipo que lo mandaba.
+
+Ahora el sensor contesta esa pregunta. Y aquí apareció algo que merece contarse: **el repositorio se
+contradecía a sí mismo** sobre por qué, en pruebas anteriores, un solo ping desataba una tormenta de
+paquetes. Una parte de la documentación lo achacaba al reenvío del sistema; otra, ya guardada y
+probada, lo achacaba a que el sensor se oía a sí mismo. En vez de elegir, se midió:
+
+| Situación | Paquetes |
+|---|---|
+| En reposo, sin tocar nada | 0 |
+| Un solo ping, con el reenvío activado | **94 en 12 segundos** |
+| Un solo ping, con el reenvío desactivado | **0** |
+
+La documentación tenía razón, y ahora hay números que lo respaldan.
+
+El resultado: el ping responde sin pérdidas, y **con el disfraz puesto**. La dirección con perfil
+Linux contesta con su firma característica y la de perfil Windows con la suya, que es distinta. Quien
+haga un barrido verá dos equipos de sistemas operativos diferentes donde no hay ninguno. Y por primera
+vez hay avisos de ping en la base.
+
+Importante: **no se da de alta la dirección en el sistema**, aunque sería lo natural. Si se hiciera,
+el propio sistema contestaría con su firma y el señuelo «Windows» respondería como Linux, además de
+mandar dos respuestas a la vez. Toda la documentación de campo pedía justamente eso, y encima con una
+subred que ya no se usa. Corregida.
+
+### Lo honesto que queda
+
+- Las 119 líneas que servían para adivinar qué parte del honeypot atendía cada petición **ya sobran**:
+  ahora el propio honeypot lo dice. Retirarlas es una limpieza pendiente.
+- La dirección de origen de los avisos de ping sale como la de la red y no la del equipo real. Es cosa
+  de cómo funciona la virtualización en este Mac; en un despliegue de campo debería salir bien, pero
+  hay que confirmarlo.
+- El aprovisionamiento del Raspberry sigue sin instalar el sensor de ping.
+- Los respaldos automáticos de configuración se acumulan sin límite (ya van 26). Salvaron un fichero
+  en esta misma sesión, así que sirven, pero merecen una poda.
+
+Pruebas: **1810 en verde** (1762 al empezar). El aislamiento entre clientes del bloque 2 sigue en 0
+fugas.

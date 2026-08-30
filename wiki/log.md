@@ -111,3 +111,38 @@ Pruebas 1762 en verde (1734 al empezar). Auditoría viva: 0 fugas. Detalle en [[
 (30-ago, bloque 2), la medición completa en [[registro-pruebas]] y el plan verbatim en
 [[planes/2026-08-30]]. Repo: `6a6c82b`.
 — claude
+
+## [2026-08-30] bitacora | Fase B9 bloques 3 y 4 — el ping y el honeypot web
+Los dos últimos bloques de la fase, y otra vez lo primero que cambió fue el diagnóstico: **dos
+premisas del plan no se sostenían**. Ni el respondedor ARP «que ya funcionaba» ni el laberinto
+anti-escáner «que desapareció el 29-ago» existían en ninguna parte — ni en el árbol, ni en el
+historial completo, ni en las veintiuna ramas, ni dentro de los contenedores. Las dos se habían
+probado en vivo sin guardarse. Y en el caso del laberinto había un mecanismo que lo explicaba y seguía
+activo: aplicar una personalidad borraba de un plumazo toda la configuración de rutas del honeypot.
+Por eso ese arreglo fue lo primero, y no las rutas: sin él, lo demás se habría vuelto a perder.
+
+El honeypot web se identificaba como tal en la primera petición: `/`, `/admin`, `/.env` y `/wp-admin`
+devolvían los cuatro exactamente los mismos bytes. Ahora hay once rutas con las páginas de error
+reales de un servidor, una pantalla de acceso donde interesa que el atacante insista, y el laberinto
+recogiendo lo que no casa con nada. Y por fin hay cebos: el mecanismo llevaba tiempo construido y no
+lo llamaba nadie, así que la fachada se servía sin uno solo. Se siembran dos, con propósitos
+distintos — una baliza que se dispara sola y un comentario en el fuente que promete un volcado de base
+de datos, que solo salta si alguien lee el código y decide ir a mirar.
+
+En el ping, el sensor llevaba cero avisos desde que se creó. No era que no alertase: nadie contestaba
+la pregunta ARP por las direcciones señuelo, así que el ping no salía del Mac. Sobre la tormenta de
+paquetes que había aparecido en pruebas anteriores, el repositorio se contradecía a sí mismo, así que
+en vez de elegir se midió: 0 paquetes en reposo, **94 en 12 segundos** con el reenvío del sistema
+activado, **0** con él desactivado. La hoja de ruta tenía razón y ahora hay números. Resultado: 0 % de
+pérdida, TTL 63 en el perfil Linux y 127 en el Windows, sin respuestas duplicadas, y 13 avisos en la
+base donde llevaba 0 desde el principio.
+
+Tres cosas se descubrieron solo al probarlas, no leyendo el código: el laberinto sobrevivía en el
+fichero pero no actuaba, porque la personalidad traía una regla comodín que se lo comía; el cebo caía
+en una página que la personalidad tapaba; y el volcador de YAML destroza el HTML al reescribirlo,
+metiendo una línea en blanco por cada salto.
+
+Pruebas 1810 en verde (1762 al empezar). El aislamiento entre clientes del bloque 2 sigue en 0 fugas.
+Detalle en [[roadmap-operativo]] (30-ago, bloques 3 y 4), las mediciones en [[registro-pruebas]] y el
+plan verbatim en [[planes/2026-08-30]]. Repo: `a67f55e`.
+— claude

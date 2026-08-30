@@ -366,3 +366,122 @@ El recorte por rol —que un gestor no pueda pedir el cliente de otro— **no se
 porque la variable que enciende las sesiones no está puesta y todo el mundo entra como administrador
 global. Está cubierto por pruebas automáticas, pero en uso real sigue sin estrenar. Mientras siga
 así, el aislamiento descansa entero en que el navegador diga de qué cliente pide.
+
+---
+
+## 2026-08-30 · El ping y el honeypot web (Fase B9, bloques 3 y 4)
+
+### El ping: de no llegar nunca a responder con disfraz
+
+El sensor llevaba **cero avisos desde que se creó**. Antes de tocar nada:
+
+```
+ping 192.168.97.240  →  3 enviados, 0 recibidos, 100 % de pérdida
+eventos ICMP en la base: 0   (en toda la historia del proyecto)
+```
+
+Nadie contestaba la pregunta ARP por esa dirección, así que el ping no salía del Mac.
+
+**La tormenta de paquetes, medida en vez de deducida.** El repositorio se contradecía: la hoja de ruta
+la achacaba al reenvío del sistema, y el código guardado la achacaba al eco propio del sensor (ya
+corregido). Se midió con el respondedor ya puesto:
+
+| Situación | Paquetes que ve el sensor |
+|---|---|
+| En reposo, sin tocar nada | 0 |
+| Un solo ping, `ip_forward=1` | **94 en 12 s** |
+| Un solo ping, `ip_forward=0` | **0** |
+
+La hoja de ruta tenía razón. El sistema, al recibir un paquete que no es suyo, intentaba reenviarlo
+por la misma interfaz por la que entró.
+
+**Después:**
+
+```
+ping 192.168.97.240  →  2 enviados, 2 recibidos, 0 % de pérdida, ttl=63   (perfil linux)
+ping 192.168.97.241  →  2 enviados, 2 recibidos, 0 % de pérdida, ttl=127  (perfil windows)
+sin DUP!
+eventos ICMP en la base: 13
+```
+
+El TTL baja uno por el salto del puente de la virtualización. Sigue distinguiendo Linux (63) de
+Windows (127) a la primera, que es todo el objetivo: quien barra la red verá dos equipos con sistemas
+operativos distintos donde no hay ninguno.
+
+### El honeypot web: la firma que se veía en la primera petición
+
+Antes, las cuatro rutas devolvían **el mismo cuerpo byte a byte**:
+
+```
+/           200 | 212b | 96116aa5b8093168c848996fa4725e54
+/admin      200 | 212b | 96116aa5b8093168c848996fa4725e54
+/.env       200 | 212b | 96116aa5b8093168c848996fa4725e54
+/wp-admin   200 | 212b | 96116aa5b8093168c848996fa4725e54
+```
+
+Un servidor real no contesta 200 con su portada a `/.env`. Eso, solo, ya delataba el honeypot.
+
+Después, con una personalidad aplicada:
+
+```
+/                 200 | 767b   la portada de la persona
+/admin            401 | 188b   con WWW-Authenticate
+/.env             404 | 162b   página de error de nginx
+/wp-admin         404 | 162b
+/.git/config      403 | 162b
+/robots.txt       200 |  72b   text/plain
+/ruta-inventada   200 | 2963b  el laberinto (Handler: tartarus/maze)
+```
+
+### Que sobreviva a aplicar una personalidad
+
+Era el fallo de fondo. Aplicando `windows-server` **dos veces seguidas**:
+
+```
+reglas de infraestructura: 11   (no se pierde ninguna)
+laberinto presente:         1
+cebos:                      1   (no se apilan)
+portada servida:            <title>IIS Windows Server
+/.env:                      404 (sigue)
+ruta inventada:             el laberinto (sigue)
+```
+
+Antes de arreglarlo, una sola aplicación se llevaba las once reglas por delante.
+
+**Un matiz que solo se vio probándolo**: al principio el laberinto sobrevivía en el fichero pero no
+actuaba, porque la personalidad traía una regla comodín que se lo comía. Medido: `/loquesea` devolvía
+la portada de Jenkins (483 bytes) en vez del laberinto (2638). La defensa anti-escáner se apagaba sola
+en cuanto alguien aplicaba una personalidad.
+
+### El cebo web
+
+```
+cebo sembrado en la portada:  9bcd4923631c…
+al pedir la URL:              HTTP 200
+estado del cebo:              generated → triggered, contador 1
+evento generado:              CANARY, riesgo 85, táctica Discovery
+```
+
+### El tráfico cifrado
+
+Antes: **82 visitas en el puerto 80 y 1 en el 443**, porque se distinguía HTTPS por un dato que solo
+llega cuando el cliente pide el sitio por nombre. Después, una visita a `https://localhost:8443/` se
+guarda con puerto 443.
+
+### Que `make up` no borre la base sin avisar
+
+```
+eventos antes:  1035
+make up con la entrada cerrada  →  cancelado, no se toca nada
+eventos después: 1035
+```
+
+### Lo que esta medición NO prueba
+
+- **La dirección de origen de los avisos de ping sale como `192.168.97.0`**, la de la red, en vez de
+  la del Mac. Es un artefacto de la virtualización en macOS. En un despliegue de campo sobre Linux
+  debería salir la real, pero **está sin comprobar**.
+- El ping se probó **desde el Mac**. Desde otro contenedor del stack el filtro de infraestructura se
+  lo tragaría, así que ese camino sigue sin ejercitarse.
+- El laberinto se ha visto responder, pero **no se ha medido cuánto entretiene de verdad** a un
+  escáner real (nmap, nikto, gobuster). Eso es una prueba pendiente.
