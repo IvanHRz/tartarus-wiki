@@ -3076,6 +3076,29 @@ sensación de dispersión.
    en cuatro segundos**. La señal no es la rapidez, es que alguien reparó un secreto que ninguna
    búsqueda automática sabe leer. Encaja con los cebos que ya tenemos.
 
+### Dónde vive cada decisión en la consola (lo señaló Iván)
+
+Su observación fue: «lo de la contraseña del servidor lo pusimos en la pestaña de infraestructura y no
+en la importante, que es la de trampas». Al comprobarlo resultó ser más amplio.
+
+El modal donde se configura un honeypot **solo se abre desde Infraestructura**, y dentro conviven dos
+clases de decisión que no tienen nada que ver. De los siete controles que hay, **seis son de engaño**
+—qué personalidad finge, qué contraseña acepta, el texto que guía al modelo, el clonador de sitios, la
+credencial señuelo y el generador de personalidades— y **uno solo** es de infraestructura de verdad:
+con qué proveedor de inteligencia artificial corre.
+
+La contraseña es el caso más claro porque es la decisión más táctica de todas —dejar entrar con
+cualquier contraseña es lo más tentador que puedes ofrecerle a un atacante— y está enterrada donde
+nadie va a buscarla.
+
+Y hay una segunda mitad: **qué parámetros faltan por cubrir**. Hoy no hay control en la consola para
+cuánto aguanta una sesión antes de cortarse (está fijado en diez minutos dentro del fichero de
+configuración), ni para qué usuarios se aceptan en el login (solo se filtra la contraseña), ni para el
+laberinto y los cebos web que se acaban de construir y funcionan sin que nadie pueda tocarlos.
+
+No es mover un control de sitio: es separar las dos clases de decisión y que cada una viva donde la
+busca quien la necesita.
+
 ### Lo que se decide NO hacer
 
 - **Perseguir a Arcangelo.** Es un producto ofensivo: otra disciplina, otro riesgo legal, otro

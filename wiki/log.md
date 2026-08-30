@@ -181,3 +181,19 @@ sino desplegando sensores en internet.
 Detalle completo en [[analisis-beelzebub-labs]], roadmap en [[roadmap-operativo]] (30-ago, Fase C) y
 el plan verbatim en [[planes/2026-08-30]]. Repo: `a67f55e`, ya subido.
 — claude
+
+## [2026-08-30] cierre | Fase B9 completa y subida; fase C planificada
+Cierre de una tanda larga. La **fase B9 queda cerrada entera** (bloques 0-1, 2, 3 y 4) y **subida a
+GitHub**, tanto el código como la wiki. Pruebas en 1810 verde y el aislamiento entre clientes en cero
+fugas sobre 39 superficies.
+
+Se añade la **fase C** al roadmap, con una regla de orden que responde a la sensación de dispersión:
+no se abre nada nuevo hasta cerrar lo que está a medias. Y dentro de ella un bloque que salió de una
+observación de Iván: **la contraseña del servidor está en la pestaña de Infraestructura y no en la de
+Trampas**. Al comprobarlo resultó más amplio — el modal de configuración de un honeypot solo se abre
+desde Infraestructura y contiene seis controles de engaño frente a uno solo de infraestructura. Queda
+también por evaluar qué parámetros faltan: cuánto aguanta la sesión, qué usuarios se aceptan en el
+login, y el laberinto y los cebos web que funcionan sin control en la consola.
+
+Reescrito [[prompt-siguiente-sesion]] con todo el estado y el orden de trabajo.
+— claude
