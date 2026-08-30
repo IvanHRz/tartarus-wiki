@@ -3016,3 +3016,72 @@ subred que ya no se usa. Corregida.
 
 Pruebas: **1810 en verde** (1762 al empezar). El aislamiento entre clientes del bloque 2 sigue en 0
 fugas.
+
+---
+
+## 30-ago-2026 (Fase C) — Medirnos contra Beelzebub: primero cerrar, luego añadir
+
+Beelzebub dejó de ser solo el honeypot que usamos. En julio levantaron tres millones de euros y hoy
+venden una plataforma de tres piezas: los honeypots, **Caronte** (análisis de malware con IA, con
+sandbox y correlación de infraestructura) y **Arcangelo** (equipo rojo autónomo que trabaja solo, día
+y noche, también contra modelos de IA). Su blog acumula **28 investigaciones** con capturas reales.
+
+La pregunta era directa: de todo eso, ¿qué cubrimos y qué no? El análisis completo está en
+[[analisis-beelzebub-labs]].
+
+### La cuenta, sin adornos
+
+De los 28 laboratorios: **cubrimos 2 del todo, 4 a medias, 16 no los cubrimos**, y 6 no aplican
+porque son investigación de campaña y no capacidades de honeypot.
+
+**Donde vamos por delante**, y no es poco. El informe que entregamos al cliente tiene diecisiete
+secciones con cadena de custodia, trazabilidad de hipótesis a conclusión y cumplimiento normativo, en
+tres formatos y dos idiomas: eso no lo enseña ninguno de sus laboratorios. La separación entre
+clientes, auditada en 39 superficies sin una sola fuga, tampoco la mencionan. Y nuestro shell resuelve
+en milisegundos lo que el suyo resuelve preguntándole al modelo, que tarda uno o dos segundos.
+
+**Donde estamos dispersos**, que es la palabra exacta. No capturamos ni un byte de lo que el atacante
+trae: el escenario que motivó todo esto —un atacante real que descarga un bot y lo arranca— hoy nos
+deja dos líneas de texto y nada más. Y hay tres cosas construidas que nunca se han estrenado.
+
+### La regla que ordena el trabajo
+
+**No se abre nada nuevo hasta cerrar lo que está a medias.** Todo lo del primer bloque ya está
+construido o medio construido: no es trabajo nuevo, es terminar. Es la respuesta directa a la
+sensación de dispersión.
+
+**Primer bloque — cerrar.** Diez puntos, de los que tres duelen especialmente:
+
+- **Estamos exportando indicadores falsos.** El campo que llamamos «hash» es el del propio mensaje del
+  evento —así lo dice su propio comentario en el código— y sin embargo sale en el paquete que se
+  entrega a un SIEM etiquetado como «hash de fichero malicioso». Cualquiera que lo consuma recibe
+  huellas de ficheros que no existen. Es una corrección, no una mejora.
+- **La separación entre clientes está apagada.** Todo el trabajo del bloque anterior está construido,
+  pero la variable que enciende las sesiones no está puesta en ninguna parte, así que el recorte por
+  rol nunca llega a actuar. Hoy el aislamiento depende de que el navegador diga de qué cliente pide.
+- **La detección de inyección de prompt nunca se ha disparado.** La regla existe y está conectada,
+  pero la batería de pruebas no envía ni un intento. Una regla que jamás ha saltado no es cobertura:
+  es una intención.
+
+**Segundo bloque — añadir.** Seis capacidades, ordenadas por lo que dan frente a lo que cuestan:
+
+1. **Capturar los ficheros que trae el atacante**, descargándolos y guardándolos pero **sin
+   ejecutarlos nunca**. Es el nudo del que cuelgan dos de las cinco capacidades de Caronte: sin los
+   bytes no hay ni ingeniería inversa ni análisis de comportamiento.
+2. **Un señuelo de la API de Docker.** Es lo que más captura da por menos trabajo: aparece en dos de
+   sus laboratorios, es HTTP plano, y con lo que se arregló en el bloque anterior se resuelve
+   escribiendo un fichero de rutas.
+3. **El cebo corrupto para agentes de IA.** Una credencial rota a propósito: un escáner no la
+   reconoce, una persona tarda entre siete y diez minutos en arreglarla, y **un agente de IA la repara
+   en cuatro segundos**. La señal no es la rapidez, es que alguien reparó un secreto que ninguna
+   búsqueda automática sabe leer. Encaja con los cebos que ya tenemos.
+
+### Lo que se decide NO hacer
+
+- **Perseguir a Arcangelo.** Es un producto ofensivo: otra disciplina, otro riesgo legal, otro
+  cliente. Lo único que merece copiarse es la idea de ejercitar nuestras propias defensas de forma
+  continua, que ya está en el primer bloque.
+- **Detonar el malware en un entorno aislado.** Se guarda, no se ejecuta.
+- **Competir en velocidad de captura de vulnerabilidades nuevas.** Su ventaja ahí no es tecnológica,
+  es de exposición: tienen sensores en internet recibiendo tráfico real y nosotros corremos en un
+  laboratorio local. Eso no se arregla programando, se arregla desplegando.

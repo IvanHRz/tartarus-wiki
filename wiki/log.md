@@ -146,3 +146,38 @@ Pruebas 1810 en verde (1762 al empezar). El aislamiento entre clientes del bloqu
 Detalle en [[roadmap-operativo]] (30-ago, bloques 3 y 4), las mediciones en [[registro-pruebas]] y el
 plan verbatim en [[planes/2026-08-30]]. Repo: `a67f55e`.
 — claude
+
+## [2026-08-30] analisis | Los 28 labs de Beelzebub, Caronte y Arcangelo — qué cubrimos y qué no
+Subida la fase B9 a GitHub (siete commits de código, dos de wiki) y hecho el análisis comparativo
+contra Beelzebub, que ya no es solo el honeypot que usamos: levantaron tres millones en julio y hoy
+venden una plataforma con **Caronte** (análisis de malware con IA) y **Arcangelo** (equipo rojo
+autónomo). Su blog acumula 28 investigaciones con capturas reales.
+
+La cuenta honesta: de los 28 laboratorios cubrimos **2 del todo, 4 a medias y 16 no**, y 6 no aplican.
+Vamos por delante en el entregable —el informe de diecisiete secciones con cadena de custodia y
+cumplimiento normativo no lo enseña ninguno de sus labs, y la separación entre clientes ni la
+mencionan— pero por detrás en la captura: **no guardamos ni un byte de lo que el atacante trae**.
+
+Tres hallazgos que salieron de mirar nuestro propio código con esa lupa. **Exportamos indicadores
+falsos**: el campo que llamamos hash es el del mensaje del evento —lo dice su propio comentario— y
+sale al paquete STIX etiquetado como hash de fichero malicioso, así que cualquier SIEM que lo consuma
+recibe huellas de ficheros inexistentes. **El honeypot se delata** tras una descarga, porque el
+fichero no aparece en el listado siguiente. Y **la detección de inyección de prompt nunca se ha
+disparado**: la regla existe, está conectada, y la batería de pruebas no envía ni un intento — una
+regla que jamás ha saltado no es cobertura, es una intención.
+
+El roadmap sale en dos bloques con una regla de orden explícita: **no se abre nada nuevo hasta cerrar
+lo que está a medias**, que es la respuesta a la sensación de dispersión. Primero diez puntos de
+cierre (el hash falso, encender la separación entre clientes que está construida y apagada, el MCP que
+no habla su protocolo, ejercitar la inyección de prompt); después seis capacidades nuevas, empezando
+por capturar los ficheros —descargando y guardando, nunca ejecutando— y el señuelo de la API de
+Docker, que es el que más da por menos trabajo.
+
+Y tres cosas que se deciden NO hacer, con su motivo: perseguir a Arcangelo (es un producto ofensivo,
+otra disciplina), detonar malware en sandbox, y competir en velocidad de captura de vulnerabilidades
+nuevas — porque ahí su ventaja no es tecnológica sino de exposición, y eso no se arregla programando
+sino desplegando sensores en internet.
+
+Detalle completo en [[analisis-beelzebub-labs]], roadmap en [[roadmap-operativo]] (30-ago, Fase C) y
+el plan verbatim en [[planes/2026-08-30]]. Repo: `a67f55e`, ya subido.
+— claude
