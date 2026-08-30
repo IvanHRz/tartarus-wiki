@@ -2593,3 +2593,32 @@ shells** — lo que un atacante se lleva de un router es su CONFIGURACIÓN. Plan
   cuadro de texto).
 - **B7 — Windows determinista** (inventario ya hecho, incluido un bloqueante que nadie había visto) y
   **B5b — filetree ZIP** fusionado con el bundle de cebos.
+
+## 29-ago-2026 (Parte B · Fase B7a) — Cimientos de Windows y editor de configuración
+
+Windows era la única persona sin «árbol» usable: tenía su estructura `C:\` escrita en el escenario, pero
+el editor caía al cuadro de texto y los canarios no se podían marcar. B7 se hace en dos partes; esta son
+los cimientos. Plan en `planes/2026-08-29.md`.
+
+### Cerrado
+- **Un bloqueante que nadie había visto**: la función que trocea los comandos trataba la barra invertida
+  como carácter de escape, así que `cd C:\Users\x` llegaba al motor como `C:Usersx`. Ninguna otra lógica
+  llegaba a ejecutarse. Resuelto con un troceador propio; el camino de Linux no cambia.
+- **Una sola gramática**: el formato del árbol se parseaba en DOS sitios con código repetido (~174
+  líneas), y las dos copias ya se habían separado entre sí. Ahora vive una vez, con «sabor» POSIX o
+  Windows. Verificado byte a byte que el resultado en Linux es idéntico al anterior — importante, porque
+  de ese texto salen las huellas que mantienen vivos los canarios.
+- **El árbol de Windows funciona**: 66 nodos, ida y vuelta estable, con `Program Files` (que el filtro
+  anterior borraba EN SILENCIO), la cadena hasta el historial de PowerShell y los ficheros del registro.
+- **Una trampa heredada de B6**: se decidía si un canario era «de árbol» o «de aparato» mirando si la
+  ruta empezaba por barra. Una ruta de Windows no empieza así, con lo que se habría aprovisionado por la
+  rama equivocada: no fallaba, hacía mal el trabajo. Ahora hay tres vías bien separadas.
+- **Editor de configuración (cierra B6)**: los endpoints estaban hechos desde B6 y **nadie los llamaba**.
+  Ahora el operador de un Cisco o un FortiGate ve su configuración línea a línea, con las que llevan
+  secretos resaltadas y marcables, igual que el de un Ubuntu ve su árbol.
+- Suite **1646 verde**; el shell de Linux por SSH real se comporta exactamente igual que antes.
+
+### Pendiente
+- **B7b — motor de comandos de Windows**: que `cd`, `dir` y `type` se resuelvan en código (el grueso son
+  los manejadores y las carpetas base de Windows).
+- **B5b — filetree ZIP** fusionado con el bundle de cebos.

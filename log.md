@@ -1327,6 +1327,17 @@ el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
 
+## [2026-08-29] bitacora | Parte B · Fase B7a HECHA: cimientos de Windows + editor de config
+Implementada y verificada. Nuevo `tree_grammar.py`: la gramática del árbol vivía duplicada en dos módulos
+(~174 líneas) y ya había divergido; ahora es una sola, con sabor POSIX o Windows, y se comprobó byte a
+byte que el resultado en Linux no cambia (de ese texto salen las huellas que mantienen vivos los canarios
+de B3). Arreglado el bloqueante: `shlex` trataba `\` como escape y destruía las rutas `C:\`. El árbol de
+Windows ya se parsea (66 nodos, con `Program Files`, PSReadline y SAM) y sus canarios se aprovisionan por
+la rama correcta — B6 había dejado un discriminador binario que los mandaba a la rama de router. Y se
+cierra el pendiente de B6: editor visual de configuración para Cisco/FortiGate. Suite 1646 verde; shell
+Linux sin regresión. Detalle en [[roadmap-operativo]] (29-ago, Fase B7a). Pendientes: B7b y B5b.
+— claude
+
 ## [2026-08-29] plan | Parte B (Fase B7a): cimientos de Windows + editor de configuración
 Plan aceptado archivado en [[planes/2026-08-29]]. B7 va en dos partes; esta ronda son los CIMIENTOS
 (el motor de comandos queda para B7b). Incluye un bloqueante que nadie había visto: `shlex.split` trata
