@@ -13,3 +13,10 @@ con las pruebas del proyecto original. Verificado por SSH real, incluido el cicl
 (29-ago, Fase B7b). Registrados dos hallazgos sin corregir: el indicador salta al reconectar (viene del
 proyecto original, afecta también a Linux) y guardar una persona por la API reescribe su fichero.
 — claude
+
+## [2026-08-29] plan | Parte B · Fase B5b: fusionar el árbol por industria con el bundle de cebos
+Plan aceptado archivado en [[planes/2026-08-29]]. Objetivo: que el generador de árboles por industria
+deje de ser medio decorado — hoy sus archivos de relleno son texto estático sin secreto único ni regla
+de reúso, así que robarlos no dispara nada — acuñando cada entrada por la vía madura del bundle, con
+su ZIP anidado, sus jobs en Redis y un botón en la consola que hoy no existe.
+— claude
