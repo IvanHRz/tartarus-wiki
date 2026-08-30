@@ -2622,3 +2622,57 @@ los cimientos. Plan en `planes/2026-08-29.md`.
 - **B7b — motor de comandos de Windows**: que `cd`, `dir` y `type` se resuelvan en código (el grueso son
   los manejadores y las carpetas base de Windows).
 - **B5b — filetree ZIP** fusionado con el bundle de cebos.
+
+## 29-ago-2026 (Parte B · Fase B7b) — El motor de comandos de Windows
+
+Con los cimientos puestos, faltaba lo principal: que los comandos de Windows los resolviera el código y
+no el modelo. Hasta hoy, quien entraba al servidor Windows hablaba con la IA en cada paso, con las
+inconsistencias que eso trae y que ya habíamos resuelto para Linux. Plan en `planes/2026-08-29.md`.
+
+### Cerrado
+- **La puerta de entrada elegía mal**: el motor solo se activaba si reconocía las reglas de Linux, así
+  que Windows pasaba de largo entero. Ahora la familia de la persona decide qué motor entra: Linux y
+  Windows tienen el suyo, y los aparatos de red siguen yendo al modelo, que es lo correcto — un router
+  no tiene carpetas que recorrer. Si la familia declarada y el árbol no concuerdan, no se contesta: es
+  preferible callar a contestar mal.
+- **Una mina que estaba puesta desde antes**: `dir` ya figuraba en la lista de comandos, pero apuntando
+  al listado de Linux. Era inalcanzable mientras la puerta no distinguiera familias; el día que lo
+  hiciera, un Windows habría impreso permisos de Linux. Por eso las listas se separaron **en el mismo
+  cambio** que la puerta, no en el siguiente.
+- **Mayúsculas y minúsculas**: Windows no las distingue. Ahora `cd c:\users` no solo funciona, sino que
+  el sistema responde con `C:\Users`, la forma real de la carpeta, como haría Windows. **Lo importante
+  estaba debajo**: el cebo se guarda con una clave calculada a partir de su ruta; la siembra viene del
+  fichero de la persona y la lectura, de lo que teclea el atacante. Si cada lado escribía la ruta de una
+  manera, el cebo se plantaba y **no se servía nunca**, sin dar error en ninguna parte. Ahora los dos
+  lados usan la misma función. Linux se dejó tal cual a propósito: cambiarlo habría dejado sin efecto
+  los cebos ya sembrados.
+- **Los errores son los de PowerShell**: no dice «no existe el fichero», escribe sus cuatro líneas con
+  el nombre del comando y el identificador del error. Un comando inventado lo contesta el motor con el
+  texto exacto de Windows, porque es la respuesta que más veces ve alguien que va tanteando: si variara
+  de una vez a otra, delataría al señuelo. Un comando que sí existe pero que aún no imitamos sigue
+  yendo al modelo, que es más creíble que negarlo.
+- **El servidor Windows ya sabe quién es**: le faltaban el nombre de máquina y el directorio de
+  arranque, y sus usuarios estaban escritos en un formato que el sistema no leía, así que `whoami`
+  respondía `root` en un Windows. Resuelto, con los nombres reales y el dominio.
+- **El indicador `PS C:\Users\Administrator>`**: se amplió el parche del honeypot para que pinte el
+  indicador de PowerShell. El parche se regeneró desde una copia limpia en vez de recalcularlo a mano,
+  y se validó compilando y pasando las pruebas del proyecto original antes de reconstruir la imagen. La
+  huella de la clave del servidor no cambió.
+- **Probado contra el sistema en marcha**: se entra por SSH y el indicador es el correcto desde el
+  primer momento; los listados salen con las columnas de Windows; se navega en minúsculas y responde
+  con la forma real; y el ciclo completo del cebo funciona — se marca, se lee (también escribiéndolo en
+  minúsculas) y al reutilizar su contraseña salta la alerta con riesgo alto. Linux quedó intacto.
+- Suite **1686 verde** (39 pruebas nuevas).
+
+### Encontrado por el camino (registrado, no corregido)
+- **El indicador salta al reconectar**: el honeypot guarda la sesión por dirección de origen y usuario,
+  así que al volver a entrar desde la misma máquina se hereda la sesión anterior. El primer indicador se
+  pinta con el directorio de arranque, pero tras el primer comando salta al directorio donde acabó la
+  vez anterior. Viene del proyecto original y afecta igual a Linux desde B4. Un terminal de verdad
+  siempre arranca en la carpeta del usuario.
+- **Guardar una persona por la API reescribe su fichero**: el texto del escenario pierde su formato y
+  cualquier cambio pequeño se ve enorme en el historial. Además, omitir la lista de cebos no la borra:
+  hay que mandarla vacía a propósito.
+
+### Pendiente
+- **B5b — filetree ZIP** fusionado con el bundle de cebos.
