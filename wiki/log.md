@@ -41,3 +41,12 @@ hace porque el marcador de apertura del honeypot se cuenta como comando tecleado
 MITRE que era su única puerta de salida—, que un comando de Windows en un Linux se niegue en código igual
 que al revés, y que el honeypot web deje de descartarse en dos peticiones.
 — claude
+
+## [2026-08-30] plan | Fase B9: desatascar la consola, fuga entre clientes y honeypot web
+Plan aceptado archivado en [[planes/2026-08-30]]. Sale de una investigación de 18 agentes en cuatro
+frentes. Lo que impedía trabajar no era lo que parecía: al recrear un contenedor, Docker reasignó las
+direcciones y nginx tenía cacheada la vieja, así que toda la consola devolvía 502. La fuga entre
+clientes resultó ser mucho mayor de lo visible —incluido el informe que se entrega al cliente— y se
+ataca con un test que la impida volver. La decisión del ICMP quedó resuelta con una cuarta opción que
+no estaba sobre la mesa.
+— claude
