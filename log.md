@@ -1327,6 +1327,17 @@ el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
 
+## [2026-08-29] plan | Parte B (Fase B6): los aparatos de red, con su config como «árbol»
+Plan aceptado archivado en [[planes/2026-08-29]]. Respuesta a «¿en qué punto entra el árbol de archivos
+en las demás personalidades?»: Windows sí tiene filesystem literal (va a B7, con sus 7 frentes ya
+inventariados); Cisco y FortiGate NO son shells — su equivalente es la CONFIGURACIÓN. Medido en vivo:
+`show running-config` está ROTO (responde `% Invalid input` incluso en privilegiado) y
+`show ip interface brief` cambia entre llamadas, porque el escenario le da al LLM un resumen en prosa y
+le exigimos repetir un texto que nunca le dimos. La fase: config literal + editor visual de config +
+canarios reales en las líneas de secreto (hoy la PSK de la VPN está en claro, sin token ni alerta).
+Sin motor determinista. Repo: `422f154`.
+— claude
+
 ## [2026-08-29] bitacora | Parte B · Fase B5a HECHA: las otras personalidades al nivel del Linux
 Implementado y verificado en vivo. Nuevo `engine/engine/cli_profiles.py` con cuatro familias de reglas
 (bash/ios/fortios/powershell) y `ssh_rules` como fachada. Jenkins y Synology, que son shells Unix reales,
