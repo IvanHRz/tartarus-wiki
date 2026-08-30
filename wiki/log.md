@@ -33,3 +33,11 @@ primera vez se ejecuta en una prueba. Botón nuevo en la consola, que hasta hoy 
 en absoluto. Verificado en vivo con el ciclo completo del cebo (riesgo 85 al reusar la credencial del
 árbol). Suite 1702 verde. Detalle en [[roadmap-operativo]] (29-ago, Fase B5b).
 — claude
+
+## [2026-08-30] plan | Fase B8: alertas que sí saltan, estrictez simétrica y el honeypot web
+Plan aceptado archivado en [[planes/2026-08-30]]. Sale de una auditoría de 31 agentes con refutación
+adversarial (24 hallazgos confirmados). El objetivo: que la alerta salte cuando alguien entra —hoy no lo
+hace porque el marcador de apertura del honeypot se cuenta como comando tecleado y de paso pisa la táctica
+MITRE que era su única puerta de salida—, que un comando de Windows en un Linux se niegue en código igual
+que al revés, y que el honeypot web deje de descartarse en dos peticiones.
+— claude
