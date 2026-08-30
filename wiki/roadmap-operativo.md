@@ -2558,3 +2558,38 @@ lo que estuviera escrito a mano en su fichero, así que mejorar el motor no las 
   gramática está duplicada en dos módulos y las primitivas de ruta asumen `/`).
 - **B5b — Filetree ZIP**: fusionarlo con el «bundle» de cebos, que ya es el flujo maduro, y exponerlo en
   la UI. Incluye tres fallos detectados en el camino.
+
+## 29-ago-2026 (Parte B · Fase B6) — Los aparatos de red: su configuración es el «árbol»
+
+Salió de una pregunta de Iván: «¿en qué punto entra el árbol de archivos en las demás personalidades?».
+La respuesta, medida: Windows sí tiene sistema de archivos (queda para B7); Cisco y FortiGate **no son
+shells** — lo que un atacante se lleva de un router es su CONFIGURACIÓN. Plan en `planes/2026-08-29.md`.
+
+### Cerrado
+- **Estaba roto y no lo sabíamos.** Antes de tocar nada medimos con el banco de pruebas:
+  `show running-config` —el comando estrella del atacante— respondía «comando inválido» incluso con
+  privilegios, y `show ip interface brief` daba resultados distintos entre dos llamadas seguidas. La
+  causa no era el motor: al modelo le dábamos un RESUMEN en prosa y le exigíamos repetir siempre la
+  misma configuración. Le pedíamos conservar un texto que nunca le habíamos dado.
+- **Configuración literal** en el escenario (115 líneas en el Cisco, 149 en el FortiGate). El modelo pasa
+  de reconstruir a transcribir. Resultado medido: el volcado sale **idéntico las tres veces y termina en
+  `end`**; la tabla de interfaces ya no cambia.
+- **Tope de tamaño por comando**: un volcado real no cabía en el límite anterior y se cortaba a media
+  lista de acceso, sin el `end` final — el delator más obvio que puede tener un router.
+- **Tres delatores más**: el acceso por telnet describía OTRO aparato (distinta versión y nombre); el
+  listado de memoria decía `flash:` cuando ese modelo arranca de `bootflash:`; y `fnsysctl` (un comando
+  oculto real de FortiOS) se rechazaba como inexistente.
+- **La configuración, editable** (`config_serde.py`): igual que el árbol de ficheros de las Linux, pero
+  **preservando el orden** — en una configuración el orden decide qué hace el aparato. Detecta solo las
+  líneas que llevan un secreto y las propone para marcar.
+- **Canarios en la configuración**: al aplicar, cada línea marcada recibe un secreto ÚNICO con su regla
+  de alerta. El secreto se escribe solo en el fichero del servicio (no en el de la persona, que está
+  versionado). Verificado: el atacante ve el secreto único en el volcado y **reusarlo dispara una alerta
+  crítica**. Antes la clave de la VPN estaba en claro, sin token ni aviso: el router era decorado, ahora
+  es sensor. Suite **1610 verde**; todo restaurado tras las pruebas.
+
+### Pendiente
+- Exponer el editor de configuración en la interfaz (los endpoints ya están; esas personas siguen con el
+  cuadro de texto).
+- **B7 — Windows determinista** (inventario ya hecho, incluido un bloqueante que nadie había visto) y
+  **B5b — filetree ZIP** fusionado con el bundle de cebos.

@@ -1327,6 +1327,18 @@ el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
 
+## [2026-08-29] bitacora | Parte B · Fase B6 HECHA: la config del aparato como «árbol»
+Implementada y verificada. Lo primero fue medir: `show running-config` estaba ROTO (respondía comando
+inválido incluso con privilegios) y la tabla de interfaces cambiaba entre llamadas, porque el escenario
+daba un resumen en prosa. Ahora la configuración va LITERAL (115 y 149 líneas): el volcado sale idéntico
+las tres veces y termina en `end`. Nuevo `config_serde.py` (hermano de filetree_serde, pero preservando
+el ORDEN, que en una config es semántico) + endpoints configtree + detección de líneas con secreto. Y
+canarios en la configuración: cada línea marcada recibe un secreto único con su regla; reusarlo dispara
+alerta crítica. El secreto vive solo en el fichero del servicio, nunca en el de la persona (C5). Suite
+1610 verde. Detalle en [[roadmap-operativo]] (29-ago, Fase B6). Pendientes: editor de config en la UI,
+B7 (Windows) y B5b.
+— claude
+
 ## [2026-08-29] plan | Parte B (Fase B6): los aparatos de red, con su config como «árbol»
 Plan aceptado archivado en [[planes/2026-08-29]]. Respuesta a «¿en qué punto entra el árbol de archivos
 en las demás personalidades?»: Windows sí tiene filesystem literal (va a B7, con sus 7 frentes ya
