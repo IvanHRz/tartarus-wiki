@@ -20,3 +20,16 @@ deje de ser medio decorado — hoy sus archivos de relleno son texto estático s
 de reúso, así que robarlos no dispara nada — acuñando cada entrada por la vía madura del bundle, con
 su ZIP anidado, sus jobs en Redis y un botón en la consola que hoy no existe.
 — claude
+
+## [2026-08-29] bitacora | Parte B · Fase B5b HECHA: el árbol por industria ya es un sensor
+Cierra la Parte B. Los archivos de relleno del árbol por industria eran texto fijo sin secreto propio ni
+alerta: robarlos y usarlos no disparaba nada, aunque la máquina para generarlos ya existía y funcionaba
+para el paquete de cebos suelto. Ahora cada hoja del árbol se acuña por esa misma vía, con su ruta real
+registrada. Corregidos los tres fallos anotados (relleno genérico por instrucciones incompletas a la IA,
+documentos sin ruta ni cliente, árbol guardado en memoria sin caducidad) y dos más encontrados al
+verificar, que afectaban también al despliegue asistido: extensiones repetidas y rutas que guardaban solo
+la carpeta sin el nombre del archivo. El paquete gana carpetas anidadas y un script de plantado que por
+primera vez se ejecuta en una prueba. Botón nuevo en la consola, que hasta hoy no llamaba a esta función
+en absoluto. Verificado en vivo con el ciclo completo del cebo (riesgo 85 al reusar la credencial del
+árbol). Suite 1702 verde. Detalle en [[roadmap-operativo]] (29-ago, Fase B5b).
+— claude

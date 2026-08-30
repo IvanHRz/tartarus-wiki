@@ -2676,3 +2676,50 @@ inconsistencias que eso trae y que ya habíamos resuelto para Linux. Plan en `pl
 
 ### Pendiente
 - **B5b — filetree ZIP** fusionado con el bundle de cebos.
+
+## 29-ago-2026 (Parte B · Fase B5b) — El árbol de cebos por industria pasa a ser un sensor de verdad
+
+Cierra la Parte B. El generador de árboles por industria es la capacidad insignia: produce un paquete
+con una estructura de carpetas creíble para una empresa de un sector, para que el consultor la plante en
+una máquina del cliente. Existía desde hacía tiempo, pero a medio construir y de una forma que engañaba.
+Plan en `planes/2026-08-29.md`.
+
+### Cerrado
+- **La mitad del árbol era decorado.** Los documentos (Word, Excel, PDF) sí avisaban al abrirse, pero
+  los archivos de «relleno» —la credencial de AWS, la configuración de VPN, el script de despliegue—
+  eran texto fijo, igual en todos los árboles: sin secreto propio, sin alerta asociada y sin quedar
+  registrados. Si el atacante se los llevaba y los usaba, **no saltaba nada**. Lo llamativo es que la
+  máquina para generar esos secretos ya estaba escrita y funcionando para el paquete de cebos suelto;
+  simplemente nadie la llamaba desde aquí. Ahora cada archivo del árbol se genera por esa misma vía.
+- **Nadie podía usarlo.** No había una sola llamada a esta función desde la consola: solo era accesible
+  a mano. Ahora hay un botón «Árbol por industria» junto al de «Bundle»: se elige el sector, se ve el
+  árbol propuesto con lo que dispara cada archivo, y se descarga.
+- **Los tres fallos que teníamos anotados, corregidos.** Las instrucciones que se le dan a la IA
+  describían los tipos de relleno en el texto pero no le pedían el dato, así que todo árbol generado
+  por IA usaba el relleno genérico. Los documentos se registraban sin decir dónde se iban a plantar ni
+  a qué cliente pertenecían. Y el árbol recién generado se guardaba en la memoria del proceso, sin
+  caducidad: se perdía al reiniciar. Ahora va a la caché compartida, con media hora de vida.
+- **Dos fallos más, encontrados al verificar y no en la revisión previa.** Salían nombres con la
+  extensión repetida (`vpn_planta.conf.conf`), que además de feo delata el cebo. Y la ruta que se
+  guardaba era solo la carpeta (`/opt/app/`), sin el nombre del archivo: la alerta no decía cuál de
+  los cebos de esa carpeta habían tocado. Los dos afectaban también al despliegue asistido, no solo al
+  árbol. Se corrigieron con una sola regla común, y hay una prueba que exige que la ruta del paquete y
+  la registrada sean idénticas.
+- **El paquete ya trae todo lo que traía el otro**: las carpetas anidadas, el script que las recrea y
+  envejece las fechas —también las de las carpetas, porque una carpeta con fecha de hoy dentro de un
+  árbol de 2019 delata igual que un archivo— y las instrucciones honestas de qué dispara cada cosa. El
+  script, además, cumple ya lo que su propia documentación prometía desde el principio y nunca hacía:
+  plantar cada cebo en la ruta sugerida. Y por primera vez **se ejecuta en una prueba**: era el único
+  trozo que llegaba al cliente sin que nadie lo hubiera corrido nunca de forma automática.
+- **Idioma**: la IA devolvía carpetas en inglés junto a las plantillas en español. Ahora se le pide
+  explícitamente que nombre todo como lo haría un empleado de esa empresa.
+- **Probado contra el sistema en marcha**: árbol generado por IA, rutas del paquete idénticas a las
+  registradas, script ejecutado de verdad (carpetas recreadas y fechas de 2019), y el ciclo completo
+  del cebo sobre un archivo de relleno: se toma la credencial del árbol, se usa como contraseña contra
+  el honeypot y salta la alerta con riesgo alto. Hasta hoy ese archivo era decoración.
+- Suite **1702 verde**.
+
+### Pendiente
+- Unificar el vocabulario de «industria»: hay dos catálogos distintos (el del árbol virtual que ve el
+  atacante por SSH y el de estos archivos reales) y al operador le van a parecer lo mismo.
+- Llevar el árbol por industria también al asistente de despliegue, donde ya se eligen cebos y rutas.
