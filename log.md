@@ -1470,3 +1470,23 @@ de `cd`/`ls`/`pwd` 2.5–5 ms (antes ~1-2 s). Suite 1466 verde. Detalle en [[roa
 Fase B1). Pendiente: toggle de UI (hoy se revierte con `set_llm(host="")`), fases B2 (constructor visual)
 y B3 (canary en el árbol).
 — claude
+
+## [2026-08-30] plan | B9 bloque 2: cerrar la fuga de datos entre clientes
+Plan aceptado archivado en [[planes/2026-08-30]]. Medido en vivo antes de planear nada, con dos clientes
+en la base —«Default Flock» con 910 eventos e «Iván» con cero—, así que cualquier cifra distinta de cero
+pedida como «Iván» es una fuga demostrada. El hallazgo que cambia el plan de partida: **el backend está
+mucho mejor de lo que creíamos y la consola mucho peor**. Informe de engagement, notificaciones, WebSocket
+y el repintado al cambiar de cliente ya estaban resueltos en el servidor; el agujero se movió a la
+interfaz, que de sus 132 llamadas solo añade el cliente en 12 — el informe que se ENTREGA al cliente se
+pide sin él y trae 910 eventos ajenos (con el cliente puesto trae 0). La otra mitad son 129 rutas que ni
+siquiera pueden aceptar el parámetro, aunque 6 de sus 7 consultas pesadas ya sepan filtrar: ahí es pasarlo,
+no reescribirlo. Lo peor suelto: `/iocs/extract` (100 hashes, 100 comandos, 12 URLs y 50 credenciales de
+otro cliente), `/detections` (434), `/audit` (587 acciones) y los memos de analista, que además son
+escritura cruzada y su borrado ni comprueba el rol. Dos hallazgos nuevos que no estaban en el plan de
+partida: `hosts.ip` y `uq_honey_creds_combo` son ÚNICOS globales —dos clientes no pueden tener el mismo
+host ni la misma credencial trampa—, y conviven tres semánticas incompatibles del cliente por defecto que
+hay que unificar antes de tocar nada. Cuatro decisiones tomadas por el usuario: migrar `console_audit` de
+verdad, omitir los contadores globales cuando hay cliente, dejar el WebSocket fuera del bloque (la consola
+ya no lo usa: 0 conexiones) y enmascarar la configuración de avisos heredada. Suite de partida: 1734 verde.
+Repo: `0633b61`.
+— claude
