@@ -1327,6 +1327,17 @@ el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
 
+## [2026-08-29] plan | Parte B (Fase B5a): las otras personalidades al nivel del Linux
+Plan aceptado archivado en [[planes/2026-08-29]]. Jenkins y Synology son shells Unix REALES sin ninguna
+regla → pasan a perfil bash con escenario denso y heredan de golpe el motor determinista, el editor de
+árbol, los canarios y el prompt con ruta. Cisco y FortiGate reciben reglas propias de su CLI (modos,
+running-config estable, errores literales, cebo del aparato). Windows: sus reglas pasan del YAML al
+código. Y se arregla el telnet, que es un router escrito a mano que contradice a la persona cisco-ios.
+Pieza de arquitectura: registro de perfiles con marcador por familia, manteniendo el motor determinista
+atado SOLO al marcador bash (para que un router no responda POSIX). B6 (Windows determinista) y B5b
+(filetree ZIP fusionado con el bundle) quedan registradas. Repo: `9ccb045`.
+— claude
+
 ## [2026-08-29] bitacora | Parte B · Fase B4 HECHA: el shell se siente real
 Implementado y verificado en vivo por SSH real. `cd` ya no deja línea en blanco y el prompt sigue la ruta
 (`admin@srv:~/documentos$`): ambos requerían parchear Beelzebub — nuevo `beelzebub-shell-prompt.patch` que
