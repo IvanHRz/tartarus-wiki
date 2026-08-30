@@ -1327,6 +1327,17 @@ el LLM solo genera contenido (cacheado en Redis). Cierra de raíz la queja #1 de
 consistencia del filesystem. Repo al momento: `bf003de`.
 — claude
 
+## [2026-08-29] bitacora | Parte B · Fase B5a HECHA: las otras personalidades al nivel del Linux
+Implementado y verificado en vivo. Nuevo `engine/engine/cli_profiles.py` con cuatro familias de reglas
+(bash/ios/fortios/powershell) y `ssh_rules` como fachada. Jenkins y Synology, que son shells Unix reales,
+pasan a perfil bash y heredan de golpe el motor determinista, el editor de árbol, los canarios y el prompt
+con ruta (verificado por SSH real). Cisco y FortiGate reciben reglas de su propio CLI (modos, config
+estable, errores literales, cebo del aparato); Windows saca sus reglas del YAML al código; el telnet queda
+alineado y también recibe reglas y comandos. Los tests cazaron un bug serio: los marcadores nuevos
+contenían al de bash, con lo que un FortiGate encendía el motor POSIX. Suite 1567 verde, sin regresión en
+Linux. Detalle en [[roadmap-operativo]] (29-ago, Fase B5a). Pendientes B6 (Windows determinista) y B5b.
+— claude
+
 ## [2026-08-29] plan | Parte B (Fase B5a): las otras personalidades al nivel del Linux
 Plan aceptado archivado en [[planes/2026-08-29]]. Jenkins y Synology son shells Unix REALES sin ninguna
 regla → pasan a perfil bash con escenario denso y heredan de golpe el motor determinista, el editor de

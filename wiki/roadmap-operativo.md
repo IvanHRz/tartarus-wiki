@@ -2522,3 +2522,39 @@ entrar por SSH; B5 = las otras personalidades + el filetree ZIP. Plan en `planes
   no existe un equivalente a las reglas bash para IOS/FortiOS/DSM. Windows sí está rico.
 - **B5b — Canary en el filetree ZIP**: fillers estáticos → secreto único + `decoy_reuse`; y exponer en la
   UI los endpoints de generación/descarga, que hoy son código muerto.
+
+## 29-ago-2026 (Parte B · Fase B5a) — Las otras personalidades al nivel del Linux
+
+Hasta aquí solo el Ubuntu era bueno: era el único con reglas en CÓDIGO. Las demás personas dependían de
+lo que estuviera escrito a mano en su fichero, así que mejorar el motor no las mejoraba. Plan en
+`planes/2026-08-29.md`.
+
+### Cerrado
+- **Registro de familias** (`cli_profiles.py`): cuatro perfiles — Linux/bash, Windows/PowerShell,
+  Cisco IOS y FortiOS — cada uno con sus reglas y su meta-prompt propios, inyectados al aplicar/probar.
+- **Jenkins y Synology heredan TODO** (lo más rentable de la ronda): son shells Unix reales, así que al
+  declararlos como bash obtienen de golpe el motor determinista, el editor de árbol, los canarios y el
+  prompt con la ruta. Verificado por SSH real: navegación de 3 niveles en `/var/lib/jenkins/secrets`,
+  `ls` estable y `cat` sirviendo el cebo (master.key, .env con credenciales).
+- **Cisco y FortiGate con reglas de su propio CLI**: modos y prompt que persisten
+  (`>` → `enable` → `#` → `(config)#`), `show running-config` estable y coherente, errores literales del
+  aparato, y cebo propio (comunidad SNMP de escritura, usuario con contraseña tipo-7, clave de VPN,
+  política «temporal» abierta). Verificado: `ls` en el router responde el error de IOS, no un listado
+  de Linux.
+- **Windows**: sus reglas salen del fichero y pasan al código, como el Ubuntu — ahora mejoran solas.
+- **Telnet arreglado**: era un router escrito a mano que contradecía a la persona de Cisco (distinta
+  versión y hostname). Se alineó, y ahora telnet también recibe reglas y sustituye sus comandos fijos.
+- **Un bug que cazaron los tests**: los marcadores nuevos contenían al del Linux como subcadena, así que
+  el FortiGate encendía el motor de Linux y habría respondido `ls` con formato POSIX dentro de un
+  firewall. Renombrados y con test para que no vuelva.
+- **Anti-delatores**: se prohibió envolver la salida en bloques de código y hacer eco del comando (el
+  FortiGate repetía `FGT100F # get system status` antes de responder).
+- **UI**: el editor ya respeta la familia de la persona (antes la perdía al crear y todo acababa siendo
+  Linux) y hay un selector «Tipo de equipo» que además elige cómo genera la IA. Suite **1567 verde**;
+  el shell Linux no cambió (mismo corte de escenario → canarios intactos).
+
+### Pendiente
+- **B6 — Windows determinista**: extender el motor de ficheros a rutas `C:\` (siete frentes medidos; la
+  gramática está duplicada en dos módulos y las primitivas de ruta asumen `/`).
+- **B5b — Filetree ZIP**: fusionarlo con el «bundle» de cebos, que ya es el flujo maduro, y exponerlo en
+  la UI. Incluye tres fallos detectados en el camino.
