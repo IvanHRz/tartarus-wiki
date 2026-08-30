@@ -2723,3 +2723,83 @@ Plan en `planes/2026-08-29.md`.
 - Unificar el vocabulario de «industria»: hay dos catálogos distintos (el del árbol virtual que ve el
   atacante por SSH y el de estos archivos reales) y al operador le van a parecer lo mismo.
 - Llevar el árbol por industria también al asistente de despliegue, donde ya se eligen cebos y rutas.
+
+## 30-ago-2026 (Fase B8) — Que la alerta salte cuando alguien entra
+
+Iván lo dijo así: «no reporta ni manda notificación cuando entro, solo cuando lanzo el primer
+comando; se supone que se debería reportar todo». La causa no era la que parecía. Plan en
+`planes/2026-08-30.md`.
+
+### Cerrado
+- **No era el umbral, era un fallo de atribución.** El honeypot abre cada sesión con un aviso interno
+  («nueva conexión SSH») que no es un comando tecleado. El motor lo contaba como si lo fuera: le
+  sumaba puntos y, de paso, **le cambiaba la etiqueta de la técnica de ataque**, sustituyendo «robo de
+  credenciales» —que es de las que disparan aviso— por «ejecución de comandos», que no lo es. El
+  resultado: la entrada puntuaba **más** y avisaba **menos**. De 538 conexiones registradas, 459 (el
+  85%) estaban mudas y **ninguna** llevaba la etiqueta correcta.
+- **Había una trampa que desactivar en el mismo cambio.** Existía un filtro, puesto en agosto, para
+  que una conexión pelada no disparara correo. Ese filtro llevaba meses sin filtrar nada: bastaba con
+  que el evento trajera cualquier envoltorio para darlo por bueno, y el envoltorio va siempre. Si se
+  corregía la etiqueta sin arreglar el filtro, **cada conexión habría mandado un correo**.
+- **El Telnet era una bomba puesta.** Sus 40 eventos de la prueba alertaban todos, hasta el saludo.
+  Nadie lo había tocado todavía, así que no había estallado.
+- **Un aviso por entrada, no dos.** El honeypot manda dos eventos por una sola entrada; se contaban
+  los dos.
+- **Dos niveles** (decisión de Iván): aviso inmediato para lo peligroso y **un resumen al cerrar la
+  sesión** con todo lo demás. Así se reporta todo sin que el buzón deje de mirarse.
+- **Se estaban perdiendo los cierres de sesión**: llegan sin dirección de origen y se descartaban.
+  553 eventos tirados, y con ellos el saber cuándo se fue el atacante.
+- **El limitador se comía alertas legítimas.** Contaba por dirección de origen, y como todo el tráfico
+  llega por la misma puerta, un único cupo gobernaba el 100%: de 119 avisos que debían salir, salían
+  unos dos por hora. Y **la supresión no dejaba rastro**, que es lo que mantuvo el problema invisible
+  todo este tiempo.
+- **Herramienta nueva**: `scripts/tabla_testigo.py` responde a la pregunta de Iván midiendo, no
+  suponiendo: por cada evento dice si avisa y **por qué**. La foto de partida quedó en
+  `registro-pruebas.md`.
+- Probado en vivo: se entra por SSH con una contraseña cualquiera y llega el aviso a Telegram y al
+  correo. Uno solo.
+
+### El ping
+- El sensor de ICMP vigilaba direcciones de una subred **donde no está**: cero eventos en toda la
+  historia. No es que no avisara, es que no llegaba. Reapuntado.
+- Y se descubrió que el sensor **se realimentaba**: veía salir su propio eco y lo tomaba por un ping
+  nuevo. El fallo llevaba latente desde siempre porque nunca llegaba un primer paquete.
+
+## 30-ago-2026 (Fase B9, bloques 0-1) — Desatascar la consola
+
+Iván reportó que «se borró todo y no deja crear nuevos despliegues». Eran dos cosas distintas y
+ninguna era un borrado.
+
+### Cerrado
+- **Lo que impedía trabajar era de red, y lo provoqué yo.** Al reconstruir un contenedor en la fase
+  anterior, Docker repartió las direcciones de otra manera y el servidor web de la consola se quedó
+  hablando con una dirección muerta: **todas las llamadas morían antes de llegar al motor**. La
+  consola cargaba pero no dejaba hacer nada. Se le enseñó a preguntar la dirección en cada petición
+  en vez de una sola vez al arrancar, y se comprobó de verdad moviendo el motor de sitio: la consola
+  se recuperó sola.
+- **Ese arreglo trajo otro peor, y costó una segunda vuelta.** Al poner el nombre en una variable, el
+  servidor web dejó de recortar el prefijo de las rutas, así que **todas las llamadas acababan en la
+  misma**, que contestaba correctamente con el contenido equivocado. Las 89 rutas devolvían «bien» y
+  la consola seguía muerta. La verificación anterior había mirado los códigos de respuesta y no los
+  contenidos, y por eso se dio por buena. Ahora se comparan los contenidos uno a uno, y hay una
+  prueba automática que caza esta trampa concreta.
+- **Una instrucción del proyecto estaba mal** y costó tiempo: decía que reiniciar el contenedor de la
+  consola recoge los cambios de su configuración. No es así, hay que reconstruirlo. Reiniciar *parece*
+  arreglarlo cuando el fallo es de nombres, pero la configuración sigue siendo la vieja. Corregido.
+- **El otro motivo de «se borró todo» era real: lo que desplegaba el asistente nacía sin dueño.**
+  Ni el asistente ni la API guardaban a qué cliente pertenecía, y la base tampoco lo rellenaba sola.
+  Quedaba en blanco, y lo que no es de nadie **no aparece en la vista de ningún cliente**. Corregido
+  de punta a punta y comprobado: un despliegue en el flock de Iván aparece en el suyo y en ningún otro.
+- **El despliegue dejó de mentir**: antes tiraba en silencio los campos que no reconocía y contestaba
+  «falló» sin explicar que nunca había recibido la orden. Ahora los rechaza, distingue «no me pediste
+  nada» de un fallo real, y deja constancia en el registro.
+- **Nada se había borrado.** La bitácora confirma un solo borrado, el autorizado: 22 cebos de prueba.
+  Los 909 eventos siguen ahí.
+
+### Pendiente (por aquí se sigue)
+- **La fuga entre clientes**, que es mucho mayor de lo que se veía: de 186 rutas, 130 no declaran a
+  qué cliente pertenecen y al menos 37 leen datos de cliente sin ninguna separación. Lo más grave es
+  que **el informe que se entrega al cliente** puede llevar datos de otro.
+- **El ping**, con la decisión ya tomada e investigada.
+- **El honeypot web**, incluida una regresión: el laberinto anti-escáner se borró el 29 de agosto y
+  con él quedó muerto todo el código que lo usa.

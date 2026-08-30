@@ -50,3 +50,27 @@ clientes resultó ser mucho mayor de lo visible —incluido el informe que se en
 ataca con un test que la impida volver. La decisión del ICMP quedó resuelta con una cuarta opción que
 no estaba sobre la mesa.
 — claude
+
+## [2026-08-30] bitacora | Fases B8 (1-2) y B9 (0-1): la alerta ya salta al entrar, y la consola desatascada
+Dos tandas seguidas. La primera resolvió la queja de Iván («no avisa cuando entro»): no era el umbral,
+era que el aviso de apertura del honeypot se contaba como comando tecleado y de paso le cambiaba la
+etiqueta de la técnica de ataque por una que no dispara aviso — puntuaba más y avisaba menos. De 538
+conexiones, 459 estaban mudas y ninguna llevaba la etiqueta correcta. Se añadió el modelo de dos
+niveles (aviso inmediato + resumen al cerrar sesión), se arregló un filtro anti-ruido que llevaba
+meses sin filtrar nada, se desactivó una inundación que el Telnet tenía preparada, y el limitador dejó
+de comerse alertas legítimas. Cada supresión queda ahora registrada: antes era muda, y eso es lo que
+mantuvo el problema invisible.
+
+La segunda desatascó la consola, que llevaba un rato sin dejar hacer nada. La causa fue mía: al
+reconstruir un contenedor, Docker repartió las direcciones de otra manera y el servidor web se quedó
+hablando con una dirección muerta. Y el primer arreglo trajo otro peor —todas las rutas contestaban
+«bien» con el contenido equivocado—, que se dio por bueno porque la verificación miró códigos de
+respuesta en vez de contenidos. Ya hay una prueba automática que caza esa trampa. También se corrigió
+que lo desplegado desde el asistente nacía sin dueño, invisible en la vista de todos los clientes: eso
+era la otra mitad del «se borró todo». Nada se había borrado.
+
+Queda por hacer la fuga entre clientes (de 186 rutas, 130 no declaran a qué cliente pertenecen, y el
+informe que se entrega al cliente puede llevar datos de otro), el ping —con la decisión ya investigada
+y tomada— y el honeypot web. Detalle en [[roadmap-operativo]] (30-ago) y el arranque de la siguiente
+sesión en [[prompt-siguiente-sesion]].
+— claude
