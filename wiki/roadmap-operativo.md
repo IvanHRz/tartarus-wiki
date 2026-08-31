@@ -41,6 +41,53 @@ Cada ítem: **Objetivo** (qué queda resuelto) · **Cómo hacerlo** (archivos/t�
 
 ---
 
+## ✅ FASE C · BLOQUE A — cerrado el 30-ago-2026 (8 puntos)
+
+Cerrar lo que ya existía antes de abrir capacidades nuevas. Regla que se respetó: **no se
+abrió nada del bloque B hasta cerrar el A**. Tres de los ocho puntos estaban **mal descritos**
+en el ROADMAP y se corrigieron al medirlos.
+
+1. **STIX ya no inventa huellas de fichero.** `events.sha256` es el hash del CUERPO del evento
+   (cadena de custodia), pero el exportador lo emitía como `[file:hashes.'SHA-256']` con el
+   nombre «Malicious File SHA-256». El bundle de 720 h pasó de **114 objetos —100 huellas de
+   fichero falsas— a 14** (2 IP + 12 URL, 0 patrón `file:`). El dato sigue donde es correcto:
+   la cadena de custodia del informe.
+2. **Los números que decimos de nosotros mismos, medidos.** CLAUDE.md decía «76 Sigma, 20
+   YARA». Son **398 Sigma (391 activas) y 439 reglas YARA en 95 ficheros**. La cifra «436 en
+   74» del propio ROADMAP también estaba mal (74 = contar `*.yar` sin recursión). Y el
+   detector de deriva `validate_docs.py` llevaba meses **en rojo sin que lo ejecutara nadie**:
+   ahora corre en CI.
+3. **Fuera `maze_tagger.py`** (119 líneas). Se midió antes de borrar: 6 golpes al laberinto en
+   vivo traen los 6 `Handler: tartarus/maze` — Beelzebub ya lo dice solo desde B9-4. El módulo
+   hasta se perdía golpes que Beelzebub sí marcaba.
+4. **Telnet ya no llama al proveedor por su cuenta**: va por el shim del motor (0 llamadas
+   directas de Beelzebub, clave fuera del YAML). De paso: su prompt no tenía NINGUNA regla ios
+   porque la persona nunca se le había aplicado, y devolvía vallas markdown — cerrado en
+   código.
+5. **El honeypot MCP habla MCP de verdad** (JSON-RPC 2.0). Antes `initialize` y `tools/list`
+   devolvían el mismo JSON; un cliente real se caía. El desajuste de puerto que decía el
+   ROADMAP no era en dev (ahí `3001:3000` concuerda) sino en prod/campo, ya parametrizado.
+6. **La inyección de prompt se ejercita**: la batería la envía por SSH/telnet/MCP y salta
+   **8 detecciones donde había 0**; el caso de control de una sola cadena no dispara.
+7. **El anti-jailbreak SÍ existía** (era falso lo del ROADMAP): está en las 7 personas y,
+   medido contra los ataques del punto 6, **el honeypot aguantó las 12** sin revelar el prompt.
+8. **El recorte por rol muerde en TODA la consola.** Al encender la sesión se vio que solo
+   estaba cableado en 4 de ~20 routers: un `watcher` de solo lectura podía crear cebos y borrar
+   credenciales trampa. Se cableó el guardarraíl en las **~45 escrituras de consola** que
+   faltaban; los endpoints de máquina se dejaron fuera a propósito. La auditoría nueva
+   `audit_rbac_enforcement.py` levanta un engine con auth ON **sin tocar dev** y da 37/37, 0
+   fugas. La de aislamiento por flock sigue en 0 fugas.
+
+**Verificación en vivo al cierre:** engine sano, STIX 14 objetos, MCP responde JSON-RPC con
+sus 4 herramientas, telnet por el motor sin vallas, laberinto por `Handler`, suite **1844
+verde**, aislamiento 0 fugas, RBAC 37/37.
+
+Detalle técnico y hallazgos nuevos (H1 fingerprint web mixto, H2 handlers sin nombre, H4
+clave ssh innecesaria, H5 prompt bash en router Cisco, H6 detecciones con prefijo, recorte
+por CLIENTE en escrituras) en `.agents/ROADMAP.md`, sección «ESTADO — Bloque A cerrado».
+
+---
+
 ## PENDIENTES MAESTRO (ago-2026)
 
 > Consolidación de TODO lo abierto al cierre de la sesión del **8-ago-2026** para no

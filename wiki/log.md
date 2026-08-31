@@ -197,3 +197,42 @@ login, y el laberinto y los cebos web que funcionan sin control en la consola.
 
 Reescrito [[prompt-siguiente-sesion]] con todo el estado y el orden de trabajo.
 — claude
+
+## [2026-08-30] bitacora | Fase C · Bloque A cerrado — los 8 puntos, tres estaban mal descritos
+Se cerró el bloque A entero de la fase C: terminar lo que ya existía antes de abrir capacidades nuevas.
+La regla se respetó — no se abrió nada del bloque B. Lo importante de la sesión no fue tachar ocho
+casillas, sino que **tres de los ocho estaban mal descritos** y se corrigieron al medirlos, no al leerlos.
+
+El **hash falso del STIX** era lo único que salía mal hacia fuera: el exportador emitía el hash del
+cuerpo del evento (cadena de custodia) como si fuera la huella de un fichero de malware. Medido en vivo,
+el bundle de una semana traía 114 objetos y **100 eran huellas de ficheros que no existen**; ahora trae
+14, todos indicadores que un SIEM puede usar. El dato no se perdió: sigue en la tabla de integridad del
+informe, que es su sitio.
+
+Los **números que decíamos de nosotros mismos** estaban desfasados en CLAUDE.md («76 Sigma, 20 YARA») y
+—sorpresa— también en el propio ROADMAP, que decía «436 YARA en 74 ficheros». Son **398 Sigma (391
+activas) y 439 reglas YARA en 95 ficheros**. El 74 salía de contar mal. Y el detector de deriva que
+existía para cazar justo esto llevaba meses en rojo **porque no lo ejecutaba nadie**: ahora corre en CI.
+
+Se **retiró `maze_tagger.py`** después de comprobar, no de suponer: seis golpes al laberinto en vivo
+llegan con el `Handler` que el módulo intentaba adivinar; el módulo hasta se perdía golpes que Beelzebub
+sí marcaba. **Telnet** dejó de llamar al proveedor por su cuenta —ahora va por el motor, sin clave en el
+fichero— y por el camino se vio que su prompt no llevaba ninguna de las reglas de router porque la
+persona nunca se le había aplicado. El **honeypot MCP** ahora habla MCP de verdad (JSON-RPC): antes dos
+mensajes distintos devolvían la misma respuesta y un cliente real se caía.
+
+La **inyección de prompt** pasó de no probarse nunca a saltar 8 detecciones, y midiéndola se cerró de
+paso el punto del **anti-jailbreak**, que el ROADMAP daba por ausente: existe, y el honeypot aguantó los
+doce intentos sin revelar nada. El punto más gordo fue el **recorte por rol**: al encender la sesión
+—en un engine aparte, sin tocar el de desarrollo— se vio que solo estaba cableado en 4 de una veintena
+de routers, y que un usuario de solo lectura podía crear cebos y borrar credenciales trampa. Se cableó el
+guardarraíl en las ~45 escrituras de consola que faltaban, dejando fuera a propósito las de los sensores
+y honeypots. La auditoría nueva da 37 de 37 sin una sola fuga.
+
+Verificado en vivo al cierre: engine sano, STIX 14 objetos, MCP con sus cuatro herramientas, telnet por
+el motor sin markdown, laberinto por `Handler`, suite **1844 verde**, aislamiento por cliente 0 fugas,
+recorte por rol 37/37. Aparecieron hallazgos nuevos que quedan anotados (el honeypot web se delata
+sirviendo IIS en la portada y nginx en los errores; una clave de SSH que ya no hace falta; el prompt del
+shell sale como bash en un router Cisco). Todo commiteado, sin subir a GitHub. Detalle en
+[[roadmap-operativo]] y en `.agents/ROADMAP.md`, sección «ESTADO — Bloque A cerrado».
+— claude
