@@ -63,31 +63,53 @@ distintas en sitios distintos del repo. Se resolvió **midiendo**, no eligiendo.
 
 ## Dónde lo dejamos
 
-**La fase B9 está cerrada entera y subida.** Cuatro bloques:
+**El bloque A de la FASE C está cerrado entero, más tres rondas de afinado de la consola.** 16
+commits sin subir (`cab22c5`..`e36206a`), rama `feature/tier0-deployment-readiness`. Suite en
+**1861 verde**, aislamiento entre clientes 0 fugas, recorte por rol 37/37.
 
-- **B9 0-1** — desatascada la consola (el 502 y el `proxy_pass` con variable que dejaba de recortar
-  el prefijo) y lo que despliega el asistente ya nace con dueño.
-- **B9-2 — la fuga entre clientes, cerrada.** El diagnóstico cambió al medirlo: el motor ya filtraba
-  bien en casi todo y **la consola no decía de qué cliente pedía** (de 127 llamadas, solo 27 lo
-  mandaban). El informe que se ENTREGA al cliente traía 910 eventos de otro. De 185 rutas, las que
-  declaran cliente pasaron de 56 a 91. Aparecieron por el camino: un gestor podía **borrar el cliente
-  de otro**, dos clientes no podían tener el mismo cebo (el segundo recibía el ID del primero), y
-  probar un canal de avisos **escribía** en la configuración global.
-- **B9-3 — el ping ya llega.** El sensor llevaba desde su creación con cero eventos porque nadie
-  contestaba el ARP. Respondedor ARP nuevo + `ip_forward=0`. Medido: 0 paquetes en reposo, 94 en 12 s
-  con el reenvío activado, 0 con él desactivado. Resultado: 0 % de pérdida, ttl 63 (linux) y 127
-  (windows), sin DUP!, y 13 eventos donde había 0.
-- **B9-4 — el honeypot web ya no canta.** Antes `/`, `/admin`, `/.env` y `/wp-admin` devolvían los
-  mismos bytes. Ahora once rutas con los errores reales de nginx, el laberinto anti-escáner activo por
-  primera vez, cebos web que disparan de verdad, HTTPS que deja de contarse como puerto 80, el señuelo
-  de Prometheus sirviendo métricas falsas, y `make up` que ya no es una trampa.
+- **Bloque A (8 puntos):** el hash falso del STIX (114→14 objetos), los conteos de
+  CLAUDE.md medidos y vigilados en CI, fuera `maze_tagger`, telnet por el motor, el MCP
+  hablando MCP de verdad, la inyección de prompt ejercitada (8 detecciones), el anti-jailbreak
+  medido (aguanta), y el recorte por rol cableado en las ~45 escrituras de consola.
+- **A-bis:** control de deadline y banner; **parche de Beelzebub** (filtro de usuario en el
+  login + latencia); control del laberinto por servicio.
+- **A-ter:** puerto real (2222), un solo menú por protocolo, 3 pestañas (Monitoreo/Análisis/
+  Trampas), personalidades por protocolo.
+- **A-quater:** limpieza de Trampas (fuera Deception/DRAS/embudo), Monitoreo = solo lo activo,
+  los 9 sensores en Trampas, menú del protocolo más claro.
 
-**Y se hizo el análisis comparativo contra Beelzebub**, que ya no es solo el honeypot que usamos:
-levantaron 3 M€ en julio y venden una plataforma con **Caronte** (análisis de malware con IA) y
-**Arcangelo** (equipo rojo autónomo). De sus **28 laboratorios** cubrimos 2 del todo, 4 a medias y 16
-no; 6 no aplican. Está entero en `wiki/analisis-beelzebub-labs.md`.
+**El análisis contra Beelzebub sigue vigente** (`wiki/analisis-beelzebub-labs.md`): de sus **28
+laboratorios** cubrimos 2 del todo, 4 a medias y 16 no; 6 no aplican. Eso marca el trabajo que
+viene.
 
 ## Por dónde seguir: la FASE C
+
+### 🎯 OBJETIVO DE ESTA SESIÓN — dejar Beelzebub al 100%, atacando sensor por sensor
+
+Lo que quiero: **atacar cada honeypot uno por uno y comprobar que todo funciona bien**,
+empezando por los que menos hemos mirado — **MCP, HTTP y Telnet**. La meta es dejar **todas las
+funciones de Beelzebub al 100%** y **cumplir los alcances de sus laboratorios lo antes posible**
+(`wiki/analisis-beelzebub-labs.md`).
+
+Cómo lo quiero:
+
+1. **Uno por uno, de verdad.** Por cada protocolo: lanzarle su ataque (la batería está en
+   `scripts/attack_all.py`, con `--only <protocolo>`), y **verificar el CONTENIDO de la
+   respuesta y del evento en la base, no el código HTTP**. Un 200 con el cuerpo equivocado ya
+   costó una sesión.
+2. **Empezar por MCP, HTTP y Telnet.** El MCP ya habla JSON-RPC (A5) y telnet ya va por el
+   motor (A4) — hay que estirarlos: probar un cliente/ataque realista de cada uno y ver que el
+   engaño aguanta, que el evento se ingiere con su cuerpo, que salta la detección que deba
+   saltar, y que no se delata (fingerprint, banner, latencia).
+3. **Cruzar con los labs.** Para cada protocolo, mirar en `wiki/analisis-beelzebub-labs.md` qué
+   labs de Beelzebub lo tocan y cuáles están «a medias» o «no» — y cerrarlos si son de este
+   bloque. El objetivo es subir la cobertura de 2/4/16.
+4. **Medir y enseñar números** (eventos ingeridos, detecciones que saltan, latencia real), y
+   **comprobar en git antes de dar algo por hecho** — la lección de los dos sustos sigue.
+
+Cuando un protocolo quede «al 100%» (ataque realista + evento con cuerpo correcto + detección
++ sin delatarse), pasar al siguiente. Registrar lo que quede a medias en el ROADMAP.
+
 
 Está en `.agents/ROADMAP.md` (busca «FASE C») y volcada a `wiki/roadmap-operativo.md` (30-ago).
 
@@ -221,5 +243,18 @@ cd engine && python3 -m pytest tests/ -q   # 1861 verde
 python3 scripts/audit_flock_isolation.py --loops 1   # 0 fugas
 ```
 
-Y luego el **bloque A**, empezando por el hash falso del STIX, que es lo único que hoy está
-directamente mal y sale hacia fuera.
+Y comprueba que los honeypots responden con su CONTENIDO (no solo que el puerto abre):
+
+```bash
+# MCP habla JSON-RPC:
+curl -s -X POST localhost:3001/ -H 'Content-Type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | head -c 200
+# HTTP: la portada y un 404 real:
+curl -s -D- -o /dev/null localhost:8880/ | grep -i '^server'
+# Telnet vivo (2323), SSH vivo (2222)
+```
+
+Y luego el **objetivo de esta sesión**: atacar cada honeypot uno por uno (empezando por MCP,
+HTTP y Telnet), verificando el cuerpo del evento en la base y la detección, hasta dejar
+Beelzebub al 100% y subir la cobertura de los labs. Usa `scripts/attack_all.py --only <proto>`
+y `wiki/analisis-beelzebub-labs.md`.
