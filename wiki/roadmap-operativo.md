@@ -144,6 +144,31 @@ aislamiento entre clientes 0 fugas, recorte por rol 37/37. Detalle en `.agents/R
 
 ---
 
+## ✅ FASE C · BLOQUE A-quater — cerrado el 31-ago-2026 (afinar Trampas y Monitoreo)
+
+Iván pidió que le explicara Trampas sección por sección y de ahí salieron ajustes de limpieza.
+El modelo que quedó: **Monitoreo enseña solo lo activo** (lo que está capturando ahora) y
+**Trampas enseña los 9 sensores que tenemos** (7 honeypots de Beelzebub + el canary de ping y
+el de Modbus), cada uno para encender y configurar.
+
+- Se **quitó el ruido** de Trampas: la fila de botones «Deception» del hub (que repetían lo de
+  Cebos y Honey Credentials), la sección «DRAS» entera (su botón hacía lo mismo que el
+  «Desplegar» de arriba) y el «embudo de ingesta» (un panel técnico de conteos que no aporta a
+  quien configura).
+- **Monitoreo** estrena «Protocolos activos»: solo lo que está encendido y su actividad; lo
+  apagado no aparece.
+- **Trampas** reúne los 9: los 7 honeypots con su menú completo y los 2 canary (ping y Modbus)
+  como tarjetas de estado —esos no tienen personalidad, se gestionan como contenedor—.
+- En el **menú del honeypot**, «Editar / crear personalidad» pasó arriba (y se quitó el botón
+  «Generar con IA» suelto, porque generar ya está dentro del editor), y la parte «Avanzado» del
+  proveedor de IA se reescribió en llano (qué es la URL y qué es la clave).
+- El **orden** de Trampas es el que pidió Iván: honeypots → personalidades → migajas, y después
+  el despliegue de cebos.
+
+Verificado con un navegador de verdad (cero errores). Suite **1861 verde**.
+
+---
+
 ## PENDIENTES MAESTRO (ago-2026)
 
 > Consolidación de TODO lo abierto al cierre de la sesión del **8-ago-2026** para no

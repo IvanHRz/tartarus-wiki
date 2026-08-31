@@ -10,8 +10,8 @@ Trabajo en **TARTARUS**, plataforma de decepción (honeypots) para respuesta a i
 
 - Código: `/Users/ivanhuerta/Documents/Tartarus` (github.com/IvanHRz/Tartarus — **repo PÚBLICO**)
 - Wiki: `/Users/ivanhuerta/Documents/Wikis/wiki-tartarus` (repo aparte, privado)
-- Rama: `feature/tier0-deployment-readiness` · último commit: `0014360` · **NO subido** (bloque A
-  + A-bis + A-ter, 15 commits, esperando tu OK para el push)
+- Rama: `feature/tier0-deployment-readiness` · último commit: `e36206a` · **NO subido** (bloque A + A-bis
+  + A-ter + A-quater, 18 commits, esperando tu OK para el push)
 
 ## Cómo quiero que trabajes
 
@@ -46,7 +46,7 @@ distintas en sitios distintos del repo. Se resolvió **midiendo**, no eligiendo.
   base si confirmas.
 - Engine en `:9001`, consola en `:8888`, SSH del honeypot en `:2222`, HTTP `:8880`, HTTPS `:8443`,
   MCP `:3001`, Prometheus señuelo `:2112` (las métricas REALES de Beelzebub, en `:9112`).
-- Suite: `cd engine && python3 -m pytest tests/ -q`. **Va por 1867 verde**, 9 saltados.
+- Suite: `cd engine && python3 -m pytest tests/ -q`. **Va por 1861 verde**, 9 saltados.
 - Auditoría de aislamiento entre clientes: `python3 scripts/audit_flock_isolation.py --loops 1` →
   **0 fugas** en 39 superficies.
 - Auditoría del recorte por ROL (nueva): `python3 scripts/audit_rbac_enforcement.py` → **37/37, 0
@@ -153,7 +153,22 @@ en tres sitios). Cuatro fases:
   son estáticos. Aclarada la latencia+IA. (`C/A-ter 4`)
 
 Verificado con Playwright en cada fase (0 errores JS). **Lo primero de la próxima sesión sigue
-siendo: decidir si subir los 15 commits (bloque A + A-bis + A-ter).**
+siendo: decidir si subir los 18 commits (bloque A + A-bis + A-ter + A-quater).**
+
+### Bloque A-quater — CERRADO el 31-ago-2026 (afinar Trampas, sin subir)
+
+Repasaste Trampas sección por sección. Modelo: **Monitoreo = solo lo activo**, **Trampas = los
+9 sensores** (7 honeypots + canary de ping + Modbus).
+
+- ✅ Quitado el ruido: familia Deception (redundante), sección DRAS (botón duplicado), embudo
+  de ingesta (técnico).
+- ✅ Monitoreo estrena «Protocolos activos» (solo lo encendido).
+- ✅ Trampas reúne los 9 (honeypots + 2 canary como tarjetas de estado).
+- ✅ Menú: «Editar/crear personalidad» arriba, sin «Generar IA» suelto; «Avanzado» del
+  proveedor reescrito en llano.
+- ✅ Orden: honeypots → personalidades → migajas → cebos. (`C/A-quater`)
+
+**Lo primero de la próxima sesión sigue siendo: decidir si subir los 18 commits.**
 
 ### Bloque B — capacidades nuevas (después del A)
 
@@ -202,7 +217,7 @@ Comprueba primero que sigue todo en pie:
 
 ```bash
 curl -s localhost:8888/api/health          # el JSON del engine, no un banner
-cd engine && python3 -m pytest tests/ -q   # 1867 verde
+cd engine && python3 -m pytest tests/ -q   # 1861 verde
 python3 scripts/audit_flock_isolation.py --loops 1   # 0 fugas
 ```
 

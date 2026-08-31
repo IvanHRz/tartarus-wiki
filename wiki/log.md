@@ -298,3 +298,32 @@ pestañas y en el menú unificado. Al cierre, suite en **1867 verde**, aislamien
 fugas y recorte por rol 37 de 37. Todo commiteado, sin subir. Detalle en [[roadmap-operativo]] y en
 `.agents/ROADMAP.md`, sección «ESTADO — Bloque A-ter cerrado».
 — claude
+
+## [2026-08-31] bitacora | Fase C · Bloque A-quater — afinar Trampas y Monitoreo
+Iván me pidió que le explicara la pestaña Trampas sección por sección, y al hacerlo salieron a la luz
+varias cosas que sobraban o no se entendían. De ahí este ajuste, y algo más importante: quedó claro el
+modelo que quiere. En **Monitoreo** solo debe verse lo que está activo —lo que está capturando ahora
+mismo— y en **Trampas** los 9 sensores que tenemos (los 7 honeypots de Beelzebub más el canary de ping
+y el de Modbus), cada uno para encenderlo y configurarlo.
+
+Se limpió Trampas de ruido. Había una fila de botones de «Deception» en el hub que repetía lo que ya
+hacían las secciones de Cebos y de Honey Credentials; fuera. Había una sección «DRAS» cuyo único botón
+hacía lo mismo que el «Desplegar» de arriba; fuera entera. Y estaba el «embudo de ingesta» —ese panel
+de la captura con los números 3 → 1212 → 1230— que es una herramienta técnica para cuadrar conteos, no
+algo que ayude a quien configura un honeypot; fuera también. La «salud de honeypots» no se perdió: se
+llevó a Monitoreo, replanteada como «Protocolos activos».
+
+En Trampas ahora se ven los 9 juntos: los 7 honeypots con su menú completo, y los dos canary como
+tarjetas de estado —esos no tienen personalidad ni IA, se gestionan como contenedor, así que su tarjeta
+solo dice qué son y si están vivos—. En el menú de cada honeypot se subió «Editar / crear personalidad»
+arriba y se quitó el botón de «Generar con IA» suelto, porque generar ya vive dentro del editor; y la
+parte «Avanzado» del proveedor de IA, que era ambigua, se reescribió en llano explicando qué es la URL
+del proveedor y qué es la clave. El orden quedó como pidió: honeypots, personalidades y migajas juntos,
+y después el despliegue de cebos.
+
+Un detalle técnico que costó un rato: el orden visual de las secciones lo mandaba el HTML, no el mapa de
+pestañas, y las secciones de las tres pestañas están intercaladas en el documento. En vez de reordenar
+el HTML a mano (frágil), ahora al abrir una pestaña se reordenan sus secciones según el mapa. Todo
+comprobado con un navegador de verdad, cero errores. Suite en **1861 verde**. Sin subir. Detalle en
+[[roadmap-operativo]] y en `.agents/ROADMAP.md`, sección «ESTADO — Bloque A-quater cerrado».
+— claude
