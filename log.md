@@ -1516,3 +1516,9 @@ Cuatro decisiones tomadas: construir el laberinto por primera vez, fusionar en v
 `personality_engine`, escribir el respondedor ARP desde cero, y que el señuelo de Prometheus sirva
 métricas falsas creíbles. Repo: `6a6c82b`.
 — claude
+
+## [2026-08-31] plan | Beelzebub al 100%, sensor por sensor
+Plan aceptado archivado en [[planes/2026-08-31]]. Dejar MCP, HTTP/HTTPS, Telnet y TCP al 100%:
+que el puerto que se ve sea el que se ataca, que HTTPS deje de registrarse como HTTP, que el
+engaño no se delate por banner ni por prompt, y que las notificaciones salgan con el dato bueno.
+— claude
