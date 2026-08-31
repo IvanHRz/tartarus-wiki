@@ -88,6 +88,34 @@ por CLIENTE en escrituras) en `.agents/ROADMAP.md`, sección «ESTADO — Bloque
 
 ---
 
+## ✅ FASE C · BLOQUE A-bis — cerrado el 30-ago-2026 (4 fases)
+
+Lo detectó Iván: la contraseña del honeypot —la decisión más táctica que hay— vivía enterrada
+en la pestaña de Infraestructura, junto a cinco controles de engaño más, cuando lo suyo es
+Trampas. Se separó dónde vive cada decisión y se cubrieron los parámetros que no tenían control.
+
+1. **El modal se partió en dos.** El de «Trampa» (desde Trampas) tiene lo táctico: qué finge
+   ser, qué contraseña y qué usuarios acepta, cuánto aguanta, su latencia y su banner. El de
+   «Motor» (desde Infraestructura) tiene solo el proveedor de IA. Nueva sección «Disfraz y
+   trampa de cada honeypot» en Trampas. Verificado con un navegador de verdad (Playwright): sin
+   errores, la contraseña ya no está enterrada, y cada modal muestra solo su mitad.
+2. **Deadline y banner** ganaron control en la consola. El tiempo que aguanta la sesión
+   sobrevive a cambiar de disfraz; el banner no —pertenece al disfraz—, y la consola lo avisa.
+3. **Usuarios del login y latencia** no existían en Beelzebub: se **parcheó** (el mismo camino
+   que ya se usó para la clave de host). Ahora se puede decir «solo entran root y admin» y
+   simular un servidor lento. Probado en vivo con cuidado —el login es lo crítico—: los usuarios
+   permitidos entran, los demás no, la contraseña sigue filtrando, y la latencia se nota.
+4. **El laberinto anti-escáner** se puede encender y apagar por honeypot web. Apagado, una ruta
+   que no existe da un 404 normal; encendido, atrapa al escáner. Los cebos web ya tenían su
+   propio control (son globales, no por servicio).
+
+Todo con el recorte por rol del bloque A puesto (los cinco controles nuevos lo llevan). Suite
+**1867 verde**, aislamiento entre clientes 0 fugas, recorte por rol 37/37.
+
+Detalle técnico en `.agents/ROADMAP.md`, sección «ESTADO — Bloque A-bis cerrado».
+
+---
+
 ## PENDIENTES MAESTRO (ago-2026)
 
 > Consolidación de TODO lo abierto al cierre de la sesión del **8-ago-2026** para no

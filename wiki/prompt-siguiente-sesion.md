@@ -10,8 +10,8 @@ Trabajo en **TARTARUS**, plataforma de decepción (honeypots) para respuesta a i
 
 - Código: `/Users/ivanhuerta/Documents/Tartarus` (github.com/IvanHRz/Tartarus — **repo PÚBLICO**)
 - Wiki: `/Users/ivanhuerta/Documents/Wikis/wiki-tartarus` (repo aparte, privado)
-- Rama: `feature/tier0-deployment-readiness` · último commit: `43dc277` · **NO subido** (7 commits
-  del bloque A + wiki, esperando tu OK para el push)
+- Rama: `feature/tier0-deployment-readiness` · último commit: `d88cc0b` · **NO subido** (bloque A
+  + A-bis, 12 commits, esperando tu OK para el push)
 
 ## Cómo quiero que trabajes
 
@@ -46,7 +46,7 @@ distintas en sitios distintos del repo. Se resolvió **midiendo**, no eligiendo.
   base si confirmas.
 - Engine en `:9001`, consola en `:8888`, SSH del honeypot en `:2222`, HTTP `:8880`, HTTPS `:8443`,
   MCP `:3001`, Prometheus señuelo `:2112` (las métricas REALES de Beelzebub, en `:9112`).
-- Suite: `cd engine && python3 -m pytest tests/ -q`. **Va por 1844 verde**, 9 saltados.
+- Suite: `cd engine && python3 -m pytest tests/ -q`. **Va por 1867 verde**, 9 saltados.
 - Auditoría de aislamiento entre clientes: `python3 scripts/audit_flock_isolation.py --loops 1` →
   **0 fugas** en 39 superficies.
 - Auditoría del recorte por ROL (nueva): `python3 scripts/audit_rbac_enforcement.py` → **37/37, 0
@@ -119,23 +119,23 @@ delata (IIS en `/`, nginx en `/.env`); handlers de la fusión de personas sin `n
 que ya no hace falta; el prompt del shell sale como bash en un router Cisco; falta bootstrap
 `services.example/`→`services/`. **Lo primero de la próxima sesión: decidir si subir los 7 commits.**
 
-### Bloque A-bis — dónde vive cada decisión en la consola (esto lo quiero mirar)
+### Bloque A-bis — CERRADO el 30-ago-2026 (4 fases, sin subir)
 
-Lo detecté yo: **la contraseña del servidor la pusimos en la pestaña de Infraestructura y no en la de
-Trampas, que es la importante.** Al comprobarlo resultó ser más amplio: el modal donde se configura un
-honeypot (`ui/src/index.html:866`) solo se abre desde Infraestructura, y dentro conviven **seis
-controles de engaño** (personalidad, contraseña de entrada, prompt, clonador de sitios, credencial
-señuelo, generador con IA) con **uno solo** que de verdad es de infraestructura (el proveedor de IA).
+Lo que señalaste: la contraseña estaba enterrada en Infraestructura y es lo más táctico. Se
+**partió el modal en dos** — «Trampa» (desde Trampas: disfraz, contraseña, usuarios, deadline,
+latencia, banner) y «Motor» (desde Infraestructura: solo el proveedor de IA). Nueva sección
+«Disfraz y trampa de cada honeypot» en Trampas. Verificado con Playwright (0 errores JS).
 
-La contraseña es el caso más claro porque es la decisión más táctica que hay —«cualquier contraseña»
-es lo más tentador para un atacante— y está enterrada donde nadie la busca.
+- ✅ **deadline + banner** — control nativo. El deadline sobrevive a aplicar persona; el banner
+  no (es del disfraz) y se avisa. (`C/A-bis 1`)
+- ✅ **usuarios de login + latencia** — NO existían en Beelzebub: parche Go
+  `beelzebub-login-latency.patch`. Filtro de usuario y latencia probados en vivo; el login no se
+  rompió. (`C/A-bis 2`)
+- ✅ **partir el modal** — Trampa vs Motor, cada uno en su pestaña. (`C/A-bis 3`)
+- ✅ **laberinto web** — toggle por servicio (apagado = 404 nginx). (`C/A-bis 4`)
 
-Y quiero **evaluar qué otros parámetros faltan por cubrir** en la configuración de personalidades:
-`deadlineTimeoutSeconds` (cuánto aguanta la sesión antes de cortar, hoy 600 s en el YAML y sin control
-en la consola), los **usuarios** aceptados en el login (hoy solo se filtra la contraseña), el banner
-del servidor, y el laberinto y los cebos web que funcionan pero no tienen ningún control.
-
-El detalle está en el ROADMAP, sección «Bloque A-bis».
+Los 5 endpoints nuevos llevan el recorte por rol; RBAC 37/37. **Lo primero de la próxima
+sesión sigue siendo: decidir si subir los 12 commits (bloque A + A-bis).**
 
 ### Bloque B — capacidades nuevas (después del A)
 
@@ -184,7 +184,7 @@ Comprueba primero que sigue todo en pie:
 
 ```bash
 curl -s localhost:8888/api/health          # el JSON del engine, no un banner
-cd engine && python3 -m pytest tests/ -q   # 1844 verde
+cd engine && python3 -m pytest tests/ -q   # 1867 verde
 python3 scripts/audit_flock_isolation.py --loops 1   # 0 fugas
 ```
 

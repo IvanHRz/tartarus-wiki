@@ -236,3 +236,35 @@ sirviendo IIS en la portada y nginx en los errores; una clave de SSH que ya no h
 shell sale como bash en un router Cisco). Todo commiteado, sin subir a GitHub. Detalle en
 [[roadmap-operativo]] y en `.agents/ROADMAP.md`, sección «ESTADO — Bloque A cerrado».
 — claude
+
+## [2026-08-30] bitacora | Fase C · Bloque A-bis — dónde vive cada decisión en la consola
+Segundo tramo del día, sobre una observación de Iván: la contraseña del honeypot la habíamos puesto en
+la pestaña de Infraestructura y no en la de Trampas, que es la que importa. Al mirarlo de cerca el
+problema era más amplio: el único sitio donde se configura un honeypot mezclaba seis controles de
+engaño (el disfraz, la contraseña, el prompt) con uno solo de infraestructura (el proveedor de IA), y
+solo se llegaba a él desde Infraestructura. Además había decisiones tácticas sin ningún control: cuánto
+aguanta la sesión, qué usuarios entran, el banner, la latencia y el laberinto anti-escáner.
+
+Se **partió el modal en dos**. Ahora lo táctico —qué finge ser, a quién deja entrar, cuánto aguanta—
+vive en un modal que se abre desde **Trampas**, con su propia sección de tarjetas; y el motor (el
+proveedor de IA) se queda en **Infraestructura**. Se verificó con un navegador de verdad, no a ojo: la
+página carga sin un solo error, el modal de Trampas no enseña el motor y el de Infraestructura no enseña
+la contraseña, y guardar desde la interfaz llama al sitio correcto.
+
+Los parámetros que faltaban se cubrieron. **Deadline y banner** salieron gratis porque Beelzebub ya los
+soporta; el deadline sobrevive a cambiar de disfraz, el banner no —es parte del disfraz— y la consola lo
+dice claro. **Los usuarios del login y la latencia no existían en Beelzebub**, así que hubo que
+parchearlo en Go, por el mismo camino que ya usamos para la clave de host: se generó el parche sobre la
+fuente, se comprobó que compila y que aplica en cadena con los otros dos, y se reconstruyó la imagen.
+Lo delicado era el login —si el filtro de usuario está mal, nadie entra al honeypot y se pierden
+capturas—, así que se probó con calma sobre la imagen ya parcheada: primero que el SSH siguiera
+entrando como siempre, y solo entonces que «solo root y admin» dejara fuera a los demás sin tocar el
+filtro de la contraseña. La latencia de segundo y medio se midió de verdad. Y el **laberinto**
+anti-escáner ganó un interruptor por honeypot web: apagado da un 404 normal, encendido atrapa al
+escáner.
+
+Los cinco controles nuevos llevan el recorte por rol que cableamos por la mañana, así que un usuario de
+solo lectura no puede tocarlos. Al cierre: suite en **1867 verde**, aislamiento entre clientes en cero
+fugas, recorte por rol 37 de 37. Todo commiteado, sin subir. Detalle en [[roadmap-operativo]] y en
+`.agents/ROADMAP.md`, sección «ESTADO — Bloque A-bis cerrado».
+— claude
