@@ -10,7 +10,8 @@ Trabajo en **TARTARUS**, plataforma de decepción (honeypots) para respuesta a i
 
 - Código: `/Users/ivanhuerta/Documents/Tartarus` (github.com/IvanHRz/Tartarus — **repo PÚBLICO**)
 - Wiki: `/Users/ivanhuerta/Documents/Wikis/wiki-tartarus` (repo aparte, privado)
-- Rama: `feature/tier0-deployment-readiness` · último commit: `a67f55e` · **todo subido**
+- Rama: `feature/tier0-deployment-readiness` · último commit: `43dc277` · **NO subido** (7 commits
+  del bloque A + wiki, esperando tu OK para el push)
 
 ## Cómo quiero que trabajes
 
@@ -45,9 +46,11 @@ distintas en sitios distintos del repo. Se resolvió **midiendo**, no eligiendo.
   base si confirmas.
 - Engine en `:9001`, consola en `:8888`, SSH del honeypot en `:2222`, HTTP `:8880`, HTTPS `:8443`,
   MCP `:3001`, Prometheus señuelo `:2112` (las métricas REALES de Beelzebub, en `:9112`).
-- Suite: `cd engine && python3 -m pytest tests/ -q`. **Va por 1810 verde**, 9 saltados.
+- Suite: `cd engine && python3 -m pytest tests/ -q`. **Va por 1844 verde**, 9 saltados.
 - Auditoría de aislamiento entre clientes: `python3 scripts/audit_flock_isolation.py --loops 1` →
   **0 fugas** en 39 superficies.
+- Auditoría del recorte por ROL (nueva): `python3 scripts/audit_rbac_enforcement.py` → **37/37, 0
+  fugas**. Levanta un engine efímero con auth ON, verifica y lo apaga; NO toca el de dev.
 - La UI se sirve por bind mount de `ui/src` → basta **Cmd+Shift+R**. Pero **`ui/nginx.conf` NO está
   montado**: hay que reconstruir con
   `docker compose -f docker-compose.yml -f docker-compose.dev-mac.yml up -d --build ui`.
@@ -88,27 +91,33 @@ no; 6 no aplican. Está entero en `wiki/analisis-beelzebub-labs.md`.
 
 Está en `.agents/ROADMAP.md` (busca «FASE C») y volcada a `wiki/roadmap-operativo.md` (30-ago).
 
-**La regla de orden, que me importa: no se abre nada del bloque B hasta cerrar el A.** Todo lo del
-bloque A ya está construido o medio construido — no es trabajo nuevo, es terminar. Es la respuesta a
-que estamos dispersos.
+**La regla de orden que me importaba se respetó: no se abrió nada del bloque B hasta cerrar el A.**
 
-### Bloque A — cerrar lo que ya existe
+### Bloque A — CERRADO el 30-ago-2026 (7 commits, sin subir)
 
-1. **El hash falso en el STIX.** Es una CORRECCIÓN, no una mejora. `events.sha256` es el hash del
-   mensaje del evento —lo dice su propio comentario, «Chain of custody: SHA256 of the raw event
-   payload»— y el exportador lo emite como `[file:hashes.'SHA-256']` con el nombre «Malicious File
-   SHA-256». Cualquier SIEM que consuma nuestro bundle recibe huellas de ficheros que no existen.
-   (`consumer.py:264`, `stix_exporter.py:32,86-88`)
-2. **Encender la sesión de verdad** (`TARTARUS_SESSION_AUTH`, hoy sin poner en ningún sitio). Todo el
-   aislamiento por cliente está construido y **el recorte por rol nunca ha llegado a actuar**.
-3. **El honeypot MCP no habla MCP**: es HTTP con JSON fijo, un cliente real se cae al primer mensaje.
-   Y el puerto no concuerda (YAML en 3000, scripts en 3001).
-4. **Ejercitar la detección de inyección de prompt**: la regla YARA existe y está conectada, pero la
-   batería de ataque no envía ni un intento. Una regla que nunca ha saltado no es cobertura.
-5. **Telnet se salta el motor** y llama al proveedor por su cuenta con la clave en el YAML.
-6. **Retirar `maze_tagger.py`** (119 líneas, redundante desde que Beelzebub rellena `Handler`).
-7. El modelo del honeypot no tiene protección anti-jailbreak.
-8. `CLAUDE.md` dice «76 Sigma, 20 YARA»; son **398 Sigma** (391 activas) y **436 YARA** en 74 ficheros.
+Los ocho puntos hechos. **Tres estaban mal descritos** y se corrigieron al medirlos:
+
+1. ✅ **Hash falso del STIX** — el bundle pasó de 114 objetos (100 huellas de fichero falsas) a 14.
+   El digest sigue en la cadena de custodia del informe. (`C/A1`)
+2. ✅ **Recorte por rol** — no bastaba «encender la sesión»: al medirlo, solo estaba cableado en 4 de
+   ~20 routers y un watcher podía crear cebos y borrar credenciales trampa. Cableado en las ~45
+   escrituras de consola que faltaban. Auditoría nueva `audit_rbac_enforcement.py` → 37/37, sin tocar
+   dev. (`C/A7`)
+3. ✅ **MCP habla MCP** (JSON-RPC de verdad). El desajuste de puerto era en prod/campo, no en dev;
+   parametrizado. (`C/A5`)
+4. ✅ **Inyección de prompt** — la batería la envía por SSH/telnet/MCP: 8 detecciones donde había 0.
+   (`C/A6`)
+5. ✅ **Telnet por el motor** — ya no llama al proveedor; clave fuera del YAML. (`C/A4`)
+6. ✅ **`maze_tagger.py` retirado** tras medir que Beelzebub ya lo dice en `Handler`. (`C/A3`)
+7. ✅ **Anti-jailbreak** — ERA FALSO que faltara: existe en las 7 personas y aguantó los 12 ataques.
+   Cerrado por medición. (`C/A6`)
+8. ✅ **Cifras de CLAUDE.md** — son 398 Sigma (391 activas) y **439 YARA en 95 ficheros** (el «436 en
+   74» también estaba mal). El detector `validate_docs.py` no lo corría nadie; ahora va en CI. (`C/A2`)
+
+**Hallazgos nuevos anotados en el ROADMAP** (sección «ESTADO — Bloque A cerrado»): el honeypot web se
+delata (IIS en `/`, nginx en `/.env`); handlers de la fusión de personas sin `name:`; una clave de SSH
+que ya no hace falta; el prompt del shell sale como bash en un router Cisco; falta bootstrap
+`services.example/`→`services/`. **Lo primero de la próxima sesión: decidir si subir los 7 commits.**
 
 ### Bloque A-bis — dónde vive cada decisión en la consola (esto lo quiero mirar)
 
@@ -175,7 +184,7 @@ Comprueba primero que sigue todo en pie:
 
 ```bash
 curl -s localhost:8888/api/health          # el JSON del engine, no un banner
-cd engine && python3 -m pytest tests/ -q   # 1810 verde
+cd engine && python3 -m pytest tests/ -q   # 1844 verde
 python3 scripts/audit_flock_isolation.py --loops 1   # 0 fugas
 ```
 
