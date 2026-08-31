@@ -11,7 +11,7 @@ Trabajo en **TARTARUS**, plataforma de decepción (honeypots) para respuesta a i
 - Código: `/Users/ivanhuerta/Documents/Tartarus` (github.com/IvanHRz/Tartarus — **repo PÚBLICO**)
 - Wiki: `/Users/ivanhuerta/Documents/Wikis/wiki-tartarus` (repo aparte, privado)
 - Rama: `feature/tier0-deployment-readiness` · último commit: `0014360` · **NO subido** (bloque A
-  + A-bis + A-ter, 21 commits, esperando tu OK para el push)
+  + A-bis + A-ter, 15 commits, esperando tu OK para el push)
 
 ## Cómo quiero que trabajes
 
@@ -153,7 +153,7 @@ en tres sitios). Cuatro fases:
   son estáticos. Aclarada la latencia+IA. (`C/A-ter 4`)
 
 Verificado con Playwright en cada fase (0 errores JS). **Lo primero de la próxima sesión sigue
-siendo: decidir si subir los 21 commits (bloque A + A-bis + A-ter).**
+siendo: decidir si subir los 15 commits (bloque A + A-bis + A-ter).**
 
 ### Bloque B — capacidades nuevas (después del A)
 
