@@ -1555,3 +1555,11 @@ fuera por una limitación de Beelzebub (LLMHoneypot solo soporta ssh/http; falla
 protocol selected») — cableado listo, pendiente parchear Beelzebub o servirlo como http. Suite 1925
 verde, aislamiento 0 fugas. 5 commits más (27 sin subir en la rama).
 — claude
+
+## [2026-08-31] plan | Que el engaño no se delate: credibilidad, coherencia y personalidades por stack
+Plan aceptado archivado en [[planes/2026-08-31]]. Cerrar los tells que descubrió Iván probando con
+criterio de atacante: baliza canary visible, claves de ejemplo de AWS, datos incoherentes entre
+endpoints, fechas de 2023, portada por defecto, personalidades por SO en vez de por stack web, y el
+HTTPS/Prometheus rotulados como HTTP. Perfil de empresa único, honeytokens deterministas, y cinco
+stacks web creíbles desde la raíz.
+— claude
