@@ -11,7 +11,7 @@ Trabajo en **TARTARUS**, plataforma de decepción (honeypots) para respuesta a i
 - Código: `/Users/ivanhuerta/Documents/Tartarus` (github.com/IvanHRz/Tartarus — **repo PÚBLICO**)
 - Wiki: `/Users/ivanhuerta/Documents/Wikis/wiki-tartarus` (repo aparte, privado)
 - Rama: `feature/tier0-deployment-readiness` · último commit: `e36206a` · **NO subido** (bloque A + A-bis
-  + A-ter + A-quater, 18 commits, esperando tu OK para el push)
+  + A-ter + A-quater, 16 commits, esperando tu OK para el push)
 
 ## Cómo quiero que trabajes
 
@@ -153,7 +153,7 @@ en tres sitios). Cuatro fases:
   son estáticos. Aclarada la latencia+IA. (`C/A-ter 4`)
 
 Verificado con Playwright en cada fase (0 errores JS). **Lo primero de la próxima sesión sigue
-siendo: decidir si subir los 18 commits (bloque A + A-bis + A-ter + A-quater).**
+siendo: decidir si subir los 16 commits (bloque A + A-bis + A-ter + A-quater).**
 
 ### Bloque A-quater — CERRADO el 31-ago-2026 (afinar Trampas, sin subir)
 
@@ -168,7 +168,7 @@ Repasaste Trampas sección por sección. Modelo: **Monitoreo = solo lo activo**,
   proveedor reescrito en llano.
 - ✅ Orden: honeypots → personalidades → migajas → cebos. (`C/A-quater`)
 
-**Lo primero de la próxima sesión sigue siendo: decidir si subir los 18 commits.**
+**Lo primero de la próxima sesión sigue siendo: decidir si subir los 16 commits.**
 
 ### Bloque B — capacidades nuevas (después del A)
 
