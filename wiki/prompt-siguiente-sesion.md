@@ -10,8 +10,8 @@ Trabajo en **TARTARUS**, plataforma de decepción (honeypots) para respuesta a i
 
 - Código: `/Users/ivanhuerta/Documents/Tartarus` (github.com/IvanHRz/Tartarus — **repo PÚBLICO**)
 - Wiki: `/Users/ivanhuerta/Documents/Wikis/wiki-tartarus` (repo aparte, privado)
-- Rama: `feature/tier0-deployment-readiness` · último commit: `d88cc0b` · **NO subido** (bloque A
-  + A-bis, 12 commits, esperando tu OK para el push)
+- Rama: `feature/tier0-deployment-readiness` · último commit: `0014360` · **NO subido** (bloque A
+  + A-bis + A-ter, 21 commits, esperando tu OK para el push)
 
 ## Cómo quiero que trabajes
 
@@ -136,6 +136,24 @@ latencia, banner) y «Motor» (desde Infraestructura: solo el proveedor de IA). 
 
 Los 5 endpoints nuevos llevan el recorte por rol; RBAC 37/37. **Lo primero de la próxima
 sesión sigue siendo: decidir si subir los 12 commits (bloque A + A-bis).**
+
+### Bloque A-ter — CERRADO el 30-ago-2026 (rediseño de consola, sin subir)
+
+Tras probar el A-bis me dijiste que la consola se sentía dispersa (un honeypot se configuraba
+en tres sitios). Cuatro fases:
+
+- ✅ **Correcciones** — puerto real (2222, no 22), pestañas **Monitoreo/Análisis**, «disfraz»→
+  «personalidad», banner auto-sugerido, Credential Analysis→Análisis, Breadcrumbs al fondo.
+  (`C/A-ter 1`)
+- ✅ **Un solo menú por protocolo** — refundido lo que el A-bis había partido (Motor+Trampa).
+  Eliges el protocolo y en una ventana está TODO. (`C/A-ter 2`)
+- ✅ **Tres pestañas** — Infra fusionada en Trampas; grid de honeypots deduplicado; cebos en
+  Trampas; hosts→Monitoreo, escaneo→Análisis. (`C/A-ter 3`)
+- ✅ **Personalidades por protocolo claras** — «compatibles con SSH (6)»; TCP/MCP explican que
+  son estáticos. Aclarada la latencia+IA. (`C/A-ter 4`)
+
+Verificado con Playwright en cada fase (0 errores JS). **Lo primero de la próxima sesión sigue
+siendo: decidir si subir los 21 commits (bloque A + A-bis + A-ter).**
 
 ### Bloque B — capacidades nuevas (después del A)
 

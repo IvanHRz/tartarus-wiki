@@ -116,6 +116,34 @@ Detalle técnico en `.agents/ROADMAP.md`, sección «ESTADO — Bloque A-bis cer
 
 ---
 
+## ✅ FASE C · BLOQUE A-ter — cerrado el 30-ago-2026 (consola coherente)
+
+Al probar el A-bis, Iván vio que la consola se sentía dispersa: un mismo honeypot se
+configuraba en tres sitios y sobraban secciones. Cuatro fases de rediseño:
+
+1. **Correcciones puntuales.** La consola mostraba el puerto de dentro del contenedor (`:22`)
+   cuando al SSH se entra por `:2222` — ahora muestra el real. Las pestañas «Qué está pasando»
+   y «Analizar» pasan a **Monitoreo** y **Análisis**. Se unifica el vocabulario: siempre
+   «personalidad», nunca «disfraz». Y al elegir una personalidad el **banner se auto-sugiere**
+   con el suyo (antes un Windows se quedaba con el banner de un Ubuntu).
+2. **Un solo menú por protocolo.** El A-bis había partido la configuración en dos ventanas
+   (una en Infraestructura, otra en Trampas); Iván pidió lo contrario. Ahora se elige el
+   protocolo y en **una sola ventana** está todo: personalidad, proveedor de IA, contraseña,
+   usuarios, cuánto aguanta, latencia, banner y laberinto. No se perdió nada de lo del A-bis.
+3. **Tres pestañas.** Infraestructura se fusiona en Trampas, que pasa a ser el centro de
+   despliegue y configuración. El grid de honeypots estaba duplicado; queda uno. Los cebos y
+   las credenciales trampa viven en Trampas; lo que solo informa (hosts descubiertos) va a
+   Monitoreo y el escaneo a Análisis.
+4. **Personalidades por protocolo, claras.** El menú de cada protocolo dice «compatibles con
+   SSH (6)»; los que responden con contenido fijo (TCP, MCP) explican que no usan personalidad.
+   Y se aclara la latencia: los honeypots con IA ya tardan un par de segundos por el modelo, así
+   que la latencia simulada se suma a eso.
+
+Verificado con un navegador de verdad en cada fase (cero errores). Suite **1867 verde**,
+aislamiento entre clientes 0 fugas, recorte por rol 37/37. Detalle en `.agents/ROADMAP.md`.
+
+---
+
 ## PENDIENTES MAESTRO (ago-2026)
 
 > Consolidación de TODO lo abierto al cierre de la sesión del **8-ago-2026** para no

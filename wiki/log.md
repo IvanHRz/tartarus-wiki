@@ -268,3 +268,33 @@ solo lectura no puede tocarlos. Al cierre: suite en **1867 verde**, aislamiento 
 fugas, recorte por rol 37 de 37. Todo commiteado, sin subir. Detalle en [[roadmap-operativo]] y en
 `.agents/ROADMAP.md`, sección «ESTADO — Bloque A-bis cerrado».
 — claude
+
+## [2026-08-30] bitacora | Fase C · Bloque A-ter — la consola, coherente
+Iván probó lo del A-bis y me dio una crítica larga y buena: la herramienta se siente dispersa. Un
+mismo honeypot se configuraba en tres sitios distintos, no se entendía si al tocar uno había que tocar
+el otro, y sobraban secciones. Además señaló errores concretos: la consola mostraba el puerto de dentro
+del contenedor (22) cuando al SSH se entra por el 2222; el banner no se actualizaba al cambiar de
+personalidad; se mezclaban las palabras «disfraz» y «personalidad»; y no quedaba claro qué
+personalidades valen para qué protocolo.
+
+Se rehízo en cuatro pasos. Primero las **correcciones sueltas**: el puerto que se muestra es el real,
+las pestañas «Qué está pasando» y «Analizar» pasan a **Monitoreo** y **Análisis**, se deja una sola
+palabra —personalidad— y el banner se propone solo según la personalidad elegida. Después, el cambio de
+fondo: **un solo menú por protocolo**. El A-bis había partido la configuración en dos ventanas y era
+justo lo que confundía; ahora eliges el protocolo y en una sola pantalla tienes todo —personalidad,
+motor de IA, contraseña, usuarios, cuánto aguanta, latencia, banner y laberinto—. No se perdió nada de
+lo anterior: los controles siguen, solo dejan de estar repartidos.
+
+Luego se pasó de cuatro pestañas a **tres**: Infraestructura se fusionó en Trampas, que queda como el
+centro de despliegue y configuración. El grid de honeypots estaba duplicado y quedó uno; los cebos y las
+credenciales trampa viven en Trampas; lo que solo informa se fue a Monitoreo y el escaneo a Análisis.
+Y por último se aclaró lo de las **personalidades por protocolo**: el menú dice cuántas son compatibles
+con cada uno, y los protocolos que responden con contenido fijo explican que no usan personalidad, en
+vez del críptico «no hay personas». También quedó explicada la duda de la latencia: los honeypots con
+IA ya tardan un par de segundos por el modelo, y la latencia simulada se suma a eso.
+
+Cada paso se comprobó con un navegador de verdad, no a ojo: cero errores en consola en las tres
+pestañas y en el menú unificado. Al cierre, suite en **1867 verde**, aislamiento entre clientes en cero
+fugas y recorte por rol 37 de 37. Todo commiteado, sin subir. Detalle en [[roadmap-operativo]] y en
+`.agents/ROADMAP.md`, sección «ESTADO — Bloque A-ter cerrado».
+— claude
