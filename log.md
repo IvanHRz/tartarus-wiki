@@ -1576,3 +1576,10 @@ WordPress, Portal .gob.mx) con fachada creíble desde la raíz, generación movi
 (web_facade.py) y apply que regenera la fachada al cambiar de stack; (6) HTTPS y Prometheus dejan de
 rotularse «HTTP». Suite 1936 verde, aislamiento 0 fugas. 7 commits más (34 sin subir en la rama).
 — claude
+
+## [2026-08-31] plan | Clonar página real como personalidad + curar personalidad↔protocolo
+Plan aceptado archivado en [[planes/2026-08-31]]. Dos features: (1) dar una URL, clonar su HTML
+(con inline de CSS/imágenes) y usarlo como portada del stack elegido, sobre la maquinaria del
+honeypot; (2) curar el catálogo para que cada protocolo ofrezca solo personalidades con sentido
+(windows/ubuntu a solo SSH; fortigate/jenkins/synology a primera clase en HTTP) + guardarraíl.
+— claude
