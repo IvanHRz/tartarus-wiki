@@ -1,8 +1,9 @@
 # Prompt para la siguiente sesión — TARTARUS
 
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
-> Actualizado: 30-ago-2026, tras cerrar la **fase B9 completa** (bloques 0-1, 2, 3 y 4), subirla a
-> GitHub y hacer el análisis comparativo contra los labs de Beelzebub.
+> Actualizado: 31-ago-2026, tras cerrar el **bloque A de la fase C** (los 8 puntos) más tres rondas
+> de afinado de la consola (A-bis/ter/quater). 16 commits sin subir. El siguiente objetivo es dejar
+> Beelzebub al 100% atacando cada honeypot uno por uno.
 
 ---
 
