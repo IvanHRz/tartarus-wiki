@@ -3236,3 +3236,25 @@ busca quien la necesita.
 - **Competir en velocidad de captura de vulnerabilidades nuevas.** Su ventaja ahí no es tecnológica,
   es de exposición: tienen sensores en internet recibiendo tráfico real y nosotros corremos en un
   laboratorio local. Eso no se arregla programando, se arregla desplegando.
+
+---
+
+## 31-ago-2026 — Beelzebub sensor por sensor
+
+**Cerrado esta tanda** (6 commits, verificado en vivo, suite 1903/9 saltados):
+puertos que se ven = los que se atacan; HTTPS como protocolo propio; MCP con la
+herramienta en el comando + inyección de prompt ejercitada; fachadas web coherentes
+(una portada, un servidor, un cebo) y versionadas; TCP que ya contesta; notificaciones
+que salen en segundo plano y agrupan los barridos.
+
+**Pendiente (su propia tanda):**
+- **Telnet al 100% (P1)** — prompt de bash en el Cisco (`admin@gw-border-01:~$` en vez de
+  `gw-border-01>`), login `login:` en vez de `User Access Verification`, `enable` que no cambia de
+  modo → **parche de imagen de Beelzebub**. Dos configuraciones del mismo router en una sesión
+  (running-config estática 2143 B vs startup del LLM 3847 B) → **generador del `telnet-23.yaml`
+  desde la persona** + unificar `cisco-ios.yml` (con cuidado por los canarios SSH). Latencia
+  delatora: 1 ms estática vs 2526 ms LLM.
+- **TCP, resto (P2)** — varias rutas, banner propio, evaluar LLMHoneypot; agrupar el marcador
+  `New TCP Session` (125 de 143 eventos).
+
+Detalle completo en `.agents/ROADMAP.md` del repo.

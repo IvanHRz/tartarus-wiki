@@ -1522,3 +1522,18 @@ Plan aceptado archivado en [[planes/2026-08-31]]. Dejar MCP, HTTP/HTTPS, Telnet 
 que el puerto que se ve sea el que se ataca, que HTTPS deje de registrarse como HTTP, que el
 engaño no se delate por banner ni por prompt, y que las notificaciones salgan con el dato bueno.
 — claude
+
+## [2026-08-31] sesión | Beelzebub sensor por sensor: MCP, HTTP/HTTPS, TCP y notificaciones al 100%
+Seis bloques cerrados y verificados en vivo: (1) el puerto que se ve es el que se ataca
+(engine/puertos.py, host_port en /events y alertas); (2) HTTPS deja de registrarse como HTTP
+—3 reglas Sigma ganaron 'HTTPS', las 6 de contains ya casaban—; (3) MCP guarda la herramienta
+llamada en el comando y la batería ya manda inyección de prompt (dispara yara:AI_Prompt_Injection,
+cierra el lab 20 a medias); (4) las fachadas web dejan de delatarse —una portada, un servidor por
+familia (nginx/IIS), el cebo web sembrado sin duplicar— y quedan versionadas en seed_web_routes.py;
+(6) el TCP contesta a lo que le llega (regex (?s), CRLF, cebo sin marca real), versionado en
+seed_tcp_route.py; (7) las notificaciones ya no atascan la ingesta (salían en ~2 min por ráfaga,
+ahora al instante) y un barrido web ya no manda un correo por petición (agrupa por protocolo).
+Pendiente en su propia tanda: Telnet al 100% (parche de imagen para el prompt Cisco + generador del
+telnet-23.yaml) y el resto de TCP. Suite 1903 verde, aislamiento 0 fugas, roles 37/37. 6 commits
+sin subir (22 en total en la rama).
+— claude

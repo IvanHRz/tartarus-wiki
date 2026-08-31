@@ -112,7 +112,7 @@ La familia más nueva y donde su ventaja es más frágil.
 | 17 | [Cazando agentes de IA: el cebo corrupto](https://beelzebub.ai/blog/catching-ai-agents-in-the-wild/) | Una credencial rota a propósito con un marcador. Un escáner no la ve; un humano tarda 7-10 min; **un agente de IA la repara en 4 segundos**. La señal no es la velocidad, es que alguien arregló un secreto que ningún patrón sabe leer | **No** — pero *encaja* con los cebos que ya tenemos |
 | 18 | [Cazando red teamers de IA: inyección inversa de prompt](https://beelzebub.ai/blog/catching-ai-red-teamers-in-the-wild/) | Usar la inyección de prompt **al revés**, como detector de que quien mira es una IA | **No** |
 | 19 | [Azazel: trazado de agentes en ejecución](https://beelzebub.ai/blog/azazel-runtime-tracing-for-ai-agents/) | Ver qué hace de verdad un agente dentro del contenedor | **No** |
-| 20 | [Asegurar agentes de IA con honeypots](https://beelzebub.ai/blog/securing-ai-agents-with-honeypots/) | Herramientas señuelo para entornos de agentes | **Parcial** — tenemos señuelo MCP, pero es HTTP con JSON fijo |
+| 20 | [Asegurar agentes de IA con honeypots](https://beelzebub.ai/blog/securing-ai-agents-with-honeypots/) | Herramientas señuelo para entornos de agentes | **Sí (31-ago-2026).** El señuelo MCP habla JSON-RPC de verdad (initialize/tools/list/tools/call), el evento guarda la herramienta llamada y sus argumentos, y la batería ejercita inyección de prompt que dispara `yara:AI_Prompt_Injection` (antes existía y nunca se había disparado) |
 | 21 | [It Thought It Had Won](https://beelzebub.ai/blog/it-thought-it-had-won/) | Secuestro de modelos | **No aplica** — investigación |
 
 ### Familia E — Persistencia y evasión
@@ -132,7 +132,7 @@ La familia más nueva y donde su ventaja es más frágil.
 | 27 | [LLM Honeypot contra cryptojacking](https://beelzebub.ai/blog/llm-honeypot-vs-cryptojacking-understanding-the-enemy/) | Capturar mineros | **Sí** — hay reglas YARA de mineros y el comando queda registrado |
 | 28 | [Cómo atacan los ciberdelincuentes](https://beelzebub.ai/blog/how-cybercriminals-attacks-your-company/) | Divulgación | **No aplica** |
 
-**Recuento:** cubrimos del todo 2, parcialmente 4, no cubrimos 16, y 6 no aplican.
+**Recuento:** cubrimos del todo 3 (el lab 20 pasó de «Parcial» a «Sí» el 31-ago-2026), parcialmente 3, no cubrimos 16, y 6 no aplican.
 
 ---
 
