@@ -1583,3 +1583,14 @@ Plan aceptado archivado en [[planes/2026-08-31]]. Dos features: (1) dar una URL,
 honeypot; (2) curar el catálogo para que cada protocolo ofrezca solo personalidades con sentido
 (windows/ubuntu a solo SSH; fortigate/jenkins/synology a primera clase en HTTP) + guardarraíl.
 — claude
+
+## [2026-08-31] sesión | Clonar página real como personalidad + curar personalidad↔protocolo
+Dos features verificadas en vivo: (1) dar una URL, clonar su HTML con CSS/imágenes incrustados y
+servirlo como portada del stack elegido, sobre la maquinaria del honeypot (cloner.clonar_para_
+personalidad + web_facade portada_html + endpoint /clone/web/apply + campo en la UI); formularios
+al login del stack (sin el tell /tartarus/capture), SSRF-safe, fallback con gracia si el sitio
+bloquea (Fonacot da 403 a un fetch). (2) Curación: windows/ubuntu a solo SSH, fortigate/jenkins/
+synology a primera clase en HTTP, y guardarraíl que impide ofrecer un protocolo sin contenido.
+Menú HTTP = solo web/appliances; SSH = shells; Telnet = cisco. Suite 1944 verde, aislamiento 0
+fugas. 4 commits más (38 sin subir en la rama).
+— claude

@@ -3298,3 +3298,18 @@ cerradas y verificadas en vivo:
 - **HTTPS y Prometheus dejan de rotularse «HTTP»** en la consola.
 
 Detalle y pendientes menores en `.agents/ROADMAP.md`.
+
+---
+
+## 31-ago-2026 (4ª tanda) — Clonar una página real como personalidad + curar los menús
+
+- **Clonar y adaptar**: das el enlace de un portal (p. ej. Fonacot), TARTARUS copia su HTML
+  con su CSS/imágenes y lo sirve como la portada del honeypot, sobre el stack elegido
+  (banner, reglas, LLM, cebo). Los formularios capturan lo que teclea el atacante. Si el
+  sitio bloquea el copiado (WAF), la fachada del stack se queda como está. Se sirve solo en
+  el honeypot (decepción autorizada). Campo nuevo en «Configurar» del honeypot web.
+- **Menús coherentes**: cada protocolo ofrece solo lo que tiene sentido — HTTP solo stacks
+  web y appliances (con LLM), SSH solo shells, Telnet solo Cisco. windows/ubuntu pasan a
+  solo SSH; fortigate/jenkins/synology suben a primera clase en HTTP.
+
+Detalle y pendientes menores en `.agents/ROADMAP.md`.
