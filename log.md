@@ -1563,3 +1563,16 @@ endpoints, fechas de 2023, portada por defecto, personalidades por SO en vez de 
 HTTPS/Prometheus rotulados como HTTP. Perfil de empresa único, honeytokens deterministas, y cinco
 stacks web creíbles desde la raíz.
 — claude
+
+## [2026-08-31] sesión | Que el engaño no se delate: credibilidad y stacks web
+Iván probó con criterio de atacante y salieron varios tells; todos cerrados y verificados en vivo:
+(1) perfil de empresa único y determinista (engine/empresa_ficticia.py) que comparten todos los
+backends LLM — se acabó el «dos dominios y los mismos tres nombres»; (2) prompts endurecidos (sin
+ejemplo de AWS, sin example.com/192.0.2.x/555-01xx, fechas de 2026); (3) el MCP get-credentials
+devuelve honeytokens deterministas rastreados (engine/honeytokens.py), no las claves de ejemplo de
+AWS; (4) baliza canary disfrazada de pixel /assets/img/{hash}.svg relativo — el fuente ya no dice
+canary/volcado/localhost:9000; (5) cinco stacks web (nginx+SPA, Apache+PHP, Tomcat/Spring,
+WordPress, Portal .gob.mx) con fachada creíble desde la raíz, generación movida al engine
+(web_facade.py) y apply que regenera la fachada al cambiar de stack; (6) HTTPS y Prometheus dejan de
+rotularse «HTTP». Suite 1936 verde, aislamiento 0 fugas. 7 commits más (34 sin subir en la rama).
+— claude

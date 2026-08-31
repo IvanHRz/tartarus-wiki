@@ -3278,3 +3278,23 @@ exacto), el LLM pone el contenido, y ante fallo se cae a lo estático — el hon
 http). El cableado está listo; falta parchear Beelzebub o servir la «API interna» como http.
 
 Detalle y pendientes en `.agents/ROADMAP.md`.
+
+---
+
+## 31-ago-2026 (3ª tanda) — Que el engaño aguante la mirada de un atacante
+
+Iván probó los honeypots con ojo de atacante y encontró varias cosas que los delataban. Todas
+cerradas y verificadas en vivo:
+
+- **Datos que no cuadraban** entre endpoints (dos dominios, mismos nombres, IPs distintas): ahora
+  hay un perfil de empresa ÚNICO que todos comparten. /empleados y /clientes usan el mismo dominio.
+- **El LLM devolvía las claves de EJEMPLO de AWS** en el señuelo MCP: ahora son honeytokens con
+  formato real, generados en código, y que saltan alerta si el atacante los usa.
+- **La baliza del cebo se veía en el fuente** («/canary/t/…», «volcado», localhost:9000): ahora es
+  un pixel de analítica relativo, sin ninguna palabra que delate la trampa.
+- **Personalidades por stack web**: cinco nuevas (nginx+SPA, Apache+PHP, Tomcat/Spring, WordPress,
+  Portal .gob.mx), cada una con su portada creíble desde la raíz. Al elegir una para el honeypot
+  HTTP, la fachada entera se regenera con ese stack.
+- **HTTPS y Prometheus dejan de rotularse «HTTP»** en la consola.
+
+Detalle y pendientes menores en `.agents/ROADMAP.md`.
