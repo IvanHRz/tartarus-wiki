@@ -1537,3 +1537,9 @@ Pendiente en su propia tanda: Telnet al 100% (parche de imagen para el prompt Ci
 telnet-23.yaml) y el resto de TCP. Suite 1903 verde, aislamiento 0 fugas, roles 37/37. 6 commits
 sin subir (22 en total en la rama).
 — claude
+
+## [2026-08-31] plan | Incorporar el LLM a HTTP/HTTPS, TCP, MCP y Prometheus
+Plan aceptado archivado en [[planes/2026-08-31]]. Llevar el patrón del shell SSH (reglas rápidas +
+LLM para lo raro) a los protocolos que hoy son estáticos: el código pone el sobre del protocolo, el
+LLM pone el contenido, Redis cachea, y ante fallo se cae a lo estático.
+— claude
