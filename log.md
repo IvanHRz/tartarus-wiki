@@ -1543,3 +1543,15 @@ Plan aceptado archivado en [[planes/2026-08-31]]. Llevar el patrón del shell SS
 LLM para lo raro) a los protocolos que hoy son estáticos: el código pone el sobre del protocolo, el
 LLM pone el contenido, Redis cachea, y ante fallo se cae a lo estático.
 — claude
+
+## [2026-08-31] sesión | El LLM llega a HTTP/HTTPS, MCP y Prometheus
+Se llevó el patrón del shell SSH (reglas rápidas + LLM para lo raro) a los protocolos que eran
+estáticos, con la regla de que el código pone el sobre del protocolo y el LLM el contenido. HTTP y
+HTTPS generan páginas/APIs creíbles para rutas plausibles (escáner→sin LLM, barrido→laberinto);
+MCP devuelve datos falsos por herramienta manteniendo el JSON-RPC exacto; Prometheus genera su API
+de consulta dejando /metrics estático. Verificado en vivo por el honeypot real en los cuatro.
+Piezas nuevas: engine/net_honeypot.py (común) y engine/web_honeypot_router.py. El LLM en TCP queda
+fuera por una limitación de Beelzebub (LLMHoneypot solo soporta ssh/http; falla con «no prompt for
+protocol selected») — cableado listo, pendiente parchear Beelzebub o servirlo como http. Suite 1925
+verde, aislamiento 0 fugas. 5 commits más (27 sin subir en la rama).
+— claude

@@ -3258,3 +3258,23 @@ que salen en segundo plano y agrupan los barridos.
   `New TCP Session` (125 de 143 eventos).
 
 Detalle completo en `.agents/ROADMAP.md` del repo.
+
+---
+
+## 31-ago-2026 (2ª tanda) — El LLM llega a HTTP/HTTPS, MCP y Prometheus
+
+Hasta ahora solo SSH y Telnet hablaban con el LLM. Ahora también HTTP, HTTPS, MCP y Prometheus:
+una petición que se sale de lo previsto recibe una respuesta generada y creíble en vez de un 404,
+un 401 fijo o el laberinto. La regla de oro: el código pone el sobre del protocolo (el formato
+exacto), el LLM pone el contenido, y ante fallo se cae a lo estático — el honeypot nunca se rompe.
+
+- **HTTP/HTTPS**: una ruta de aplicación (`/api/v1/empleados`) la genera el LLM coherente con la
+  persona (un IIS responde como IIS); un escáner no gasta modelo; un barrido cae al laberinto.
+- **MCP**: las herramientas trampa devuelven datos falsos creíbles (filas con una cuenta admin,
+  una credencial AWS-cebo) en vez de un 401. El envoltorio JSON-RPC sigue exacto en código.
+- **Prometheus**: la API de consulta (`/api/v1/query`) la genera el LLM; `/metrics` sigue exacto.
+
+**Fuera, por ahora:** el LLM en TCP. Es una limitación de Beelzebub (su plugin solo soporta ssh y
+http). El cableado está listo; falta parchear Beelzebub o servir la «API interna» como http.
+
+Detalle y pendientes en `.agents/ROADMAP.md`.
