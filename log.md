@@ -1601,3 +1601,13 @@ que gpt-4o-mini y barato. El engine probaba OpenAI (clave muerta) primero por ca
 proveedor ACTIVO elegible y poder quitar una clave, en el cliente y la UI. Luego se retoma el
 Bloque G (prompts editables por protocolo + fachada que no se delate) sobre DeepSeek.
 — claude
+
+## [2026-08-31] sesión | LLM cambiado a DeepSeek (OpenAI sin créditos)
+deepseek-chat (V3) es el modelo equivalente/mejor que gpt-4o-mini y barato; reasoner (R1)
+filtraría su razonamiento, así que chat es lo correcto. El engine elegía proveedor por presencia
+de clave y probaba OpenAI (muerto) primero; ahora hay proveedor ACTIVO elegible (persistido en
+TARTARUS_LLM_ACTIVE) que analyze prueba primero, y se puede quitar una clave. UI: selector de activo
++ botón Quitar + etiquetas de modelo DeepSeek. Verificado: DeepSeek activo (persiste al reinicio),
+honeypot generando vía DeepSeek, 0 fallos de OpenAI. Nota: DeepSeek a veces antepone «.body:» a la
+respuesta — se limpia en el Bloque G (prompts «output ONLY the body»). Suite 1949 verde.
+— claude
