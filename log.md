@@ -1594,3 +1594,10 @@ synology a primera clase en HTTP, y guardarraíl que impide ofrecer un protocolo
 Menú HTTP = solo web/appliances; SSH = shells; Telnet = cisco. Suite 1944 verde, aislamiento 0
 fugas. 4 commits más (38 sin subir en la rama).
 — claude
+
+## [2026-08-31] plan | Cambiar el LLM a DeepSeek (OpenAI sin créditos)
+Plan aceptado archivado en [[planes/2026-08-31]]. deepseek-chat (V3) es el modelo equivalente/mejor
+que gpt-4o-mini y barato. El engine probaba OpenAI (clave muerta) primero por cascada; se añade
+proveedor ACTIVO elegible y poder quitar una clave, en el cliente y la UI. Luego se retoma el
+Bloque G (prompts editables por protocolo + fachada que no se delate) sobre DeepSeek.
+— claude
