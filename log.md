@@ -1640,3 +1640,13 @@ añade la comparación de las tres superficies WEB (mapa de rutas, barrido inter
 desplegado), que hoy solo existía hecha a mano. Nota: la recomendación previa (las tuberías)
 se descartó tras medirla — 7 de 1.013 comandos, el 0,5%.
 — claude
+
+## [2026-09-10] plan | tuberías y redirecciones en el SSH
+Plan aceptado archivado en [[planes/2026-09-10]]. El arreglo de los verbos deterministas de
+esta mañana afiló el motor y dejó al descubierto que canalizar contradice no canalizar: `ps aux`
+dice PID 1676 y `ps aux | grep postgres` dice 892; `ls -a /etc` da 22 entradas y `ls -a /etc |
+wc -l` responde 213. Las redirecciones son peor: `echo 'ssh-rsa…' >> authorized_keys` contesta
+`/home/user` y el fichero nunca se crea, aunque `touch` sí persiste. Se corrige también el dato
+que di al cerrar la sesión anterior: el «0,5% de comandos con tubería» salía de 1.013 eventos
+que vienen todos de nuestros propios scripts — cero atacantes externos en la base.
+— claude
