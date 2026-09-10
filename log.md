@@ -1697,3 +1697,14 @@ con tres avisos y nadie puede verlo. Además el serializador se come el `auto_fi
 propio control calcula, que es la diferencia entre «esto lo arregla el motor» y «esto lo
 escribes tú».
 — claude
+
+## [2026-09-10] cierre | jornada de SSH y realismo, nueve ciclos
+Nueve commits sin subir (`039a800`..`9f1d41a`): familia weblogic y cada stack con su página de
+error, cinco verbos más al código, el comparador de superficies arreglado para las personas web,
+tuberías y redirecciones, los hitos de sesión con el borrado de rastro registrado, Windows a la
+par de Linux, la auditoría de realismo, la caché del passthrough (dos atacantes veían máquinas
+distintas) y el control de calidad visible en la consola. Suite 2.242 → **2.482**. Documentado:
+`.agents/TRASPASO.md` reescrito, entrada ejecutiva del 10-sep en [[bitacora-ejecutiva]] —que
+llevaba parada desde el 11-ago, hueco anotado en el ROADMAP— y [[prompt-siguiente-sesion]] al
+día con los tres candidatos medidos para la próxima.
+— claude

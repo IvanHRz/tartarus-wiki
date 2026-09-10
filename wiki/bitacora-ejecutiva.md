@@ -1,8 +1,8 @@
 ---
 tipo: estado
 creado: 2026-08-10
-actualizado: 2026-08-10
-commit_ref: 17d167c (+ correcciones de seguridad 10-ago sin commitear al escribir)
+actualizado: 2026-09-10
+commit_ref: 9f1d41a (rama feature/tier0-deployment-readiness, sin subir a GitHub)
 tags: [ejecutivo, seguridad, flocks, cebos]
 ---
 
@@ -351,6 +351,56 @@ vez, manteniendo los datos de cada uno separados de los demás.
   generación del paquete para respetar esos datos, con sus pruebas); el total quedó en 1050 pruebas, todas en
   verde.
 
+### 10 de septiembre de 2026 — Que el señuelo aguante que lo miren de cerca
+
+> **Nota de continuidad.** Esta bitácora se quedó parada el 11 de agosto. El detalle técnico de
+> lo ocurrido entre el 12 de agosto y el 9 de septiembre está en la bitácora técnica del repo
+> (`.agents/BITACORA.md`); volcarlo aquí en lenguaje llano queda pendiente y está anotado.
+
+- **Qué se logró.** Una jornada entera dedicada a un solo objetivo: que el honeypot no se
+  delate cuando alguien lo examina con atención. Un atacante no «cae» en un señuelo porque el
+  señuelo exista, sino porque no encuentra la costura. El día cerró con nueve entregas.
+  - **La página de error ya no dice qué somos.** Un atacante pide una dirección inventada y el
+    servidor se presenta solo en la página de «no encontrado». El portal real del gobierno
+    mexicano que estamos imitando responde con la página de Oracle WebLogic y nosotros
+    respondíamos con la de Apache: una diferencia de dos segundos de trabajo para quien mira.
+    Ahora cada tipo de servidor imitado sirve **la suya**, y son diez.
+  - **La máquina dejó de improvisarse.** Antes, preguntas normales de un administrador —qué
+    procesos corren, cuánto lleva encendida, qué tareas programadas hay, qué dirección de red
+    tiene— las contestaba la inteligencia artificial, y contestaba distinto cada vez. Ahora las
+    resuelve el programa a partir de una descripción fija del sistema: la misma pregunta da la
+    misma respuesta hoy, mañana y al siguiente visitante.
+  - **Lo que el atacante hace, queda.** Si borra un archivo, desaparece; si intenta cambiarle la
+    fecha para no dejar rastro, **se le deja hacerlo y se anota**. Es información valiosa: dice
+    qué técnicas conoce y qué está intentando ocultar.
+  - **Los momentos importantes llegan al analista.** Conseguir permisos de administrador,
+    dejarse una puerta trasera o borrar el rastro ya no quedan enterrados en la transcripción:
+    salen marcados en la línea de tiempo, con el nombre de la técnica en el catálogo
+    internacional que usa la industria (MITRE).
+  - **Windows quedó al mismo nivel que Linux**, que hasta ahora iba muy por detrás.
+  - **La consola por fin enseña la calidad de cada señuelo.** El programa ya sabía puntuar un
+    escenario contra 23 comprobaciones y decir qué le falta; simplemente nunca se lo
+    preguntaba. Ahora hay un indicador permanente que se actualiza solo mientras se edita.
+
+- **Qué problema apareció.** Dos, y los dos del mismo tipo: **pedirle algo por escrito a la
+  inteligencia artificial no garantiza que lo haga.** Se le pedía que nunca dijera que un
+  comando no existe cuando sí existe, y lo decía igual — primero en Linux y después, el mismo
+  día, en Windows. Además se descubrió que dos visitantes distintos veían máquinas distintas,
+  porque las respuestas generadas no se guardaban y se regeneraban en cada petición.
+
+- **Cómo se resolvió.** Verificando la salida en vez de confiar en la instrucción: ahora el
+  programa revisa lo que la inteligencia artificial devuelve y descarta lo que un sistema real
+  nunca imprimiría. Y las respuestas generadas se guardan, de modo que la máquina es la misma
+  para todos. Hubo que corregir una conclusión propia por el camino: el fallo de Windows parecía
+  culpa del guardado que se había añadido esa misma tarde, y al medirlo resultó que el guardado
+  solo lo mantenía vivo — quien se equivocaba era la inteligencia artificial.
+
+- **Impacto para el cliente.** El señuelo aguanta un examen mucho más cercano, que es justo
+  cuando importa: contra un atacante distraído sirve cualquier cosa; contra uno que comprueba,
+  solo sirve la coherencia. Y el operador puede ver, antes de desplegar, si el escenario que
+  construyó tiene la densidad y la coherencia suficientes — algo que hasta ayer solo sabía el
+  programa por dentro.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
@@ -358,8 +408,15 @@ vez, manteniendo los datos de cada uno separados de los demás.
 - Cada cliente está **separado** de los demás: ni ve ni modifica lo ajeno, sus informes van
   etiquetados con su nombre, y puede tener **sus propios avisos**.
 - El guardado de contraseñas es más robusto.
-- Todo lo anterior está respaldado por pruebas automáticas (más de mil) que se ejecutan en cada
-  cambio, más una auditoría específica de separación entre clientes que se corre en bucle y da
+- **El señuelo de SSH aguanta que lo examinen**: las preguntas normales de un administrador las
+  contesta el programa, no la inteligencia artificial, así que la máquina es la misma para todos
+  los visitantes y en todas las visitas. Windows va al mismo nivel que Linux.
+- **Lo que hace el atacante queda registrado**, incluidos sus intentos de borrar el rastro, y los
+  momentos importantes salen marcados en la línea de tiempo con su nombre técnico oficial.
+- **El operador ve la calidad de cada señuelo mientras lo construye**, con las 23 comprobaciones
+  que el programa ya sabía hacer y nunca enseñaba.
+- Todo lo anterior está respaldado por pruebas automáticas (**2.482**, que se ejecutan en cada
+  cambio), más una auditoría específica de separación entre clientes que se corre en bucle y da
   cero fugas.
 
 ## Próximos pasos (con fecha estimada)
