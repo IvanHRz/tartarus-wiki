@@ -1680,3 +1680,11 @@ de 2025 sobre un arranque de 2026; free -m no cuadra con /proc/meminfo. Y el hue
 motor entero: la plantilla de árbol ignora el perfil, así que una persona Windows nace con árbol
 POSIX y cae en `dialecto-discrepa` — el 100% al modelo.
 — claude
+
+## [2026-09-10] plan | la consola interna y la shell externa deben coincidir
+Plan aceptado archivado en [[planes/2026-09-10]]. Medido: los 18 verbos deterministas dan
+salida idéntica por los dos caminos, y las secuencias con estado también (cd→pwd, sudo su→root).
+Pero de 14 comandos que caen al modelo, 9 difieren. La causa está en el código: `_content`
+cachea en Redis y `_passthrough` no, así que cada llamada regenera. No es solo un problema de la
+consola — dos atacantes distintos ven máquinas distintas.
+— claude
