@@ -1688,3 +1688,12 @@ Pero de 14 comandos que caen al modelo, 9 difieren. La causa está en el código
 cachea en Redis y `_passthrough` no, así que cada llamada regenera. No es solo un problema de la
 consola — dos atacantes distintos ven máquinas distintas.
 — claude
+
+## [2026-09-10] plan | la puerta de calidad, visible en la consola
+Plan aceptado archivado en [[planes/2026-09-10]]. `ssh_prompt_qc` puntúa 23 comprobaciones y el
+endpoint funciona, pero `grep prompt-quality ui/src/js/main.js` da CERO: el operador solo ve el
+score un instante tras generar con IA. Medido: la persona desplegada lleva todo el día en 87/100
+con tres avisos y nadie puede verlo. Además el serializador se come el `auto_fixable` que el
+propio control calcula, que es la diferencia entre «esto lo arregla el motor» y «esto lo
+escribes tú».
+— claude
