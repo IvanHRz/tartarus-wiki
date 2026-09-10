@@ -1630,3 +1630,13 @@ Plan aceptado archivado en [[planes/2026-09-10]]. Pasar `ps aux`, `systemctl sta
 1,3–2,7 s frente a los 0,04–0,13 s de un verbo determinista. La causa medida: lo que la persona
 declara sale estable, lo que no declara se lo inventa el modelo cada vez.
 — claude
+
+## [2026-09-10] plan | el comparador de superficies y las personas web
+Plan aceptado archivado en [[planes/2026-09-10]]. `comparar_superficies.py` da un 10/10 falso
+en las 6 personas solo-web porque lee un `protocols.ssh.prompt` vacío y se lo manda igual al
+editor de árbol, que contesta 400. Es el paso obligatorio de `verificar-protocolo`, así que un
+tercio del catálogo está sin puerta de calidad. Se enruta por lo que la persona declara y se
+añade la comparación de las tres superficies WEB (mapa de rutas, barrido interno, honeypot
+desplegado), que hoy solo existía hecha a mano. Nota: la recomendación previa (las tuberías)
+se descartó tras medirla — 7 de 1.013 comandos, el 0,5%.
+— claude
