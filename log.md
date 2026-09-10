@@ -1660,3 +1660,14 @@ la cara. Hallazgo mayor de paso: el INSERT del consumer no escribe la columna `t
 solo 8 de 23.022 eventos la tienen (los canarios) y cinco señales que ya se calculan
 —HONEY_CRED_MATCH, PORTSCAN, WEB_FUZZING…— se pierden en disco.
 — claude
+
+## [2026-09-10] plan | paridad SSH Windows/Linux e inyección de prompt
+Plan aceptado archivado en [[planes/2026-09-10]]. Las cuatro tandas de mejoras del día eran
+todas POSIX. Medido: Windows tiene 29 verbos pero ninguna de ellas, y cuatro delatores vivos —
+el honeypot NIEGA que existan `Set-ItemProperty`, `Write-Output`, `Clear-EventLog` y `wevtutil`,
+cmdlets que trae todo Windows desde 2006. Los dos últimos son justo los verbos anti-forenses.
+Batería: 41 pruebas POSIX contra 9 de Windows. De los dos laboratorios de Beelzebub, el de MCP
+ya se cumple casi entero (4 herramientas trampa, JSON-RPC, regla Sigma, 213 eventos); el de
+red-teamers de IA tiene un hueco medido: 31 intentos de inyección de prompt en la base y cero
+detectados como tal, aunque el honeypot no filtra el escenario.
+— claude
