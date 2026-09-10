@@ -1650,3 +1650,13 @@ wc -l` responde 213. Las redirecciones son peor: `echo 'ssh-rsa…' >> authorize
 que di al cerrar la sesión anterior: el «0,5% de comandos con tubería» salía de 1.013 eventos
 que vienen todos de nuestros propios scripts — cero atacantes externos en la base.
 — claude
+
+## [2026-09-10] plan | los hitos de una sesión SSH
+Plan aceptado archivado en [[planes/2026-09-10]]. Escalada a root con éxito, persistencia y
+borrado de rastro (con timestomping) como hitos visibles para el analista. Medido: las reglas
+Sigma detectan el INTENTO pero ninguna sabe si tuvo éxito; y `touch -t` se acepta en silencio
+pero el `ls -l` siguiente sigue dando la fecha vieja, así que la técnica le falla al atacante en
+la cara. Hallazgo mayor de paso: el INSERT del consumer no escribe la columna `tags`, así que
+solo 8 de 23.022 eventos la tienen (los canarios) y cinco señales que ya se calculan
+—HONEY_CRED_MATCH, PORTSCAN, WEB_FUZZING…— se pierden en disco.
+— claude
