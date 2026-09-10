@@ -1621,3 +1621,12 @@ maqueta de Apache diciendo «nginx», y las respuestas del motor salen SIN cabec
 (mientras las reglas estáticas sí la llevan), con 2 bytes de diferencia por un `TrimRight` del
 parche de Go.
 — claude
+
+## [2026-09-10] plan | cuatro verbos deterministas más (ps, systemctl, crontab, ip)
+Plan aceptado archivado en [[planes/2026-09-10]]. Pasar `ps aux`, `systemctl status`,
+`crontab -l` e `ip a` del modelo al código. Medido en vivo antes de planear: el mismo
+`crontab -l` contesta «no crontab for rrhh» en una pasada y lista dos tareas en la siguiente;
+`ps aux` pierde `sshd` entre pasadas y su columna START cambia de idioma; y los cuatro tardan
+1,3–2,7 s frente a los 0,04–0,13 s de un verbo determinista. La causa medida: lo que la persona
+declara sale estable, lo que no declara se lo inventa el modelo cada vez.
+— claude
