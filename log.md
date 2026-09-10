@@ -1611,3 +1611,13 @@ TARTARUS_LLM_ACTIVE) que analyze prueba primero, y se puede quitar una clave. UI
 honeypot generando vía DeepSeek, 0 fallos de OpenAI. Nota: DeepSeek a veces antepone «.body:» a la
 respuesta — se limpia en el Bloque G (prompts «output ONLY the body»). Suite 1949 verde.
 — claude
+
+## [2026-09-10] plan | familia weblogic y páginas de error por stack
+Plan aceptado archivado en [[planes/2026-09-10]]. Añadir la familia `weblogic` (el 404 de
+Oracle WebLogic que sirve el portal real de Fonacot) y conseguir que las diez familias de
+`web_facade` sirvan cada una SU página de error, comprobado con un curl externo contra :8880.
+Al medir salieron tres delatores más: jenkins anuncia Jetty y firma Tomcat, fortigate sirve la
+maqueta de Apache diciendo «nginx», y las respuestas del motor salen SIN cabecera `Server`
+(mientras las reglas estáticas sí la llevan), con 2 bytes de diferencia por un `TrimRight` del
+parche de Go.
+— claude
