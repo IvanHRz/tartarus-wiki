@@ -1671,3 +1671,12 @@ ya se cumple casi entero (4 herramientas trampa, JSON-RPC, regla Sigma, 213 even
 red-teamers de IA tiene un hueco medido: 31 intentos de inyección de prompt en la base y cero
 detectados como tal, aunque el honeypot no filtra el escenario.
 — claude
+
+## [2026-09-10] plan | auditoría de realismo Linux/Windows y paridad de la consola
+Plan aceptado archivado en [[planes/2026-09-10]]. Auditado con comandos que teclea un
+administrador real: de 28 comandos Linux el motor resuelve 6, de 24 cmdlets Windows resuelve 2
+y NIEGA 11. Contradicciones duras medidas: uptime dice 12 días y systemctl 26; who da un login
+de 2025 sobre un arranque de 2026; free -m no cuadra con /proc/meminfo. Y el hueco que anula el
+motor entero: la plantilla de árbol ignora el perfil, así que una persona Windows nace con árbol
+POSIX y cae en `dialecto-discrepa` — el 100% al modelo.
+— claude
