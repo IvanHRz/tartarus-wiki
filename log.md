@@ -1795,3 +1795,7 @@ Plan aceptado archivado en [[planes/2026-09-10]]. El lado honeypot ya soporta Ol
 ## [2026-09-10] avance | Ollama local en el motor
 El `llm_client` del motor gana Ollama como proveedor **sin clave** (su credencial es el host), así que el passthrough del shell ya no necesita internet. Verificado por SSH real contra un Ollama de mentira; la latencia y la calidad de `gemma3:4b` de verdad siguen sin medir.
 — claude
+
+## [2026-09-10] plan | Ollama local cableado a los honeypots de la RPi5
+Plan aceptado archivado en [[planes/2026-09-10]]. Se montó el SSD de 2 TB, se instaló Ollama con `gemma3:4b` en el disco y se cablearon los honeypots SSH (Ubuntu) y Telnet (Cisco) del despliegue de campo al LLM local vía `http://172.18.0.1:11434/api/chat`. Verificado en vivo: persona correcta, Ollama sirviendo (`172.18.0.4 POST /api/chat 200`), evento en el engine. Latencia real medida ~36 s/comando (domina el prompt largo). Solo en la Pi v0.6.2, no en esta rama.
+— claude
