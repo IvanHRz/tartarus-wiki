@@ -1787,3 +1787,7 @@ Plan aceptado archivado en [[planes/2026-09-10]]. Poner al día la bitácora eje
 ## [2026-09-10] avance | barrido de realismo cerrado
 `netstat`, `ss`, `lsof`, `mount`, `lsblk`, `route`, `arp`, `service --status-all` y `journalctl` —más los cuatro gemelos de Windows— los resuelve ya el motor sobre un modelo de puertos nuevo, con los MISMOS PID que `ps aux`. Verificado en una sesión SSH viva. Bitácora ejecutiva al día y ROADMAP sin deuda inexistente.
 — claude
+
+## [2026-09-10] plan | Ollama en el motor (LLM local para redes OT aisladas)
+Plan aceptado archivado en [[planes/2026-09-10]]. El lado honeypot ya soporta Ollama; el `llm_client` del motor no, y sin eso el passthrough del shell necesita internet.
+— claude
