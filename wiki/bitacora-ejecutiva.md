@@ -566,6 +566,34 @@ vez, manteniendo los datos de cada uno separados de los demás.
   un cebo así no sirve de prueba—. Y se retiró del proyecto una contraseña de laboratorio que
   estaba escrita en claro en ocho documentos; **conviene cambiarla**, porque ya ha circulado.
 
+### 11 de septiembre de 2026 (tarde) — Instalar un aparato deja de ser cosa de técnicos
+
+- **Qué se logró.** Dar de alta un equipo en la plataforma ya se hace **desde la pantalla**:
+  se pulsa un botón, sale un código de un solo uso y el comando exacto que hay que pegar en el
+  aparato. Antes eso requería escribir instrucciones a mano en una terminal. Con esto, las tres
+  pantallas que Iván quería —la lista de aparatos, la ficha de cada uno y el alta— están
+  completas.
+
+- **Qué problema apareció.** Casi todo estaba **construido y escondido**. La sección donde vive
+  esto se había ocultado meses atrás con una nota que decía «se repondrá cuando haya despliegue
+  de campo», y nadie volvió a mirarla. Al destaparla salieron cuatro cosas rotas que nadie había
+  notado porque no se veían: un botón que prometía llevarte a una pantalla y **no llevaba a
+  ninguna parte**, dos botones distintos que hacían exactamente lo mismo, el aparato apareciendo
+  dos veces, y un contador que decía «8 activos» sobre una lista de tres.
+
+- **Cómo se resolvió.** Destapando y arreglando en la misma pasada. Y comprobándolo contra el
+  aparato de verdad: se emitió el código desde la pantalla, se pegó el comando en la Raspberry y
+  el equipo apareció en la lista, sin escribir un solo comando a mano.
+
+- **Impacto para el cliente.** Instalar un aparato en casa de un cliente deja de depender de
+  quien sepa la receta. Y de paso quedó demostrado que **el tablero ya no miente**: a mitad de la
+  prueba el aparato perdió la conexión de verdad, la pantalla lo marcó como sin contacto, y al
+  recuperarla volvió a verde solo. Eso es exactamente lo que tiene que pasar.
+
+- **Además.** Los dos sensores del laboratorio que llevaban semanas marcados como caídos —uno
+  once días, el otro sin haber dado señales nunca— **están en verde**, que es lo que siempre
+  estuvieron.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
@@ -593,7 +621,7 @@ vez, manteniendo los datos de cada uno separados de los demás.
 - **Las preguntas de red y de disco tampoco se improvisan**: qué puertos escucha la máquina, qué
   discos tiene montados, qué rutas conoce y qué dice su diario salen del programa y **cuadran
   entre sí**. Antes las contestaba la inteligencia artificial, y daba números distintos cada vez.
-- Todo lo anterior está respaldado por pruebas automáticas (**2.691**, que se ejecutan en cada
+- Todo lo anterior está respaldado por pruebas automáticas (**2.699**, que se ejecutan en cada
   cambio), más una auditoría específica de separación entre clientes que se corre en bucle y da
   cero fugas.
 

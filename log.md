@@ -1811,3 +1811,7 @@ La Pi se da de alta con un token, late cada 30 s y sale como tarjeta con su deta
 ## [2026-09-11] plan | el alta manual de un equipo
 Plan aceptado archivado en [[planes/2026-09-11]]. La sección de sensores de campo existe entera y está oculta desde que se decidió «reponerla cuando haya despliegue de campo»; ya lo hay. Se destapa, se cablea el alta con token, y se arreglan los cuatro defectos que salen a la luz con ella.
 — claude
+
+## [2026-09-11] avance | el alta de un equipo, desde la pantalla
+Las tres pantallas de Thinkst están cubiertas. Casi nada había que construir: la sección estaba escondida esperando «que haya despliegue de campo». Al destaparla salieron cuatro defectos invisibles (un botón que no llevaba a ninguna parte, dos botones con la misma acción, el equipo duplicado y un contador falso), arreglados en la misma pasada.
+— claude
