@@ -1827,3 +1827,7 @@ Limpieza de la pantalla (un solo guardado en vez de seis, bancos de prueba fuera
 ## [2026-09-11] plan | afinar la pestaña de Trampas
 Plan aceptado archivado en [[planes/2026-09-11]]. Dos bugs (bancos duplicados, badge de IA montado sobre el título) + de-ruido (puerto interno fuera, sin líneas vacías, badge sin repetir) + fundir las dos secciones en una con dos grupos + menú menos amontonado. Quirúrgico, la noche antes de la demo.
 — claude
+
+## [2026-09-11] avance | afinar la consola para la demo
+Dos bugs (bancos duplicados, badge de IA montado sobre el título) + de-ruido + fusión de las dos secciones de despliegue en una con dos grupos. Coordinado con la sesión de la Pi para no pisar sus cambios sin commitear. 2.708 pruebas.
+— claude

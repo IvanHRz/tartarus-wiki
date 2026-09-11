@@ -620,6 +620,26 @@ vez, manteniendo los datos de cada uno separados de los demás.
   Y se ve corriendo en dos sitios: un servidor y un aparato de campo del tamaño de la palma de la
   mano que funciona sin conexión a internet.
 
+### 11 de septiembre de 2026 (madrugada) — Afinar la consola antes de la demostración
+
+- **Qué se logró.** La pantalla principal de trampas quedó más limpia y honesta: se juntaron dos
+  listados que se veían iguales y confundían en uno solo con dos grupos claros (los servicios
+  señuelo y los equipos de campo), se quitó texto técnico que no aportaba, y se corrigió un
+  detalle que el operador leía como una contradicción.
+
+- **Qué problema apareció.** Al revisar la consola con ojo crítico salieron cosas que estorban:
+  dos secciones que nadie distinguía, una etiqueta que se montaba encima del título, y datos
+  técnicos repetidos en cada tarjeta que no dicen nada al usuario.
+
+- **Cómo se resolvió.** Uno por uno, sin rehacer nada de fondo (eso queda para después de la
+  demostración): unificar las dos secciones, arreglar el desbordamiento de la etiqueta, y dejar
+  de repetir en cada tarjeta información que ya está escrita una vez. También se apartaron de la
+  vista dos bancos de prueba internos que no son del cliente.
+
+- **Impacto para el cliente.** La herramienta se ve más profesional y menos abarrotada justo
+  cuando se va a enseñar. Y menos ruido en pantalla significa que quien la mira entiende antes qué
+  está viendo.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
