@@ -594,6 +594,32 @@ vez, manteniendo los datos de cada uno separados de los demás.
   once días, el otro sin haber dado señales nunca— **están en verde**, que es lo que siempre
   estuvieron.
 
+### 11 de septiembre de 2026 (noche) — Preparar la demostración: limpiar la pantalla y el ataque paso a paso
+
+- **Qué se logró.** La herramienta queda lista para enseñarse. Se preparó un recorrido de ataque
+  **paso a paso** —un intruso que entra, se hace administrador, se deja una puerta trasera, roba
+  una credencial trampa y borra su rastro— que se detiene en cada fase para poder explicarlo, y
+  que funciona igual en la computadora (con IA en la nube) y en el aparato de campo (con IA
+  local, sin internet). Y se limpió la pantalla, que se había vuelto demasiado densa.
+
+- **Qué problema apareció.** Al preparar el recorrido salió que reproducir un ataque «realista»
+  no es trivial: si cada acción se hace por separado, el sistema no recuerda que el intruso ya se
+  hizo administrador, y la parte más vistosa —la escalada— no se ve. Y en la pantalla de
+  configuración de cada señuelo había seis botones de «Guardar» que hacían que cambiar varias
+  cosas reiniciara el sistema varias veces y se perdieran ajustes.
+
+- **Cómo se resolvió.** El ataque se rehízo para que ocurra en **una sola sesión**, de modo que
+  cada paso se apoya en el anterior; ahora la escalada, la puerta trasera y el borrado de rastro
+  se ven encadenados y quedan registrados con su nombre técnico. Los seis botones se unificaron en
+  **uno solo** que guarda lo que se cambió y reinicia una vez. Y se apartó de la vista lo que no
+  es del cliente (bancos de prueba internos) y se tradujeron los rótulos que estaban en inglés.
+
+- **Impacto para el cliente.** Queda una demostración clara y honesta: se ve un ataque completo
+  reproducido en vivo, cómo el señuelo lo aguanta sin delatarse, y cómo el sistema lo reconstruye
+  como **la historia de un incidente** —no como comandos sueltos— con su clasificación estándar.
+  Y se ve corriendo en dos sitios: un servidor y un aparato de campo del tamaño de la palma de la
+  mano que funciona sin conexión a internet.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la

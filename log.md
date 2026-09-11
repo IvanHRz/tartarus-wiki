@@ -1819,3 +1819,7 @@ Las tres pantallas de Thinkst están cubiertas. Casi nada había que construir: 
 ## [2026-09-11] plan | la ruta de demo de SSH
 Plan aceptado archivado en [[planes/2026-09-11]]. Demo mañana: limpiar conservando el inventario, quitar el ruido que estorba, auditar SSH (6 botones de Guardar en un solo menú) y dejar los labs de ataque reproducibles paso a paso en las dos máquinas.
 — claude
+
+## [2026-09-11] avance | preparar la demo de SSH
+Limpieza de la pantalla (un solo guardado en vez de seis, bancos de prueba fuera, títulos al español) y guión de ataque paso a paso en una sola sesión, verificado de punta a punta: la consola registró el incidente con riesgo 90 y la cadena MITRE completa. Funciona en Mac (DeepSeek) y Raspberry (Ollama).
+— claude
