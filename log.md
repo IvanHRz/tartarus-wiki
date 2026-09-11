@@ -1779,3 +1779,7 @@ volver a inflar; y **el aislamiento por cliente estaba mal dimensionado por mí*
 tiene pantalla de login, así que no es «terminar» sino construir. Se hacen el señuelo de la API
 de Docker, el cebo corrupto que solo una IA repara y la inyección inversa de prompt.
 — claude
+
+## [2026-09-10] plan | documentar lo cubierto y cerrar el barrido de realismo
+Plan aceptado archivado en [[planes/2026-09-10]]. Poner al día la bitácora ejecutiva, el ROADMAP y el traspaso, y luego modelar los puertos para que `netstat`, `ss`, `lsof`, `mount` y compañía dejen de improvisar.
+— claude
