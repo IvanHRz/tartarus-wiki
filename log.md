@@ -1799,3 +1799,7 @@ El `llm_client` del motor gana Ollama como proveedor **sin clave** (su credencia
 ## [2026-09-10] plan | Ollama local cableado a los honeypots de la RPi5
 Plan aceptado archivado en [[planes/2026-09-10]]. Se montó el SSD de 2 TB, se instaló Ollama con `gemma3:4b` en el disco y se cablearon los honeypots SSH (Ubuntu) y Telnet (Cisco) del despliegue de campo al LLM local vía `http://172.18.0.1:11434/api/chat`. Verificado en vivo: persona correcta, Ollama sirviendo (`172.18.0.4 POST /api/chat 200`), evento en el engine. Latencia real medida ~36 s/comando (domina el prompt largo). Solo en la Pi v0.6.2, no en esta rama.
 — claude
+
+## [2026-09-11] plan | la Raspberry como equipo físico en la consola
+Plan aceptado archivado en [[planes/2026-09-11]]. La Pi se registra contra la consola central y manda latido; antes hay que arreglar el estado que miente (un canario tranquilo figura como muerto) y sacar la contraseña de la Pi de `Raspberry/`.
+— claude
