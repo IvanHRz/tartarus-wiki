@@ -534,7 +534,10 @@ vez, manteniendo los datos de cada uno separados de los demás.
   entra el 92 % del tráfico.
 - **Lo que el atacante trae —archivos, scripts, herramientas— se conserva como evidencia**, una
   sola vez por contenido y sin ejecutarlo nunca.
-- Todo lo anterior está respaldado por pruebas automáticas (**2.634**, que se ejecutan en cada
+- **Las preguntas de red y de disco tampoco se improvisan**: qué puertos escucha la máquina, qué
+  discos tiene montados, qué rutas conoce y qué dice su diario salen del programa y **cuadran
+  entre sí**. Antes las contestaba la inteligencia artificial, y daba números distintos cada vez.
+- Todo lo anterior está respaldado por pruebas automáticas (**2.652**, que se ejecutan en cada
   cambio), más una auditoría específica de separación entre clientes que se corre en bucle y da
   cero fugas.
 

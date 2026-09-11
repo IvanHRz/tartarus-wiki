@@ -7,7 +7,7 @@
 
 > Fuente de verdad del pendiente. Sustituye la sección "Next Sprint" de `.agents/MANDATES.md` (v2.3). El estado real verificado del código está por delante de STATUS.md — ver §1.
 >
-> **Cifras al 10-sep-2026 (medidas, no estimadas):** **2.634 pruebas** pasando (10 saltadas) y el motor **carga 100 reglas Sigma de 411 ficheros en disco**. La cifra de 391 que figuraba aquí era la de ficheros, no la de reglas activas: las demás no aplican a los campos que el honeypot observa y el motor las descarta al arrancar. El porqué, con el recuento desglosado, vive en `engine/rules/sigma/README.md`. **No sustituir 100 por 411:** es el mismo número inflado que ya se corrigió en `CLAUDE.md` y en el análisis de los labs; éste era el tercer sitio donde vivía.
+> **Cifras al 10-sep-2026 (medidas, no estimadas):** **2.652 pruebas** pasando (10 saltadas) y el motor **carga 100 reglas Sigma de 411 ficheros en disco**. La cifra de 391 que figuraba aquí era la de ficheros, no la de reglas activas: las demás no aplican a los campos que el honeypot observa y el motor las descarta al arrancar. El porqué, con el recuento desglosado, vive en `engine/rules/sigma/README.md`. **No sustituir 100 por 411:** es el mismo número inflado que ya se corrigió en `CLAUDE.md` y en el análisis de los labs; éste era el tercer sitio donde vivía.
 
 ---
 
