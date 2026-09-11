@@ -1823,3 +1823,7 @@ Plan aceptado archivado en [[planes/2026-09-11]]. Demo mañana: limpiar conserva
 ## [2026-09-11] avance | preparar la demo de SSH
 Limpieza de la pantalla (un solo guardado en vez de seis, bancos de prueba fuera, títulos al español) y guión de ataque paso a paso en una sola sesión, verificado de punta a punta: la consola registró el incidente con riesgo 90 y la cadena MITRE completa. Funciona en Mac (DeepSeek) y Raspberry (Ollama).
 — claude
+
+## [2026-09-11] plan | afinar la pestaña de Trampas
+Plan aceptado archivado en [[planes/2026-09-11]]. Dos bugs (bancos duplicados, badge de IA montado sobre el título) + de-ruido (puerto interno fuera, sin líneas vacías, badge sin repetir) + fundir las dos secciones en una con dos grupos + menú menos amontonado. Quirúrgico, la noche antes de la demo.
+— claude
