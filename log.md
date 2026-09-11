@@ -1803,3 +1803,7 @@ Plan aceptado archivado en [[planes/2026-09-10]]. Se montó el SSD de 2 TB, se i
 ## [2026-09-11] plan | la Raspberry como equipo físico en la consola
 Plan aceptado archivado en [[planes/2026-09-11]]. La Pi se registra contra la consola central y manda latido; antes hay que arreglar el estado que miente (un canario tranquilo figura como muerto) y sacar la contraseña de la Pi de `Raspberry/`.
 — claude
+
+## [2026-09-11] avance | la Raspberry como equipo físico en la consola
+La Pi se da de alta con un token, late cada 30 s y sale como tarjeta con su detalle (identidad, red, servicios señuelo vs propios). Antes hubo que arreglar el estado que mentía: un canario al que nadie atacaba figuraba como muerto a los 90 s. Verificado contra el equipo real en las dos direcciones.
+— claude

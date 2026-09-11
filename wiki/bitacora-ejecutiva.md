@@ -537,6 +537,35 @@ vez, manteniendo los datos de cada uno separados de los demás.
   intruso hace más daño y donde menos herramientas hay. Y en cualquier otro despliegue, baja el
   coste: una consulta a una IA local no se factura.
 
+### 11 de septiembre de 2026 — El aparato físico, visible en la consola
+
+- **Qué se logró.** La caja que va a vivir en la planta del cliente —una Raspberry Pi— ya
+  **aparece en la consola como un equipo**, con su estado, dónde está, qué trampas ofrece y
+  cuándo se le vio por última vez. Es lo que pedía Iván para poder decir «este aparato está
+  instalado y funcionando» sin ir a mirarlo físicamente.
+
+- **Qué problema apareció, y era grave.** Al ir a construirlo se descubrió que **el tablero
+  mentía**. Dos sensores llevaban uno once días y otro dos semanas funcionando perfectamente, y
+  el sistema los daba por **caídos**. El motivo: solo avisaban de que existían **cuando
+  detectaban un ataque**. Como nadie los había atacado, el sistema los daba por muertos. Dicho de
+  otro modo: **una trampa que nadie ha pisado parecía una trampa rota.**
+
+- **Cómo se resolvió.** Separando dos cosas que se estaban confundiendo: **detectar** y **estar
+  vivo**. Ahora cada aparato dice «sigo aquí» cada medio minuto, pase lo que pase. Y se afinó el
+  lenguaje: un equipo recién instalado que todavía no ha dado señales ya no sale en rojo como si
+  estuviera averiado, sino como «aún no ha reportado». Cuando de verdad hay un problema, la ficha
+  dice qué comprobar, y reconoce con honestidad lo que no sabe: que el equipo dejó de responder,
+  pero no si está apagado, desconectado o sin ruta hasta la consola.
+
+- **Impacto para el cliente.** Un tablero en el que no se puede confiar es peor que no tener
+  tablero: o se sale a revisar equipos sanos, o se acaba ignorando las alarmas de verdad. Esto se
+  comprobó contra el aparato real: **tres minutos sin un solo ataque y siguió marcado como
+  activo**; al apagarlo, pasó a caído en menos de dos minutos; al encenderlo, revivió solo.
+
+- **Además.** Se corrigió un cebo que, una de cada sesenta veces, se entregaba sin estropear —y
+  un cebo así no sirve de prueba—. Y se retiró del proyecto una contraseña de laboratorio que
+  estaba escrita en claro en ocho documentos; **conviene cambiarla**, porque ya ha circulado.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
@@ -557,12 +586,14 @@ vez, manteniendo los datos de cada uno separados de los demás.
   entra el 92 % del tráfico.
 - **Lo que el atacante trae —archivos, scripts, herramientas— se conserva como evidencia**, una
   sola vez por contenido y sin ejecutarlo nunca.
+- **Los aparatos físicos se ven y se vigilan desde la consola**: si están vivos, dónde están,
+  qué trampas ofrecen y cuándo se les vio. Y el estado es **cierto en las dos direcciones**.
 - **Puede funcionar sin internet**, con una inteligencia artificial que corre en el propio
   aparato — el requisito de las redes industriales aisladas.
 - **Las preguntas de red y de disco tampoco se improvisan**: qué puertos escucha la máquina, qué
   discos tiene montados, qué rutas conoce y qué dice su diario salen del programa y **cuadran
   entre sí**. Antes las contestaba la inteligencia artificial, y daba números distintos cada vez.
-- Todo lo anterior está respaldado por pruebas automáticas (**2.669**, que se ejecutan en cada
+- Todo lo anterior está respaldado por pruebas automáticas (**2.691**, que se ejecutan en cada
   cambio), más una auditoría específica de separación entre clientes que se corre en bucle y da
   cero fugas.
 
