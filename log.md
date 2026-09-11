@@ -1768,3 +1768,14 @@ honeypot no tiene. Hay además un lab nuevo del 1-sep, el 29, que valida nuestra
 que el atacante trae**, y medido en vivo, `wget bot.pl` contesta el directorio actual y el
 fichero no aparece en el `ls`.
 — claude
+
+## [2026-09-10] plan | cerrar los puntos mapeados de los labs
+Plan aceptado archivado en [[planes/2026-09-10]]. Cierra los seis pendientes que quedaban de la
+revisión de [[analisis-beelzebub-labs]]. Dos decisiones medidas antes de planear: **las 304 reglas
+Sigma NO se traducen** —traducir los campos de EDR las haría cargar (204) y 76 dispararían
+**~18.000 veces sobre tráfico inocente**, con «Archive via Custom Method» saltando 3.988 veces
+sobre un `GET /legal-notice`—, así que lo que se cierra es la cifra y el hecho de que se pueda
+volver a inflar; y **el aislamiento por cliente estaba mal dimensionado por mí**: la consola no
+tiene pantalla de login, así que no es «terminar» sino construir. Se hacen el señuelo de la API
+de Docker, el cebo corrupto que solo una IA repara y la inyección inversa de prompt.
+— claude
