@@ -1708,3 +1708,13 @@ distintas) y el control de calidad visible en la consola. Suite 2.242 → **2.48
 llevaba parada desde el 11-ago, hueco anotado en el ROADMAP— y [[prompt-siguiente-sesion]] al
 día con los tres candidatos medidos para la próxima.
 — claude
+
+## [2026-09-10] plan | el saneador deja la salida vacía
+Plan aceptado archivado en [[planes/2026-09-10]]. Medido antes de tocar nada: **12 de 30**
+comandos que SÍ existen acaban en cadena vacía (10 de 20 en Windows, 2 de 10 en POSIX), y las 12
+por una negación falsa del modelo que el saneador tira entera. Prototipo probado: un reintento
+correctivo recupera **10 de 11**. El plan añade ese reintento, cinco verbos de Windows al motor
+(`Get-ComputerInfo`, `Get-Volume`, `Get-Disk`, `Get-LocalGroupMember`, `Get-History`), unifica el
+criterio POSIX de «existe» con el de `which` —15 de 15 se contradecían— y tapa el agujero del
+barrido, donde la prueba del cmdlet real pasaba en verde con la salida vacía.
+— claude
