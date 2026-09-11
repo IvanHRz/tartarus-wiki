@@ -1718,3 +1718,14 @@ correctivo recupera **10 de 11**. El plan añade ese reintento, cinco verbos de 
 criterio POSIX de «existe» con el de `which` —15 de 15 se contradecían— y tapa el agujero del
 barrido, donde la prueba del cmdlet real pasaba en verde con la salida vacía.
 — claude
+
+## [2026-09-10] plan | motor determinista para routers y firewalls
+Plan aceptado archivado en [[planes/2026-09-10]]. Medido antes de tocar nada: `show
+running-config` **sin `enable` vuelca el cebo entero 4 de 4 veces** —enable secret, comunidad
+SNMP RW y clave IPsec en claro—, el modelo **repite el prompt como salida en 12 de 14** comandos
+de modo y el saneador no tapa ninguno, y Beelzebub pinta **un prompt de bash en un Cisco**. Lo
+que NO estaba roto: el volcado sale verbatim (114/114 y 149/149, 0 líneas inventadas). El plan
+da a los aparatos lo que bash tiene desde B1: el modo como equivalente del directorio actual, el
+privilegio en código, el volcado servido desde `config_serde`, y el prompt real del aparato
+(séptimo cambio en el Go). Se verifica en un segundo SSH en :2223, sin tocar la clínica.
+— claude
