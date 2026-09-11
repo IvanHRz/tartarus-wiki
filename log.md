@@ -1815,3 +1815,7 @@ Plan aceptado archivado en [[planes/2026-09-11]]. La sección de sensores de cam
 ## [2026-09-11] avance | el alta de un equipo, desde la pantalla
 Las tres pantallas de Thinkst están cubiertas. Casi nada había que construir: la sección estaba escondida esperando «que haya despliegue de campo». Al destaparla salieron cuatro defectos invisibles (un botón que no llevaba a ninguna parte, dos botones con la misma acción, el equipo duplicado y un contador falso), arreglados en la misma pasada.
 — claude
+
+## [2026-09-11] plan | la ruta de demo de SSH
+Plan aceptado archivado en [[planes/2026-09-11]]. Demo mañana: limpiar conservando el inventario, quitar el ruido que estorba, auditar SSH (6 botones de Guardar en un solo menú) y dejar los labs de ataque reproducibles paso a paso en las dos máquinas.
+— claude
