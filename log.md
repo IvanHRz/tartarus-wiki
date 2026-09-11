@@ -1729,3 +1729,15 @@ da a los aparatos lo que bash tiene desde B1: el modo como equivalente del direc
 privilegio en código, el volcado servido desde `config_serde`, y el prompt real del aparato
 (séptimo cambio en el Go). Se verifica en un segundo SSH en :2223, sin tocar la clínica.
 — claude
+
+## [2026-09-10] plan | la inyección de prompt por HTTP
+Plan aceptado archivado en [[planes/2026-09-10]]. Medido antes de tocar nada: **el 92 % de los
+eventos son HTTP** y el laboratorio de red-teamers de IA solo mira SSH/TELNET/MCP. Mandé cuatro
+inyecciones en vivo por query, ruta, cuerpo y cabecera: **las cuatro quedaron sin marcar**, y la
+regla Sigma no casó ninguna (sobre SSH sí casa: la regla funciona, mira solo `command`, que en
+HTTP es `GET /ruta`). Lo que NO está roto: el honeypot no filtra su prompt — el gate las 404ea
+sin tocar el modelo. Es un problema de señal para el analista, no de fuga. La segunda mitad, el
+barrido de 53 rutas frente a 4.750, resultó no ser una laguna de comportamiento: **ninguna de
+las 4.750 llega al modelo** y 4.737 dan el mismo 404 de 259 bytes, así que correr la wordlist
+entera es barato y lo que faltaba era decirlo.
+— claude
