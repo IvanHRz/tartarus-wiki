@@ -1831,3 +1831,7 @@ Plan aceptado archivado en [[planes/2026-09-11]]. Dos bugs (bancos duplicados, b
 ## [2026-09-11] avance | afinar la consola para la demo
 Dos bugs (bancos duplicados, badge de IA montado sobre el título) + de-ruido + fusión de las dos secciones de despliegue en una con dos grupos. Coordinado con la sesión de la Pi para no pisar sus cambios sin commitear. 2.708 pruebas.
 — claude
+
+## [2026-09-11] handoff | los dos huecos de la Raspberry en la consola
+Registrados en BITACORA y en el prompt de la siguiente sesión: (1) aplanar «Trampas desplegadas» (los 3 equipos arriba, sin grupo aparte); (2) GORDO — los ataques de la Pi no llegan al Monitoreo central (Pi tiene 3.765 eventos, el Mac 0; el agente solo manda latido). Federación de eventos, a diseñar entre las dos sesiones.
+— claude
