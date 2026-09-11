@@ -514,6 +514,29 @@ vez, manteniendo los datos de cada uno separados de los demás.
   intruso toca de verdad —consola, equipos de red y web—, y del incidente ya no queda solo un
   relato: queda la evidencia.
 
+### 10 de septiembre de 2026 (noche) — Que el señuelo pueda funcionar sin internet
+
+- **Qué se logró.** El sistema ya puede usar una **inteligencia artificial que corre en el
+  propio aparato**, sin conexión a internet y sin pagar por consulta. Es el requisito de la caja
+  que se está preparando para **redes industriales aisladas**: en una planta o una subestación no
+  hay salida a internet, así que una IA en la nube sencillamente no es una opción.
+
+- **Qué problema apareció.** Que había **dos** inteligencias artificiales y solo una estaba
+  preparada. La que hace de «personaje» ya podía ser local desde antes; la que resuelve las
+  preguntas raras —las que el programa no tiene contestadas de antemano— seguía necesitando
+  internet. Y es justo ésa la que hace falta cuando el atacante escribe algo inesperado.
+
+- **Cómo se resolvió.** Añadiéndola al motor con una regla sencilla: como la IA local **no lleva
+  contraseña**, lo que la identifica es su dirección. Eso permitió encajarla sin rehacer nada de
+  lo que ya funcionaba. También se le dio más margen de tiempo, porque un modelo que corre en un
+  aparato pequeño tarda entre 7 y 16 segundos, y con el margen de una IA de internet se habría
+  cortado sola.
+
+- **Impacto para el cliente.** Abre un mercado que hasta hoy estaba cerrado: **plantas
+  industriales, subestaciones y redes separadas de internet por norma**, que son justo donde un
+  intruso hace más daño y donde menos herramientas hay. Y en cualquier otro despliegue, baja el
+  coste: una consulta a una IA local no se factura.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
@@ -534,10 +557,12 @@ vez, manteniendo los datos de cada uno separados de los demás.
   entra el 92 % del tráfico.
 - **Lo que el atacante trae —archivos, scripts, herramientas— se conserva como evidencia**, una
   sola vez por contenido y sin ejecutarlo nunca.
+- **Puede funcionar sin internet**, con una inteligencia artificial que corre en el propio
+  aparato — el requisito de las redes industriales aisladas.
 - **Las preguntas de red y de disco tampoco se improvisan**: qué puertos escucha la máquina, qué
   discos tiene montados, qué rutas conoce y qué dice su diario salen del programa y **cuadran
   entre sí**. Antes las contestaba la inteligencia artificial, y daba números distintos cada vez.
-- Todo lo anterior está respaldado por pruebas automáticas (**2.652**, que se ejecutan en cada
+- Todo lo anterior está respaldado por pruebas automáticas (**2.669**, que se ejecutan en cada
   cambio), más una auditoría específica de separación entre clientes que se corre en bucle y da
   cero fugas.
 

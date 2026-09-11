@@ -1791,3 +1791,7 @@ Plan aceptado archivado en [[planes/2026-09-10]]. Poner al día la bitácora eje
 ## [2026-09-10] plan | Ollama en el motor (LLM local para redes OT aisladas)
 Plan aceptado archivado en [[planes/2026-09-10]]. El lado honeypot ya soporta Ollama; el `llm_client` del motor no, y sin eso el passthrough del shell necesita internet.
 — claude
+
+## [2026-09-10] avance | Ollama local en el motor
+El `llm_client` del motor gana Ollama como proveedor **sin clave** (su credencial es el host), así que el passthrough del shell ya no necesita internet. Verificado por SSH real contra un Ollama de mentira; la latencia y la calidad de `gemma3:4b` de verdad siguen sin medir.
+— claude
