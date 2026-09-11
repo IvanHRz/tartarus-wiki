@@ -1807,3 +1807,7 @@ Plan aceptado archivado en [[planes/2026-09-11]]. La Pi se registra contra la co
 ## [2026-09-11] avance | la Raspberry como equipo físico en la consola
 La Pi se da de alta con un token, late cada 30 s y sale como tarjeta con su detalle (identidad, red, servicios señuelo vs propios). Antes hubo que arreglar el estado que mentía: un canario al que nadie atacaba figuraba como muerto a los 90 s. Verificado contra el equipo real en las dos direcciones.
 — claude
+
+## [2026-09-11] plan | el alta manual de un equipo
+Plan aceptado archivado en [[planes/2026-09-11]]. La sección de sensores de campo existe entera y está oculta desde que se decidió «reponerla cuando haya despliegue de campo»; ya lo hay. Se destapa, se cablea el alta con token, y se arreglan los cuatro defectos que salen a la luz con ella.
+— claude
