@@ -2,7 +2,7 @@
 tipo: estado
 creado: 2026-08-10
 actualizado: 2026-09-10
-commit_ref: 9f1d41a (rama feature/tier0-deployment-readiness, sin subir a GitHub)
+commit_ref: 2c34d70 (rama feature/tier0-deployment-readiness, sin subir a GitHub)
 tags: [ejecutivo, seguridad, flocks, cebos]
 ---
 
@@ -351,11 +351,83 @@ vez, manteniendo los datos de cada uno separados de los demás.
   generación del paquete para respetar esos datos, con sus pruebas); el total quedó en 1050 pruebas, todas en
   verde.
 
-### 10 de septiembre de 2026 — Que el señuelo aguante que lo miren de cerca
+### 31 de agosto de 2026 — Que el señuelo web no se distinga de un sitio de verdad
 
-> **Nota de continuidad.** Esta bitácora se quedó parada el 11 de agosto. El detalle técnico de
-> lo ocurrido entre el 12 de agosto y el 9 de septiembre está en la bitácora técnica del repo
-> (`.agents/BITACORA.md`); volcarlo aquí en lenguaje llano queda pendiente y está anotado.
+- **Qué se logró.** El proveedor de inteligencia artificial que usábamos se quedó sin saldo y se
+  cambió a otro más barato sin perder calidad. Aprovechando la parada, se reconstruyó el señuelo
+  web entero: la consola de configuración ahora se adapta al tipo de servicio que se está
+  editando (no enseña opciones de Linux a quien configura una página web), hay puntos de partida
+  ya hechos para los tipos de sitio más comunes, se puede copiar un sitio real como fachada desde
+  un solo sitio de la pantalla, y las páginas del sitio falso se declaran por adelantado en un
+  "mapa de rutas".
+
+- **Qué problema apareció.** Una herramienta de exploración automática —de las que usa cualquier
+  atacante— distinguía el señuelo de un servidor real en segundos: **casi todo lo que pedía
+  respondía "correcto"**, incluso direcciones inventadas. Un servidor de verdad responde "no
+  existe" a casi todo. Además el copiado de sitios fallaba con páginas cuyo certificado está mal
+  montado, que son muchas.
+
+- **Cómo se resolvió.** Con el mapa de rutas: lo que la persona configurada no declara, se
+  responde "no existe" — y de paso sin gastar inteligencia artificial, o sea más barato y más
+  creíble a la vez. El copiado dejó de exigir un certificado perfecto (se copia contenido
+  público; ahí no hay nada que proteger).
+
+- **Impacto para el cliente.** El señuelo web deja de delatarse ante la primera herramienta
+  automática, que es exactamente la primera cosa que un intruso ejecuta.
+
+### 1 de septiembre de 2026 — Medir el señuelo, y que con cuatro líneas salga un entorno creíble
+
+- **Qué se logró.** Dos cosas grandes. **Una:** el operador escribe cuatro líneas sobre su
+  cliente —a qué se dedica, dónde está, cómo se llama— y el sistema construye un entorno
+  completo y coherente: nombres de equipos, usuarios, departamentos, archivos, todo en su idioma
+  y con sentido para ese negocio. **Dos:** por primera vez el sistema **se puntúa a sí mismo**.
+  Antes la calidad de un señuelo dependía de lo bien que alguien hubiera escrito su descripción,
+  y nadie lo comprobaba. Ahora hay una nota, con lo que falta detallado, y las descripciones
+  pobres se reparan solas. Se regeneraron siete señuelos web que estaban por debajo del estándar.
+
+- **Qué problema apareció.** Varios, y del mismo tipo: cosas que *parecían* funcionar. La sección
+  de credenciales-cebo daba por guardado lo que no guardaba. Una persona configurada y aplicada
+  no llegaba al señuelo de verdad. Las sesiones de prueba se cortaban solas a los pocos segundos.
+  Y un señuelo que imitaba un servidor de páginas PHP respondía "no existe" a **sus propias
+  direcciones**, porque las tomaba por rastro de escáner.
+
+- **Cómo se resolvió.** Uno por uno y midiendo en vivo entre cada arreglo, no al final.
+
+- **Impacto para el cliente.** Montar un señuelo creíble deja de ser trabajo de experto: se
+  describe el cliente en lenguaje normal y el sistema hace el resto, con una nota visible que
+  dice si está listo o no.
+
+### 2 de septiembre de 2026 — Una sola verdad: lo que se configura es lo que ve el atacante
+
+- **Qué se logró.** Iván lo resumió en una frase: «el árbol de documentos, la consola de pruebas
+  y lo que veo desde fuera son siempre diferentes». Eran tres cosas distintas y ahora son una
+  sola. Además el atacante ya puede **escalar privilegios** de forma realista —pedir permisos de
+  administrador, cambiar de usuario, equivocarse de contraseña— en vez de recibir respuestas
+  inconsistentes. Y se dejaron escritas cuatro rutinas de comprobación que se disparan solas cada
+  vez que se toca un protocolo, para no repetir los mismos errores.
+
+- **Qué problema apareció.** Al medirlo salieron cinco defectos que la consola escondía: cinco
+  equipos configurados con el mismo nombre, la sesión que heredaba la carpeta de la sesión
+  anterior, la consola interna que no seguía al usuario cuando cambiaba de carpeta, pestañas
+  "decorativas" que en realidad corrompían la configuración al guardar, y la identidad del equipo
+  que se iba a la inteligencia artificial cuando debía resolverla el programa.
+
+- **Cómo se resolvió.** Midiendo primero contra el señuelo vivo y arreglando después. Es la
+  lección que ya había costado cara antes: cada botón que el operador "no entendía" tapaba un
+  defecto real.
+
+- **Impacto para el cliente.** Lo que el operador aprueba en pantalla es exactamente lo que el
+  atacante encuentra. Sin esa garantía, configurar un señuelo es un acto de fe.
+
+### 9 de septiembre de 2026 — La página de "no encontrado" delata al servidor
+
+- **Qué se logró.** Un hallazgo, no una entrega. Iván mandó la captura de un portal real del
+  gobierno mexicano y su página de error resultó ser la característica de un tipo concreto de
+  servidor. El nuestro servía otra distinta. Es una diferencia que un atacante ve en dos segundos
+  y que ninguna herramienta automática pasa por alto. Quedó anotado y se resolvió al día
+  siguiente.
+
+### 10 de septiembre de 2026 — Que el señuelo aguante que lo miren de cerca
 
 - **Qué se logró.** Una jornada entera dedicada a un solo objetivo: que el honeypot no se
   delate cuando alguien lo examina con atención. Un atacante no «cae» en un señuelo porque el
@@ -401,6 +473,47 @@ vez, manteniendo los datos de cada uno separados de los demás.
   construyó tiene la densidad y la coherencia suficientes — algo que hasta ayer solo sabía el
   programa por dentro.
 
+### 10 de septiembre de 2026 (tarde) — Que nada se quede a medias: el mudo, los routers, la web y lo que el atacante trae
+
+- **Qué se logró.** Seis entregas más, todas medidas contra el señuelo vivo antes y después.
+  - **El señuelo dejó de quedarse mudo.** La revisión que descarta las mentiras de la
+    inteligencia artificial funcionaba, pero cuando descartaba algo dejaba la respuesta **en
+    blanco**. Una orden que no contesta nada es tan sospechosa como una que contesta mal. De 30
+    comprobaciones, 12 salían vacías; ahora salen **0**.
+  - **Los routers y cortafuegos dejaron de improvisar.** Hasta hoy, imitar un equipo de red
+    —marca Cisco, marca Fortinet— lo hacía **enteramente** la inteligencia artificial. El
+    resultado: el equipo regalaba permisos de administrador sin pedirlos (4 de 4 intentos) y
+    repetía en pantalla lo que el atacante acababa de escribir (12 de 14 veces), que es el
+    delator más obvio que hay. Ahora lo resuelve el programa: **0 y 0**.
+  - **La inyección de prompt, por donde de verdad entra.** Ya detectábamos cuando un atacante
+    intenta manipular a la inteligencia artificial escribiendo órdenes ocultas… pero solo por la
+    consola de comandos. **El 92 % del tráfico del señuelo es web**, y por ahí no mirábamos
+    nadie. Ahora sí: de 4 intentos, 4 marcados, y ni una falsa alarma en 23.570 sucesos reales.
+  - **Lo que se aprueba editando ya no se pierde.** Si el operador ajustaba el árbol de archivos
+    y volvía a guardar, parte de lo aprobado se regeneraba distinto. Se midió con la máquina
+    real: **0 diferencias de 35** en Linux, **0 de 27** en Windows y **0 de 6** en un router.
+    Lo que se ve en la consola de pruebas es, byte a byte, lo que ve el atacante fuera.
+  - **Por fin se retiene lo que el atacante trae.** Si sube un archivo, escribe un script o
+    intenta descargar una herramienta, eso queda guardado —una sola vez por contenido, aunque lo
+    repita, y **sin ejecutarlo jamás**—. Es la prueba material del incidente.
+  - **Se abrió un señuelo nuevo: la interfaz de administración de contenedores**, que aparece en
+    dos de los laboratorios públicos de ataque que estudiamos y es de las superficies más
+    atacadas que no cubríamos.
+
+- **Qué problema apareció.** El más caro no fue del producto sino de la medición: **tres de mis
+  propias sondas de comprobación mintieron** y estuvieron a punto de hacerme declarar rota una
+  pieza que funcionaba. Y un recuento que llevábamos tiempo repitiendo estaba inflado: decíamos
+  "391 reglas de detección" cuando el sistema **carga 100** (el resto son archivos que no
+  aplican a lo que observamos).
+
+- **Cómo se resolvió.** Cada sonda se arregló y se dejó una prueba automática que impide que
+  vuelva a mentir. El recuento se corrigió en los tres sitios donde vivía y se documentó **por
+  qué** son 100 y no 391, para que nadie lo "arregle" volviendo a inflarlo.
+
+- **Impacto para el cliente.** El señuelo aguanta el examen en las tres superficies que un
+  intruso toca de verdad —consola, equipos de red y web—, y del incidente ya no queda solo un
+  relato: queda la evidencia.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
@@ -415,7 +528,13 @@ vez, manteniendo los datos de cada uno separados de los demás.
   momentos importantes salen marcados en la línea de tiempo con su nombre técnico oficial.
 - **El operador ve la calidad de cada señuelo mientras lo construye**, con las 23 comprobaciones
   que el programa ya sabía hacer y nunca enseñaba.
-- Todo lo anterior está respaldado por pruebas automáticas (**2.482**, que se ejecutan en cada
+- **Los equipos de red (routers y cortafuegos) también los resuelve el programa**, no la
+  inteligencia artificial: ya no regalan permisos ni repiten en pantalla lo que el atacante teclea.
+- **La manipulación de la inteligencia artificial se detecta también por web**, que es por donde
+  entra el 92 % del tráfico.
+- **Lo que el atacante trae —archivos, scripts, herramientas— se conserva como evidencia**, una
+  sola vez por contenido y sin ejecutarlo nunca.
+- Todo lo anterior está respaldado por pruebas automáticas (**2.634**, que se ejecutan en cada
   cambio), más una auditoría específica de separación entre clientes que se corre en bucle y da
   cero fugas.
 
