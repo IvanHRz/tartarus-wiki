@@ -1741,3 +1741,17 @@ barrido de 53 rutas frente a 4.750, resultó no ser una laguna de comportamiento
 las 4.750 llega al modelo** y 4.737 dan el mismo 404 de 259 bytes, así que correr la wordlist
 entera es barato y lo que faltaba era decirlo.
 — claude
+
+## [2026-09-10] plan | que lo aprobado editando sea lo que se sirve
+Plan aceptado archivado en [[planes/2026-09-10]]. Iván preguntó tres cosas con urgencia y se
+midieron las tres. (2) Sí cumplimos el laboratorio: cadena de ataque completa, **0 comandos
+negados** y **10 hitos** en cada familia. (3) Sí hay paridad en Linux: **18 de 20 comandos byte a
+byte idénticos** entre la consola y una sesión SSH real; las dos diferencias son el reloj (bien)
+y un `pwd` fantasma en el `history` (defecto). Pero midiendo salieron dos cosas peores: el modelo
+**contesta al comando anterior** cuando el historial trae turnos silenciosos —con seis, Linux
+acierta 1 de 4— que es el precio del propio motor determinista; y **editar una línea del árbol
+regenera el contenido de todos los ficheros**, porque la clave de caché cuelga del sha1 del
+escenario entero. Eso último es exactamente lo que Iván refinó: los nombres sobreviven al
+guardar, el contenido que ya había aprobado no. Windows además nunca se ha desplegado, así que
+su paridad no se ha comprobado jamás.
+— claude
