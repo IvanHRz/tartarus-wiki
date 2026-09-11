@@ -1835,3 +1835,10 @@ Dos bugs (bancos duplicados, badge de IA montado sobre el título) + de-ruido + 
 ## [2026-09-11] handoff | los dos huecos de la Raspberry en la consola
 Registrados en BITACORA y en el prompt de la siguiente sesión: (1) aplanar «Trampas desplegadas» (los 3 equipos arriba, sin grupo aparte); (2) GORDO — los ataques de la Pi no llegan al Monitoreo central (Pi tiene 3.765 eventos, el Mac 0; el agente solo manda latido). Federación de eventos, a diseñar entre las dos sesiones.
 — claude
+
+## [2026-09-11] plan | los dos huecos de la Raspberry
+Plan aceptado archivado en [[planes/2026-09-11]]. Aplanar «Trampas desplegadas» a una sola lista
+con los equipos arriba, y federar los eventos de la Raspberry al Monitoreo central, filtrables por
+equipo (reenviador best-effort en el agente + ingesta idempotente). Medido antes de planear: de los
+3.799 eventos de la Pi, 3.777 son autoruido de su propia red Docker y solo 22 son ataques reales.
+— claude
