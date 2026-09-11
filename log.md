@@ -1755,3 +1755,16 @@ escenario entero. Eso último es exactamente lo que Iván refinó: los nombres s
 guardar, el contenido que ya había aprobado no. Windows además nunca se ha desplegado, así que
 su paridad no se ha comprobado jamás.
 — claude
+
+## [2026-09-10] plan | retener el artefacto (revisión de los labs de Beelzebub)
+Plan aceptado archivado en [[planes/2026-09-10]]. Se revisó [[analisis-beelzebub-labs]] punto por
+punto contra el código y la base. **Cinco afirmaciones se habían quedado viejas** —la inyección
+de prompt ya se disparó (19 hitos), el sha256 falso del STIX ya está arreglado, el MCP ya habla
+JSON-RPC, el desajuste de puertos no era tal, y la ventaja en el lab del honeypot LLM es mucho
+mayor— y **una cifra estaba mal**: el documento dice «391 reglas Sigma activas» y el motor solo
+carga **99** de 410; las otras 304 piden campos de EDR (`commandline`, `image`, `eventid`) que un
+honeypot no tiene. Hay además un lab nuevo del 1-sep, el 29, que valida nuestra postura de
+«guardar sin ejecutar». Lo que el documento acertó sigue vigente: **no capturamos un byte de lo
+que el atacante trae**, y medido en vivo, `wget bot.pl` contesta el directorio actual y el
+fichero no aparece en el `ls`.
+— claude
