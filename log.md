@@ -1931,3 +1931,12 @@ no salía: `/auth/me` siempre responde «operator», porque el middleware SALTA 
 `GET /api/auth/users` responde 200 SIN cookie, y crear o borrar usuarios está igual de abierto. Un
 puenteo completo de la sesión encendida esa misma mañana y declarada verificada probando otra ruta.
 — claude
+
+## [2026-09-13] plan | un menú de usuario que no miente
+Plan aceptado archivado en [[planes/2026-09-13]]. Iván pidió el desplegable de usuario y una barra
+más limpia. Al ir a hacerlo salieron dos cosas: mi añadido de la mañana era redundante (ya existía
+`meBadge` con usuario y rol), y sobre todo, «Salir» no habría cerrado nada — la clave de sesión de
+Redis se escribe al entrar y se borra al salir, pero NADIE la lee, así que el token seguía siendo
+válido 24 h. Poner en el menú un Salir que no cierra y un Cambiar contraseña que no existe habría
+sido construir dos controles que mienten.
+— claude
