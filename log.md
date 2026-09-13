@@ -1913,3 +1913,12 @@ dos comprobados en vivo, así que encender el login hoy sería teatro. Tercera r
 clase de fallo en el día, y ésta con vuelta de tuerca: el detector no la habría cazado porque el
 valor vive en el `os.getenv(..., "por defecto")` del código, no en una variable de entorno.
 — claude
+
+## [2026-09-13] plan | A06, auditar las dependencias
+Plan aceptado archivado en [[planes/2026-09-13]]. Nunca se habían revisado: ni pip-audit, ni
+dependabot, ni nada. Medidos contra OSV los 67 paquetes que corren de verdad (no los 21 declarados;
+46 son transitivos): 4 con vulnerabilidad conocida. Pero las tres de gravedad ALTA de starlette NO
+aplican —cero usos de StaticFiles, request.form() y FileResponse—, así que el susto se desinfla al
+medirlo, igual que con las reglas Sigma. El guión de auditoría lleva descartes que se COMPRUEBAN
+contra el código: si mañana aparece un StaticFiles, el descarte caduca solo.
+— claude
