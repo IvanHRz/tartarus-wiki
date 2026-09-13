@@ -1904,3 +1904,12 @@ Adminer. Se ata el plano de datos a loopback, se rota la contraseña de Postgres
 que cambiar la variable NO cambia la de una base ya creada) y se escribe `revisar_exposicion.py`
 para que esta clase de fallo la cace un guión y no la casualidad.
 — claude
+
+## [2026-09-13] plan | encender la sesión de la consola
+Plan aceptado archivado en [[planes/2026-09-13]]. El ROADMAP decía que la consola no tiene login;
+es inexacto — `login.html` existe y hace lo correcto, lo que falta es cablearlo. Lo importante salió
+al mirarlo: el secreto JWT es el literal del repo y admin entra con la contraseña de fábrica, los
+dos comprobados en vivo, así que encender el login hoy sería teatro. Tercera repetición de la misma
+clase de fallo en el día, y ésta con vuelta de tuerca: el detector no la habría cazado porque el
+valor vive en el `os.getenv(..., "por defecto")` del código, no en una variable de entorno.
+— claude
