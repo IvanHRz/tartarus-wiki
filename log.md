@@ -1859,3 +1859,11 @@ campo y un canal caído añade más de 10 s por suceso. Ya se arregló una vez p
 esperando. Se mueve el lanzamiento al propio notificador, se hace atómico el limitador (la carrera
 que se abre al concurrir) y se drenan los avisos en vuelo al apagar.
 — claude
+
+## [2026-09-12] plan | el CSV baja lo que promete
+Plan aceptado archivado en [[planes/2026-09-12]]. El CSV no exportaba lo mismo que el feed. Medido
+al planear: no era un recorte sino dos, y el peor no era el del pendiente — el CSV del menú baja
+195 de 215 sucesos (7 días) y el del feed con «Todo» baja 210 (30 días), porque `/events/export`
+exige `hours` de 1 a 720 mientras el feed admite 0 = todo. Se unifica la semántica, el nombre del
+fichero pasa a decir su alcance, y cada botón dice sobre qué actúa.
+— claude
