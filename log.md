@@ -1851,3 +1851,11 @@ o un reinicio; y no era un camino roto sino tres (honey-creds, MCP y breadcrumbs
 el punto único `register_decoy`, recargando solo cuando esa regla no está ya armada — porque una
 recarga completa cuesta 0,6 s y el camino del MCP lo dispara el atacante en cada petición.
 — claude
+
+## [2026-09-12] plan | la notificación, a segundo plano
+Plan aceptado archivado en [[planes/2026-09-12]]. El notificador corre en línea en la ingesta de
+campo y un canal caído añade más de 10 s por suceso. Ya se arregló una vez para RabbitMQ el 31-ago
+(`_notificar_en_segundo_plano`), pero la obligación quedó en el llamador: seis sitios más siguen
+esperando. Se mueve el lanzamiento al propio notificador, se hace atómico el limitador (la carrera
+que se abre al concurrir) y se drenan los avisos en vuelo al apagar.
+— claude
