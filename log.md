@@ -1877,3 +1877,13 @@ MITRE en 16 de 33). Quedarse con el máximo habría importado 20 falsas alertas.
 neutral: enseña los dos números y explica por qué difieren, sin afirmar cuál es el bueno — la
 consola no sabe qué versión de motor corre el equipo.
 — claude
+
+## [2026-09-13] plan | firmar con marca de tiempo, y ver quién no firma
+Plan aceptado archivado en [[planes/2026-09-13]]. El pendiente decía «falta el anti-replay en la
+ingesta de campo»; medido, el problema es mayor: `.env` no tiene `TARTARUS_HMAC_SECRET`, así que el
+verificador está en modo derivación y ACEPTA CUALQUIER POST SIN FIRMA en cinco rutas (ingesta,
+latido, webhook de cebos, canario ICMP y OpenCanary). Es también el P1 del latido visto por otra
+puerta. Y el firmante «único» no lo es: los dos canarios firman sus sucesos por su cuenta. Se añade
+marca de tiempo compatible hacia atrás, se unifica el firmante y el motor pasa a comprobar lo que
+venga firmado aunque todavía no lo exija, registrando quién manda sin firmar.
+— claude
