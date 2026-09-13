@@ -1940,3 +1940,12 @@ Redis se escribe al entrar y se borra al salir, pero NADIE la lee, así que el t
 válido 24 h. Poner en el menú un Salir que no cierra y un Cambiar contraseña que no existe habría
 sido construir dos controles que mienten.
 — claude
+
+## [2026-09-13] plan | cambiar contraseña no abría nada y el ⚙ se funde en el menú de usuario
+Plan aceptado archivado en [[planes/2026-09-13]]. «Cambiar contraseña» solo pintaba el velo borroso:
+`passwordSection` es la única de las 26 secciones que no está en ninguna lista de main.js, así que
+nunca recibe `admin-section` y `as-modal` no casa con ninguna regla — además de quedarse visible
+inline al fondo del panel. Se arregla, el engranaje desaparece y sus tres opciones se mudan al menú
+de usuario (barra de 8 a 7), y la exención del guardarraíl deja de ser una lista literal para leerse
+de `_ADMIN_SECTIONS`: afirmaba la intención que el código no cumplía.
+— claude
