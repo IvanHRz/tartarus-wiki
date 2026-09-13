@@ -1842,3 +1842,12 @@ con los equipos arriba, y federar los eventos de la Raspberry al Monitoreo centr
 equipo (reenviador best-effort en el agente + ingesta idempotente). Medido antes de planear: de los
 3.799 eventos de la Pi, 3.777 son autoruido de su propia red Docker y solo 22 son ataques reales.
 — claude
+
+## [2026-09-12] plan | armar la regla de reúso al plantar el cebo
+Plan aceptado archivado en [[planes/2026-09-12]]. Plantar un cebo escribe su regla Sigma de reúso
+pero no avisa al motor, que tiene el corpus en memoria. Medido al planear: el rescan de 5 minutos
+NO recarga (usa el singleton), así que la regla quedaba muerta hasta un `/detections/reload` manual
+o un reinicio; y no era un camino roto sino tres (honey-creds, MCP y breadcrumbs). El arreglo va en
+el punto único `register_decoy`, recargando solo cuando esa regla no está ya armada — porque una
+recarga completa cuesta 0,6 s y el camino del MCP lo dispara el atacante en cada petición.
+— claude
