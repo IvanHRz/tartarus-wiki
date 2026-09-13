@@ -1895,3 +1895,12 @@ atribuye ni un solo ataque. No es nuevo: `infra_filter.py:86` ya decía que un a
 NATeado llega con esa IP, y por eso no se filtra. Falta la otra mitad: decir que el origen se
 perdió, en vez de enseñar esa dirección como si fuera el atacante.
 — claude
+
+## [2026-09-13] plan | cerrar el plano de datos y cazar la clase del CHANGE_ME
+Plan aceptado archivado en [[planes/2026-09-13]]. El `CHANGE_ME_IN_PROD` del canario ICMP no era un
+caso aislado: medido desde la LAN, Postgres está abierto con una contraseña escrita en el repo
+(`.env.production.example`) y Redis abierto SIN contraseña ninguna; también RabbitMQ, Grafana y
+Adminer. Se ata el plano de datos a loopback, se rota la contraseña de Postgres (con la trampa de
+que cambiar la variable NO cambia la de una base ya creada) y se escribe `revisar_exposicion.py`
+para que esta clase de fallo la cace un guión y no la casualidad.
+— claude
