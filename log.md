@@ -1949,3 +1949,14 @@ inline al fondo del panel. Se arregla, el engranaje desaparece y sus tres opcion
 de usuario (barra de 8 a 7), y la exención del guardarraíl deja de ser una lista literal para leerse
 de `_ADMIN_SECTIONS`: afirmaba la intención que el código no cumplía.
 — claude
+
+## [2026-09-13] plan | SSRF (A10) e inyección (A03): el clonador era el menor de seis
+Plan aceptado archivado en [[planes/2026-09-13]] (segundo del día). Archivado **después** de
+ejecutarlo, incumpliendo la regla de archivar antes; se anota en la propia entrada en vez de
+disimular la hora. Al medir, la entrada del ROADMAP miraba al sitio equivocado: hablaba de
+DNS-rebinding cuando el ataque que funcionaba era `http://broker:15672/` —los servicios comparten
+una red bridge y el motor los alcanza por nombre—, y había seis endpoints con el mismo agujero, de
+los que el clonador era el de menos alcance. Del A03, cuatro de siete áreas estaban genuinamente
+bien; lo roto era la consola: el comando que teclea el atacante se ejecutaba como JavaScript en la
+pantalla del analista. Commits `ed7281a` y `126c42d`, PR #25.
+— claude
