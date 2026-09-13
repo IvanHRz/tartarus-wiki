@@ -1867,3 +1867,13 @@ al planear: no era un recorte sino dos, y el peor no era el del pendiente — el
 exige `hours` de 1 a 720 mientras el feed admite 0 = todo. Se unifica la semántica, el nombre del
 fichero pasa a decir su alcance, y cada botón dice sobre qué actúa.
 — claude
+
+## [2026-09-12] plan | el riesgo de un suceso federado
+Plan aceptado archivado en [[planes/2026-09-12]]. El motor central recalcula el riesgo de lo que
+llega de un equipo de campo y la consola no lo dice. Medido al planear: el ROADMAP lo tenía al
+revés — no es que el central puntúe más, es que puntúa MENOS en 20 de 33, y al comprobar quién
+tiene razón resultó que el central CORRIGE (la Pi puntúa su propio autoruido a 80 y etiqueta mal
+MITRE en 16 de 33). Quedarse con el máximo habría importado 20 falsas alertas. El panel queda
+neutral: enseña los dos números y explica por qué difieren, sin afirmar cuál es el bueno — la
+consola no sabe qué versión de motor corre el equipo.
+— claude
