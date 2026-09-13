@@ -1887,3 +1887,11 @@ puerta. Y el firmante «único» no lo es: los dos canarios firman sus sucesos p
 marca de tiempo compatible hacia atrás, se unifica el firmante y el motor pasa a comprobar lo que
 venga firmado aunque todavía no lo exija, registrando quién manda sin firmar.
 — claude
+
+## [2026-09-13] plan | el origen enmascarado por el NAT de Docker
+Plan aceptado archivado en [[planes/2026-09-13]]. Medido al revisar el ROADMAP: los 182 sucesos
+propios del Mac vienen TODOS de 192.168.97.1, la puerta del bridge de Docker — la consola no
+atribuye ni un solo ataque. No es nuevo: `infra_filter.py:86` ya decía que un ataque externo
+NATeado llega con esa IP, y por eso no se filtra. Falta la otra mitad: decir que el origen se
+perdió, en vez de enseñar esa dirección como si fuera el atacante.
+— claude
