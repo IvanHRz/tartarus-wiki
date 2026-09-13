@@ -1922,3 +1922,12 @@ aplican —cero usos de StaticFiles, request.form() y FileResponse—, así que 
 medirlo, igual que con las reglas Sigma. El guión de auditoría lleva descartes que se COMPRUEBAN
 contra el código: si mañana aparece un StaticFiles, el descarte caduca solo.
 — claude
+
+## [2026-09-13] plan | la sesión tenía una puerta trasera
+Plan aceptado archivado en [[planes/2026-09-13]]. Iván dijo que el menú de usuario es básico y que
+no hay forma de cerrar sesión — pero el botón se había añadido esa misma mañana. Al mirar por qué
+no salía: `/auth/me` siempre responde «operator», porque el middleware SALTA `/auth/` y
+`current_user` cae en el operador implícito, que es global_admin. Consecuencia medida:
+`GET /api/auth/users` responde 200 SIN cookie, y crear o borrar usuarios está igual de abierto. Un
+puenteo completo de la sesión encendida esa misma mañana y declarada verificada probando otra ruta.
+— claude
