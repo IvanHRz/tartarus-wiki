@@ -1960,3 +1960,50 @@ los que el clonador era el de menos alcance. Del A03, cuatro de siete áreas est
 bien; lo roto era la consola: el comando que teclea el atacante se ejecutaba como JavaScript en la
 pantalla del analista. Commits `ed7281a` y `126c42d`, PR #25.
 — claude
+
+## [2026-09-13] plan | el atacante redactaba el informe forense de su propio ataque
+Plan aceptado archivado en [[planes/2026-09-13]] (último del día). El comando del atacante entraba
+**dentro del texto de la instrucción** que se manda al modelo, y el resumen se persiste en
+`events.llm_summary`. Medido con un A/B contra DeepSeek —mismo suceso, mismo modelo, cambiando solo
+la forma del prompt—: el viejo devolvía literalmente `Benign. Routine administrative activity. No
+response required.`, lo que dictó el atacante. Ahora la evidencia va entre vallas y neutralizada
+(`prompt_datos.py`), se neutraliza **todo** campo y no solo `command`, y si hay intento de inyección
+el resumen sale **sellado en código** con la confianza a la mitad: eso vale aunque el modelo pique
+entero. Al medirlo salieron tres defectos que nadie había visto: `POST /analyze/batch` y
+`/analyze/session-by-ip` daban **500 siempre** (la ruta comodín estaba declarada antes y se las
+tragaba), `POST /analyze/{event_id}` **no llegaba a un modelo nunca** (cascada propia con claves de
+entorno vacías) y la respuesta se cortaba en 1024 tokens, así que se guardaba el volcado JSON
+truncado en vez de la narrativa. Commit `71402ab`, PR #25. Suite 2.947.
+— claude
+
+## [2026-09-14] plan | que el CI abra un navegador
+Plan aceptado archivado en [[planes/2026-09-13]]. La conclusión de la semana era que los tres fallos
+más graves —el login que nunca funcionó, un modal que solo ponía la pantalla borrosa y un XSS
+almacenado— **no los podía ver ninguna prueba de Python**. La causa de fondo no era la que decía el
+ROADMAP: `playwright.config.ts` existía y estaba bien, pero `e2e/`, la configuración y el
+`package.json` estaban **en el `.gitignore`** desde febrero, o sea que el montaje vivía solo en una
+máquina. Ahora son 37 pruebas en 30 s y un trabajo «Navegador (E2E)» que levanta el stack real por
+compose y **bloquea** el PR. **Cada spec se vio en ROJO** contra su defecto antes de darlo por bueno,
+y uno no cazaba el suyo: pedía «visible y con caja» y la sección rota cumplía las dos cosas
+(`position:static`, y=1751 con un viewport de 720, y el velo encima). Montarlo destapó cuatro cosas:
+las claves de OpenAI y DeepSeek **viajaban dentro de la imagen** del motor (no había
+`.dockerignore`), `.env.example` no tenía **ninguna** variable de seguridad, el menú de usuario podía
+quedarse diciendo «—» para siempre, y una prueba del hub *esperaba* que no hubiera clave de IA en vez
+de provocarlo. Commits `b1b75d4` y `b57b911`, PR #25.
+— claude
+
+## [2026-09-14] plan | la configuración de IA sobrevive, y el resumen se puede leer
+Plan aceptado archivado en [[planes/2026-09-14]]. Los dos cabos que dejaron los pases anteriores.
+Al sacar las claves de la imagen se rompió, sin querer, lo único que hacía persistir *AI Settings*:
+la credencial estaba horneada en la capa, así que sin bind mount cada `--force-recreate` dejaba al
+operador sin IA **en silencio**. Va a un volumen (`ai_estado`), no a una tabla: los vuelcos de la
+base acaban en `backups/` y la credencial viajaría en cada copia de seguridad. Y `events.llm_summary`
+se escribía desde hacía meses sin que lo leyera nadie —cero referencias en la consola, en los
+exportes y en los informes—, que es además lo que hacía que la inyección de prompt fuera un agujero
+latente: envenenaba un campo que nadie miraba. Ahora el detalle del suceso lo enseña con su proveedor
+y su confianza, y con una banda de aviso cuando nació de evidencia manipulada — **lo decide el
+motor**, con la misma constante que puso el sello, y hay una prueba que cambia esa constante y exige
+que la detección siga viva. Dos trampas anotadas: el motor no lleva `--reload` (la banda no salía
+porque corría el código anterior) y una espera de 500 ms hacía que la prueba del XSS pasara **en
+verde con el agujero abierto**. Commit `94abfd0`, PR #25. Suite 2.952, navegador 37.
+— claude
