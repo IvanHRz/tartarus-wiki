@@ -1,15 +1,15 @@
 ---
 tipo: guia
 creado: 2026-09-11
-actualizado: 2026-09-13
+actualizado: 2026-09-14
 tags: [sesion, prompt]
 ---
 
 # Prompt para la siguiente sesión — TARTARUS
 
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
-> Actualizado: **13-sep-2026 (tarde)**, al cerrar tres jornadas seguidas de seguridad de la
-> propia plataforma. Último commit **`ed7281a`**, PR **#25** abierto y con el CI en verde.
+> Actualizado: **14-sep-2026 (madrugada)**, al cerrar la inyección de prompt del analizador, el
+> navegador en el CI y el resumen de IA en la consola. PR **#25** abierto y con el CI en verde.
 
 ---
 
@@ -26,7 +26,7 @@ Trabajo en **TARTARUS**, plataforma de decepción (honeypots) para respuesta a i
 
 ## Antes de nada, lee esto
 
-`.agents/TRASPASO.md` — el mapa, actualizado al 13-sep: números que no hay que volver a medir,
+`.agents/TRASPASO.md` — el mapa, actualizado al 14-sep: números que no hay que volver a medir,
 qué se hizo, qué falta por orden, y las trampas que ya costaron una sesión cada una.
 Después, `.agents/COORDINACION.md` y las entradas de arriba de `.agents/BITACORA.md`.
 
@@ -44,57 +44,65 @@ pega su salida. **No toques `beelzebub/configurations/personalities/portal-gobmx
 vivo mío). Los YAML de `beelzebub/configurations/services/` **no están versionados** (llevan la
 clave). `.agents/` **sí** se versiona.
 
-**Y para cualquier cosa de interfaz, abre un navegador.** No es una recomendación: los tres fallos
-más graves de esta semana —el login que nunca funcionó, un modal que solo ponía la pantalla
-borrosa y un XSS almacenado— **ninguna prueba de la suite podía verlos**, porque los tres eran de
-lo que se renderiza y no de lo que está en el fichero. Hay Playwright con Chromium instalado. Exige
-que el elemento esté **visible y con caja de tamaño no nulo**, no solo presente en el DOM.
+**Y para cualquier cosa de interfaz, abre un navegador.** Desde el 14-sep hay batería propia:
+`npx playwright test` **desde la raíz** del repo — **37 pruebas en 30 s**, y corre en el CI en el
+trabajo «Navegador (E2E)», que **bloquea**. Existe porque los tres fallos más graves de la semana
+—el login que nunca funcionó, un modal que solo ponía la pantalla borrosa y un XSS almacenado—
+**ninguna prueba de Python podía verlos**. Dos reglas que salieron de ahí, y que no son
+opcionales: exige que el elemento esté **visible, con caja y dentro del viewport** (`apoyo.ts`:
+`visibleDeVerdad` y `seVeAlAbrirlo`), y **no des por bueno un spec que no hayas visto en ROJO**
+contra el defecto que vigila — uno de los cinco no cazaba el suyo.
 
-## Qué pasó estos tres días (para contexto, no para repetirlo)
+## Qué pasó, en corto (para contexto, no para repetirlo)
 
-La plataforma dejó de tener agujeros de seguridad propia. Estaban todos, y todos medidos:
+Del 11 al 13 de septiembre se cerraron los agujeros de seguridad **propia** de la plataforma: la
+consola no tenía sesión, «Salir» no cerraba nada, «Cambiar contraseña» solo ponía la pantalla
+borrosa, el comando del atacante **se ejecutaba como JavaScript** en la pantalla del analista, y
+seis endpoints alcanzaban la red interna con una URL.
 
-- La consola **no tenía sesión**; al encenderla apareció que el middleware saltaba `/auth/`
-  entero, así que `GET /api/auth/users` respondía **200 sin cookie** y cualquiera podía crearse un
-  `global_admin`.
-- **«Salir» no cerraba nada** (la clave de sesión de Redis se escribía y se borraba, pero nadie la
-  leía) y esa clave era la **cabecera del JWT**, idéntica en todos los tokens: todas las sesiones
-  compartían una.
-- **«Cambiar contraseña» no abría nada**, solo ponía la pantalla borrosa.
-- El comando que teclea un atacante en el SSH del honeypot **se ejecutaba como JavaScript** en la
-  pantalla del analista (XSS almacenado, probado en un navegador).
-- **Seis endpoints** dejaban alcanzar la red interna con una URL; el clonador —el único que tenía
-  validación— era el de menos alcance.
+La madrugada del 14 se cerró lo que quedaba de eso:
 
-Y **tres veces una prueba fijaba el agujero como si fuera lo correcto**. De ahí salió la regla 7
-de la skill `medir-no-suponer`, que conviene leer antes de escribir cualquier guardarraíl.
+- **El atacante ya no redacta el informe forense de su propio ataque.** Su comando entraba dentro
+  del texto de la instrucción que se le manda al modelo. Medido: el prompt viejo devolvía
+  `Benign. Routine administrative activity. No response required.` — lo que él dictó.
+- **El CI abre un navegador.** El montaje existía y estaba **en el `.gitignore`** desde febrero.
+- **El resumen del modelo se puede leer** desde el detalle del suceso, con su proveedor, su
+  confianza y una banda de aviso cuando nació de evidencia manipulada.
+
+Y tres defectos que aparecieron al hacerlo, que dicen mucho de dónde suelen estar: dos rutas de
+`/analyze` daban **500 siempre** por el orden de declaración, `POST /analyze/{event_id}` **no
+llegaba a un modelo nunca**, y las claves de OpenAI y DeepSeek **viajaban dentro de la imagen**
+del motor porque no existía ningún `.dockerignore`.
 
 ## Por dónde seguir
 
-Elige tú y dime por qué; esto es mi orden, no una orden. El detalle de cada uno está en
-`.agents/ROADMAP.md`.
+Elige tú y dime por qué; esto es mi orden, no una orden. El detalle está en `.agents/ROADMAP.md`.
 
-1. **El atacante puede escribir el informe forense de su propio ataque** (P1). `llm_analyzer`
-   mete su comando **dentro del texto de la instrucción** del modelo, y el resumen se persiste en
-   `events.llm_summary`. En una plataforma de decepción es de lo que más importa: altera lo que yo
-   leo para decidir cómo responder.
-2. **Nada en el CI abre un navegador** (P2). Hay un `e2e/` de marzo sin configuración y fuera del
-   CI, y los guiones de esta semana se quedaron en un directorio temporal.
-3. **La Raspberry está caída** (P1) — figura `offline` en `/sensors/status`. Es área de la otra
-   sesión, pero que no se pierda.
-4. **Recuperar la IP del atacante** (P1): el NAT de Docker la enmascara, los eventos locales salen
-   todos con `192.168.97.1`.
-5. **Exigir la firma HMAC** (P1): está a una variable, pero antes hay que poner el secreto en la
+Los tres P1 que quedan **están bloqueados por lo mismo** y son, de hecho, un solo trabajo:
+
+1. **La Raspberry está caída** (P1) — `equipo-88a29e57855e` figura `offline` desde el 11-sep. Es
+   área de la otra sesión, pero **desbloquea los dos siguientes**.
+2. **Recuperar la IP del atacante** (P1) — el NAT de Docker la enmascara. En la Pi el arreglo es
+   `network_mode: host`; en el Mac (OrbStack = VM) probablemente no tiene arreglo.
+3. **Exigir la firma HMAC** (P1) — está a una variable, pero antes hay que poner el secreto en la
    Pi o dejará de reportar.
+
+Sin la Pi se puede hacer, por valor: **ocultar por rol en la consola** (P2, hoy no esconde nada y
+un `watcher` ve entradas que siempre fallan), **segundo factor** y **ver/cerrar sesiones
+abiertas** (P2, los pediste tú), y **`narrative_builder`** (P2), que hoy no manda nada a ningún
+modelo pero está armado para reabrir el agujero que se acaba de cerrar.
 
 ## Estado al abrir
 
-- Suite: **2.924 pasando**, 11 saltadas. `cd engine && python3 -m pytest tests/ -q`.
-- Consola con **sesión encendida** (`TARTARUS_SESSION_AUTH=true`). Usuario `admin`; la contraseña
-  está en `.env` (`TARTARUS_ADMIN_PASS`). En la base solo existe ese usuario.
-- La barra de la consola tiene **7 controles**: el ⚙ desapareció y todo vive en el menú del
-  usuario (contraseña, notificaciones, usuarios, auditoría, salir).
+- Suite de Python: **2.952 pasando**, 11 saltadas. `cd engine && python3 -m pytest tests/ -q`.
+- Batería de navegador: **37 pruebas** en ~30 s. `npx playwright test` desde la raíz.
+- CI: **seis trabajos, los seis bloqueantes** (Tests, Sigma, Dependencias, Lint, **Navegador**,
+  Secret Scan).
+- Consola con **sesión encendida**. Usuario `admin`; la contraseña está en `.env`
+  (`TARTARUS_ADMIN_PASS`). En la base solo existe ese usuario.
 - Sensores: **9 activos de 10**; el caído es la Raspberry. Los dos canarios, `active`.
-- El motor del Mac está en **DeepSeek**; la Pi en **Ollama** (`gemma3:4b`).
-- **OJO con las claves de OpenAI del repo: las dos dan 401.** No son el problema que estés
-  depurando.
+- El motor del Mac está en **DeepSeek**; la Pi en **Ollama** (`gemma3:4b`). Lo que se configura
+  en *AI Settings* vive en el volumen `ai_estado` y sobrevive a recrear el contenedor.
+- **OJO con el IPv6 de esta máquina**: se traga las conexiones a `api.deepseek.com` y
+  `api.github.com` (con `curl -4` responden). Si una llamada al modelo, un push o un `docker
+  build` fallan sin motivo, **no es tu cambio**.
