@@ -2040,3 +2040,10 @@ secreto a una segunda sección—; «Cross-Protocol Correlation» se pide al mot
 vive en una sección que nació con `hidden` y nadie se lo quita; y siete de los nueve títulos en
 inglés de la consola están en esta pestaña. Se traduce lo que toque la auditoría.
 — claude
+
+## [2026-09-14] plan | mapa de ataques
+Plan aceptado archivado en [[planes/2026-09-14]]. Estudiar a fondo el mapa de ataques contra el
+modelo de Thinkst Canary y reconstruirlo: el lienzo que se queda en 1200 px tras cada recarga, las
+43 cruces entre 15 aristas, y un resaltado que funciona pero no se nota porque el atacante
+dominante enciende el 77 % del grafo.
+— claude
