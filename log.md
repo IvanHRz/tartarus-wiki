@@ -2019,3 +2019,14 @@ el suceso más nuevo a 26 horas. De la auditoría salen tres arreglos para esta 
 que se pierde al recargar, una ventana de tiempo única con «Todo» por defecto, y un mapa de ataques
 que escale) y nueve temas al ROADMAP.
 — claude
+
+## [2026-09-14] plan | que nunca se encimen las letras en la consola
+
+Plan aceptado archivado en [[planes/2026-09-14]]. Iván mandó una captura donde se lee
+`PROTOCOCANARY` y pidió que **nunca** se encimen letras ni títulos. Barrida la consola entera con un
+navegador: no hay ni un solape por apilamiento; el problema es desbordamiento, y todos los casos
+vienen del mismo patrón —un ancho fijo sobre una caja con texto— que el repo ya había arreglado una
+vez el 11 de septiembre. Se arreglan los cuatro casos medidos, se extrae una pieza única de
+etiqueta+valor para que no vuelva a inventarse en cada sección, y queda un guardarraíl de navegador
+que barre toda la consola. Detrás, cuatro pendientes locales más.
+— claude
