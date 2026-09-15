@@ -2030,3 +2030,13 @@ vez el 11 de septiembre. Se arreglan los cuatro casos medidos, se extrae una pie
 etiqueta+valor para que no vuelva a inventarse en cada sección, y queda un guardarraíl de navegador
 que barre toda la consola. Detrás, cuatro pendientes locales más.
 — claude
+
+## [2026-09-14] plan | auditoría de la pestaña de Análisis
+
+Plan aceptado archivado en [[planes/2026-09-14]]. Segunda auditoría por partes, tras cerrar la de
+Monitoreo. Tres defectos medidos antes de planear: la línea de tiempo enseña **0 events** con 541
+sucesos guardados —tiene su propio selector de 24 h, sin opción «todo», que además gobierna en
+secreto a una segunda sección—; «Cross-Protocol Correlation» se pide al motor cada 30 segundos y
+vive en una sección que nació con `hidden` y nadie se lo quita; y siete de los nueve títulos en
+inglés de la consola están en esta pestaña. Se traduce lo que toque la auditoría.
+— claude
