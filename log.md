@@ -2054,3 +2054,9 @@ en el consumidor tira el evento de cierre de sesión, la línea de tiempo escond
 actividad, el WebSocket lleva meses emitiendo a cero clientes y los relojes de tres sensores van
 entre 2 y 35 días atrasados.
 — claude
+
+## [2026-09-15] plan | señal honesta de ingesta
+Plan aceptado archivado en [[planes/2026-09-15]]. La plataforma no distingue «la tubería está
+rota» de «nadie me ataca», y de ahí salen el vigilante circular, una banda de falsa alarma y un
+`/health` ambiguo. Se resuelve comparando lo que Beelzebub captura con lo que el motor ingiere.
+— claude
