@@ -2007,3 +2007,15 @@ que la detección siga viva. Dos trampas anotadas: el motor no lleva `--reload` 
 porque corría el código anterior) y una espera de 500 ms hacía que la prueba del XSS pasara **en
 verde con el agujero abierto**. Commit `94abfd0`, PR #25. Suite 2.952, navegador 37.
 — claude
+
+## [2026-09-14] plan | auditoría de la pestaña de Monitoreo
+
+Plan aceptado archivado en [[planes/2026-09-14]]. Primera auditoría por partes de la plataforma:
+las siete observaciones que trajo Iván sobre Monitoreo, medidas en vivo contra la base, la API y un
+navegador. Seis de las siete tienen un defecto concreto detrás, y la más grave no era lo que
+parecía: **nadie borra nada a las 24 horas** —la base conserva los 541 sucesos desde el 7 de
+agosto—, lo que vacía la pantalla es un `hours=24` escrito a mano en doce sitios de la consola, con
+el suceso más nuevo a 26 horas. De la auditoría salen tres arreglos para esta misma sesión (la vista
+que se pierde al recargar, una ventana de tiempo única con «Todo» por defecto, y un mapa de ataques
+que escale) y nueve temas al ROADMAP.
+— claude
