@@ -2088,3 +2088,14 @@ fallado las 13 pasadas, la tabla `hosts` está en 0 filas y hay 66 trabajos que 
 nunca. Se arregla la cadena entera —clave única duplicada, sin tope de tiempo, reencolado infinito
 por el corte de 30 min de RabbitMQ, estado sin caducidad y dos cadenas de sondeo en la consola.
 — claude
+
+## [2026-09-15] cierre | el escáner llevaba 42 horas escaneando para nadie
+Lo que estaba anotado como «espaciar un temporizador» resultó una avería de dos días: el escáner
+llevaba desde el 13-sep corriendo nmap sin parar, con 13 pasadas, cero equipos guardados y 66
+trabajos encolados sin salida. Seis defectos encadenados, desde un esquema versionado que no
+servía para el escáner hasta el corte de entrega de 30 minutos de RabbitMQ que reencolaba el
+mismo trabajo para siempre. De paso apareció que la propia batería de navegador lanzaba tres
+escaneos reales contra la red de casa en cada pasada, y una prueba que sólo pasaba porque el
+escáner estaba roto. Medido: /api/scan/status de 21 a 1 petición por cada 32 segundos, tráfico
+del ciclo de 82 a 54, equipos guardados de 0 a 3. Suite 3.041, navegador 110.
+— claude
