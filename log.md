@@ -2047,3 +2047,10 @@ modelo de Thinkst Canary y reconstruirlo: el lienzo que se queda en 1200 px tras
 43 cruces entre 15 aristas, y un resaltado que funciona pero no se nota porque el atacante
 dominante enciende el 77 % del grafo.
 — claude
+
+## [2026-09-15] plan | ingesta y conteos
+Plan aceptado archivado en [[planes/2026-09-15]]. La tubería pierde ataques: un guardián invertido
+en el consumidor tira el evento de cierre de sesión, la línea de tiempo esconde el 45 % de la
+actividad, el WebSocket lleva meses emitiendo a cero clientes y los relojes de tres sensores van
+entre 2 y 35 días atrasados.
+— claude
