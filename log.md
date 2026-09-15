@@ -2107,3 +2107,15 @@ del VRA, y hacía que un fallo real saliera como «flaky» con el comando en éx
 deja de exigir tres sucesos para perfilar a alguien — hoy hace que un atacante salga en el mapa y
 no en la lista, sin que nada lo diga.
 — claude
+
+## [2026-09-15] cierre | cero reintentos y el umbral que escondía atacantes
+La batería de navegador deja de reintentar también en local: era la red de seguridad que hacía que
+un defecto intermitente saliera como «flaky» con el comando en éxito, y fue lo que escondió el
+fallo de la caché del VRA esa misma tarde. Queda escrito en CLAUDE.md, hay `make e2e`, y un test
+que falla si alguien lo deshace. Y «Atacantes» deja de exigir tres sucesos para perfilar a alguien:
+un atacante con uno o dos salía en el mapa y en Monitoreo pero no en la lista, sin que nada lo
+dijera — medido, el cliente propio daba 1 IP en un panel y 0 en el otro; ahora 1 y 1, con los
+perfiles de poca evidencia marcados. Al quitar la red de seguridad salieron tres defectos de
+pruebas, uno de ellos la batería barriendo todavía la red de casa por una segunda puerta.
+Suite 3.045, navegador 112 sin reintentos.
+— claude
