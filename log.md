@@ -2119,3 +2119,10 @@ perfiles de poca evidencia marcados. Al quitar la red de seguridad salieron tres
 pruebas, uno de ellos la batería barriendo todavía la red de casa por una segunda puerta.
 Suite 3.045, navegador 112 sin reintentos.
 — claude
+
+## [2026-09-15] plan | el informe al cliente, y el CI en rojo
+Plan aceptado archivado en [[planes/2026-09-15]]. Los ocho umbrales que parecían lo siguiente
+resultaron casi todos definicionales; lo que sí importa es que alimentan el informe que se entrega
+al cliente, y ese informe cubre siete días clavados en el código pase lo que pase con el «Periodo»
+de la pantalla. Se abre cerrando el CI en rojo del commit anterior.
+— claude
