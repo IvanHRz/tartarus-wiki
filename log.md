@@ -2099,3 +2099,11 @@ escaneos reales contra la red de casa en cada pasada, y una prueba que sólo pas
 escáner estaba roto. Medido: /api/scan/status de 21 a 1 petición por cada 32 segundos, tráfico
 del ciclo de 82 a 54, equipos guardados de 0 a 3. Suite 3.041, navegador 110.
 — claude
+
+## [2026-09-15] plan | cero reintentos y el umbral que escondía atacantes
+Plan aceptado archivado en [[planes/2026-09-15]]. Dos cosas del mismo origen: la batería de
+navegador deja de reintentar en local (era la red de seguridad que escondió el defecto de la caché
+del VRA, y hacía que un fallo real saliera como «flaky» con el comando en éxito), y «Atacantes»
+deja de exigir tres sucesos para perfilar a alguien — hoy hace que un atacante salga en el mapa y
+no en la lista, sin que nada lo diga.
+— claude
