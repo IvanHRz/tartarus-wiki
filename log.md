@@ -2066,3 +2066,9 @@ Plan aceptado archivado en [[planes/2026-09-15]]. Cuatro quejas de Iván sobre A
 quinta que apareció al medirlas: el VRA pierde hasta 25 puntos de 100 en el informe del cliente
 porque consulta una tabla con columnas que no existen y el error se traga en silencio.
 — claude
+
+## [2026-09-15] plan | fundir las secciones por atacante
+Plan aceptado archivado en [[planes/2026-09-15]]. Tres secciones describen al mismo atacante con
+los mismos datos: se funden en una tabla que se despliega. Y el «a veces 5 atacantes» que veía
+Iván era basura de las propias pruebas: 269 filas sembradas en el cliente que él mira.
+— claude
