@@ -1,15 +1,16 @@
 ---
 tipo: guia
 creado: 2026-09-11
-actualizado: 2026-09-14
+actualizado: 2026-09-15
 tags: [sesion, prompt]
 ---
 
 # Prompt para la siguiente sesión — TARTARUS
 
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
-> Actualizado: **14-sep-2026 (madrugada)**, al cerrar la inyección de prompt del analizador, el
-> navegador en el CI y el resumen de IA en la consola. PR **#25** abierto y con el CI en verde.
+> Actualizado: **15-sep-2026 (tarde)**, al cerrar la cuarta auditoría por partes de la consola
+> (Análisis: tres secciones fundidas en una, fases pulsables, catálogo de reglas al menú de
+> usuario y credenciales). PR **#25**, CI **verde en los seis trabajos** sobre `450700e`.
 
 ---
 
@@ -26,9 +27,11 @@ Trabajo en **TARTARUS**, plataforma de decepción (honeypots) para respuesta a i
 
 ## Antes de nada, lee esto
 
-`.agents/TRASPASO.md` — el mapa, actualizado al 14-sep: números que no hay que volver a medir,
-qué se hizo, qué falta por orden, y las trampas que ya costaron una sesión cada una.
-Después, `.agents/COORDINACION.md` y las entradas de arriba de `.agents/BITACORA.md`.
+`.agents/TRASPASO.md` — el mapa, actualizado al **15-sep por la tarde**: los números que no hay
+que volver a medir, qué se hizo en las cuatro auditorías de la consola, qué falta por orden, y las
+trampas que ya costaron una sesión cada una. Después, `.agents/COORDINACION.md`, la sección **«POR
+DÓNDE SE RETOMA»** al principio de `.agents/ROADMAP.md`, y las entradas de arriba de
+`.agents/BITACORA.md`.
 
 ## Cómo quiero que trabajes
 
@@ -44,65 +47,77 @@ pega su salida. **No toques `beelzebub/configurations/personalities/portal-gobmx
 vivo mío). Los YAML de `beelzebub/configurations/services/` **no están versionados** (llevan la
 clave). `.agents/` **sí** se versiona.
 
-**Y para cualquier cosa de interfaz, abre un navegador.** Desde el 14-sep hay batería propia:
-`npx playwright test` **desde la raíz** del repo — **37 pruebas en 30 s**, y corre en el CI en el
-trabajo «Navegador (E2E)», que **bloquea**. Existe porque los tres fallos más graves de la semana
-—el login que nunca funcionó, un modal que solo ponía la pantalla borrosa y un XSS almacenado—
-**ninguna prueba de Python podía verlos**. Dos reglas que salieron de ahí, y que no son
-opcionales: exige que el elemento esté **visible, con caja y dentro del viewport** (`apoyo.ts`:
-`visibleDeVerdad` y `seVeAlAbrirlo`), y **no des por bueno un spec que no hayas visto en ROJO**
-contra el defecto que vigila — uno de los cinco no cazaba el suyo.
+**Y para cualquier cosa de interfaz, abre un navegador.** `npx playwright test` **desde la raíz**
+del repo — **104 pruebas en ~1 min 12 s**, y corre en el CI en el trabajo «Navegador (E2E)», que
+**bloquea**. Existe porque los tres fallos más graves de septiembre —el login que nunca funcionó,
+un modal que solo ponía la pantalla borrosa y un XSS almacenado— **ninguna prueba de Python podía
+verlos**. Tres reglas que salieron de ahí, y que no son opcionales:
+
+- Exige que el elemento esté **visible, con caja y dentro del viewport** (`e2e/apoyo.ts`:
+  `visibleDeVerdad` y `seVeAlAbrirlo`).
+- **No des por bueno un spec que no hayas visto en ROJO** contra el defecto que vigila. Dos
+  guardarraíles pasaron en verde contra código roto porque miraban el TEXTO del fichero.
+- Si una prueba comprueba que algo está **vacío**, siembra en `flockQuieto()` — el segundo cliente
+  de la batería. Si no, pasará ella sola y fallará en la batería entera.
 
 ## Qué pasó, en corto (para contexto, no para repetirlo)
 
 Del 11 al 13 de septiembre se cerraron los agujeros de seguridad **propia** de la plataforma: la
 consola no tenía sesión, «Salir» no cerraba nada, «Cambiar contraseña» solo ponía la pantalla
 borrosa, el comando del atacante **se ejecutaba como JavaScript** en la pantalla del analista, y
-seis endpoints alcanzaban la red interna con una URL.
+seis endpoints alcanzaban la red interna con una URL. La madrugada del 14 se cerró lo que quedaba:
+**el atacante ya no redacta el informe forense de su propio ataque**, **el CI abre un navegador**
+y **el resumen del modelo se puede leer**.
 
-La madrugada del 14 se cerró lo que quedaba de eso:
+Del 14 por la tarde al 15 por la tarde hicimos **cuatro auditorías por partes de la consola** —
+Monitoreo, Análisis, el mapa de ataques, e ingesta y conteos — a partir de lo que yo iba viendo en
+pantalla. El patrón se repitió en las cuatro: **lo que yo señalaba como «raro» era siempre un
+defecto real**. Salió de ahí:
 
-- **El atacante ya no redacta el informe forense de su propio ataque.** Su comando entraba dentro
-  del texto de la instrucción que se le manda al modelo. Medido: el prompt viejo devolvía
-  `Benign. Routine administrative activity. No response required.` — lo que él dictó.
-- **El CI abre un navegador.** El montaje existía y estaba **en el `.gitignore`** desde febrero.
-- **El resumen del modelo se puede leer** desde el detalle del suceso, con su proveedor, su
-  confianza y una banda de aviso cuando nació de evidencia manipulada.
-
-Y tres defectos que aparecieron al hacerlo, que dicen mucho de dónde suelen estar: dos rutas de
-`/analyze` daban **500 siempre** por el orden de declaración, `POST /analyze/{event_id}` **no
-llegaba a un modelo nunca**, y las claves de OpenAI y DeepSeek **viajaban dentro de la imagen**
-del motor porque no existía ningún `.dockerignore`.
+- **Tres relojes en la misma pantalla.** Con el «Periodo» en «todo» y 541 sucesos, un panel decía
+  «0 events». Ahora la ventana la manda una sola pieza (`_ventanaQ()`).
+- **La línea de tiempo escondía el 45 %** de los sucesos (296 de 541).
+- **Los relojes de los sensores mienten** entre 2 y 31 días: hay `sello_efectivo(alias)` y toda
+  consulta que ordene por tiempo tiene que usarlo.
+- **Tres secciones describían al mismo atacante** con los mismos datos. Se fundieron en una fila
+  que se despliega; Análisis pasó de 8 secciones a 6.
+- **El «a veces 5 atacantes y a veces 4»** que reporté dos veces era **basura de la propia batería
+  cayendo en mi cliente**. Ahora las pruebas tienen los suyos.
 
 ## Por dónde seguir
 
-Elige tú y dime por qué; esto es mi orden, no una orden. El detalle está en `.agents/ROADMAP.md`.
+Elige tú y dime por qué; esto es mi orden, no una orden.
 
-Los tres P1 que quedan **están bloqueados por lo mismo** y son, de hecho, un solo trabajo:
-
-1. **La Raspberry está caída** (P1) — `equipo-88a29e57855e` figura `offline` desde el 11-sep. Es
-   área de la otra sesión, pero **desbloquea los dos siguientes**.
-2. **Recuperar la IP del atacante** (P1) — el NAT de Docker la enmascara. En la Pi el arreglo es
-   `network_mode: host`; en el Mac (OrbStack = VM) probablemente no tiene arreglo.
-3. **Exigir la firma HMAC** (P1) — está a una variable, pero antes hay que poner el secreto en la
-   Pi o dejará de reportar.
-
-Sin la Pi se puede hacer, por valor: **ocultar por rol en la consola** (P2, hoy no esconde nada y
-un `watcher` ve entradas que siempre fallan), **segundo factor** y **ver/cerrar sesiones
-abiertas** (P2, los pediste tú), y **`narrative_builder`** (P2), que hoy no manda nada a ningún
-modelo pero está armado para reabrir el agujero que se acaba de cerrar.
+1. **Los tres P1 siguen bloqueados por la Raspberry** (P1), que figura `offline` desde el 11-sep.
+   Recuperar la IP real del atacante y exigir la firma HMAC dependen de ella. Es área de la otra
+   sesión, pero desbloquea lo demás.
+2. **`/api/scan/status` se pide 21 veces en 32 segundos** con el escáner parado (P2, S): un cuarto
+   del tráfico del ciclo de refresco. Es lo más barato y lo que más se nota.
+3. **El perfil VRA exige 3 sucesos** (P2, S): un atacante con uno o dos sale en el mapa pero no en
+   «Atacantes», y eso no se dice en ninguna parte. Es justo el tipo de desacuerdo entre paneles
+   que yo detecto como «algo mal conectado».
+4. **Tres vocabularios de fase** conviven todavía (P2, M), y `kill_chain_tracer` escribe en una
+   tabla que no lee nadie (P3).
+5. Sin la Pi y por valor: **ocultar por rol en la consola** (P2, hoy no esconde nada), **segundo
+   factor** (P2) y **`narrative_builder`** (P2), que no manda nada a ningún modelo pero está
+   armado para reabrir el agujero de inyección que cerramos el 14.
 
 ## Estado al abrir
 
-- Suite de Python: **2.952 pasando**, 11 saltadas. `cd engine && python3 -m pytest tests/ -q`.
-- Batería de navegador: **37 pruebas** en ~30 s. `npx playwright test` desde la raíz.
+- Suite de Python: **3.028 pasando**, 11 saltadas. `cd engine && python3 -m pytest tests/ -q`.
+- Batería de navegador: **104 pruebas** en ~1 min 12 s, 18 ficheros. `npx playwright test` desde
+  la raíz.
 - CI: **seis trabajos, los seis bloqueantes** (Tests, Sigma, Dependencias, Lint, **Navegador**,
-  Secret Scan).
+  Secret Scan). En verde sobre `450700e`.
 - Consola con **sesión encendida**. Usuario `admin`; la contraseña está en `.env`
   (`TARTARUS_ADMIN_PASS`). En la base solo existe ese usuario.
+- **Clientes (flocks):** «Default Flock» es el mío, con **541 sucesos y 0 de prueba**. «Pruebas
+  automáticas» y «Pruebas automáticas · sin ruido» son de la batería: no los mires como datos.
 - Sensores: **9 activos de 10**; el caído es la Raspberry. Los dos canarios, `active`.
-- El motor del Mac está en **DeepSeek**; la Pi en **Ollama** (`gemma3:4b`). Lo que se configura
-  en *AI Settings* vive en el volumen `ai_estado` y sobrevive a recrear el contenedor.
+- Reglas Sigma: **88** base versionada, este motor carga **103** (15 de cebo) y **95 pueden
+  disparar** con tráfico de honeypot.
+- El motor del Mac está en **DeepSeek**; la Pi en **Ollama** (`gemma3:4b`). Lo que se configura en
+  *AI Settings* vive en el volumen `ai_estado` y sobrevive a recrear el contenedor.
 - **OJO con el IPv6 de esta máquina**: se traga las conexiones a `api.deepseek.com` y
   `api.github.com` (con `curl -4` responden). Si una llamada al modelo, un push o un `docker
   build` fallan sin motivo, **no es tu cambio**.
