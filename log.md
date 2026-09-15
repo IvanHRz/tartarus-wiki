@@ -2060,3 +2060,9 @@ Plan aceptado archivado en [[planes/2026-09-15]]. La plataforma no distingue «l
 rota» de «nadie me ataca», y de ahí salen el vigilante circular, una banda de falsa alarma y un
 `/health` ambiguo. Se resuelve comparando lo que Beelzebub captura con lo que el motor ingiere.
 — claude
+
+## [2026-09-15] plan | análisis 3ª pasada
+Plan aceptado archivado en [[planes/2026-09-15]]. Cuatro quejas de Iván sobre Análisis, y una
+quinta que apareció al medirlas: el VRA pierde hasta 25 puntos de 100 en el informe del cliente
+porque consulta una tabla con columnas que no existen y el error se traga en silencio.
+— claude
