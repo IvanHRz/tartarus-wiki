@@ -2080,3 +2080,11 @@ fila que se despliega, las fases de la kill chain se pulsan y el catálogo de re
 de usuario. El «a veces 5 atacantes y a veces 4» era basura de la propia batería cayendo en el
 cliente del operador; ahora las pruebas tienen los suyos. CI verde en los seis trabajos.
 — claude
+
+## [2026-09-15] plan | el escáner no guarda nada desde hace 42 horas
+Plan aceptado archivado en [[planes/2026-09-15]]. Al ir a espaciar el sondeo de `/api/scan/status`
+apareció que el escáner no está parado: lleva desde el 13-sep corriendo nmap sin descanso, ha
+fallado las 13 pasadas, la tabla `hosts` está en 0 filas y hay 66 trabajos que no se ejecutarán
+nunca. Se arregla la cadena entera —clave única duplicada, sin tope de tiempo, reencolado infinito
+por el corte de 30 min de RabbitMQ, estado sin caducidad y dos cadenas de sondeo en la consola.
+— claude
