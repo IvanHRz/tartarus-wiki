@@ -2278,3 +2278,7 @@ podía dispararse), y la reconciliación del ROADMAP: 258 entradas, 97 cerradas,
 Lo más serio: el guion de limpieza de cebos daba por huérfanas DOS TRAMPAS ARMADAS. Prompt de la
 sesión siguiente actualizado en [[prompt-siguiente-sesion]].
 — claude
+
+## [2026-09-16] plan | el ciclo de vida de los cebos, de punta a punta
+Plan aceptado archivado en [[planes/2026-09-16]]. Cerrar el ciclo de los cebos por sus dos extremos: que `plant_token()` devuelva el hash de la regla que acuña, invertir el orden registrar/insertar en los cinco sitios que lo tienen al revés, un guardarraíl que mire los cinco caminos y no dos, hacer visible en la consola la divergencia que el motor ya publica, y retirar al final las nueve reglas huérfanas medidas hoy.
+— claude
