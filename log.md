@@ -2216,3 +2216,11 @@ reglas Sigma, se enseñó al comprobador de plantillas a entender los macros de 
 carrera de la batería. Queda anotado el exportable en Markdown que pidió Iván, con su diseño.
 Suite 3.102, navegador 117.
 — claude
+
+## [2026-09-15] plan | el informe, también en Markdown
+Plan aceptado archivado en [[planes/2026-09-15]]. Es el pendiente que Iván pidió anotar. Al mirarlo
+resultó mejor de lo previsto: de las 24 secciones del informe sólo 2 llevan gráfica, así que no hace
+falta un subconjunto — el Markdown es un espejo completo y las dos gráficas pasan a tablas con los
+mismos números. El guardarraíl principal compara las secciones de las dos plantillas, para que el
+Markdown no se quede atrás cuando alguien añada una al HTML. Después, la auditoría de «Trampas».
+— claude
