@@ -2231,3 +2231,10 @@ navegador: el honeypot SSH sirve una clínica privada mientras la tarjeta lo lla
 (enseña el id interno en vez del nombre), la leyenda de colores explica tarjetas que no están en
 pantalla, y «Credenciales cebo» es la única sección de la consola en inglés.
 — claude
+
+## [2026-09-16] plan | el menú de descargas nunca tuvo estilo
+Plan aceptado archivado en [[planes/2026-09-16]]. Iván mandó una captura: el menú de exportación se
+despliega en línea sobre la cabecera. Medido: sus cuatro clases tienen CERO reglas de CSS, nunca se
+maquetó. Y en la misma captura, dos defectos más: el botón se queda en inglés tras cualquier
+descarga, y un mensaje del feed manda a un botón que ya no se llama así.
+— claude
