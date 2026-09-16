@@ -2175,3 +2175,11 @@ Por el camino, tres errores propios de medición que quedan escritos: los índic
 el entorno del contenedor que no es el del proceso vivo, y una «mejora» de 15 s a 0,13 que era un
 error 500. Suite 3.094, navegador 116.
 — claude
+
+## [2026-09-15] plan | que el informe con IA sirva de verdad
+Plan aceptado archivado en [[planes/2026-09-15]]. Al explicar qué puede hacer el informe conectado
+a DeepSeek salió que no puede hacer nada: el proveedor funciona (responde en 1,18 s), pero el tope
+de 8 segundos que puse antes garantiza que una generación de 4096 tokens nunca llegue, y tres de
+los seis bloques de datos del prompt se pasan vacíos. Se mide cuánto tarda de verdad, se anuncia la
+espera y se llena el contexto con datos que el informe ya tiene.
+— claude
