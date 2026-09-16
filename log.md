@@ -2204,3 +2204,15 @@ de 235 fuera sin una palabra; lo mismo el STIX, que sale de la misma consulta. L
 quitan: se anuncian, con el mismo criterio que ya usan «Equipos en la red» y «Atacantes». Y queda
 anotado el exportable en Markdown con su diseño.
 — claude
+
+## [2026-09-15] cierre | el informe recortaba y no lo decía
+La sección de indicadores del informe que se entrega al cliente enseñaba cien comandos de
+doscientos treinta y cinco, y una tarjeta grande que ponía «Comandos: 100» porque el total estaba
+calculado como la longitud de la página. El fichero STIX que el cliente carga en su SIEM iba
+recortado igual, y además no sabía decir «todo el histórico». Los topes no se han quitado —un
+informe de cinco mil filas no lo lee nadie— pero ahora se anuncian, con el mismo criterio que ya
+usaban otros dos paneles. De paso quedó corregido un dato que yo mismo había dado mal sobre las
+reglas Sigma, se enseñó al comprobador de plantillas a entender los macros de Jinja, y se quitó otra
+carrera de la batería. Queda anotado el exportable en Markdown que pidió Iván, con su diseño.
+Suite 3.102, navegador 117.
+— claude
