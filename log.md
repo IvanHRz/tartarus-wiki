@@ -2253,3 +2253,11 @@ el limitador, con ámbitos IP:HTTP repetidos 40 veces. De los 41 intentos de una
 es una petición cualquiera: la detección del barrido cae entre los suprimidos. Y se corrige una
 entrada del ROADMAP que yo mismo escribí ayer y que hoy se desmiente (1.418 = 1.418).
 — claude
+
+## [2026-09-16] plan | reconciliar el ROADMAP con el código
+Plan aceptado archivado en [[planes/2026-09-16]]. Cuatro de las cinco entradas comprobadas estaban
+desfasadas o eran falsas —dos las escribí yo esta semana— y sólo una de seis resultó trabajo real.
+Con 6.356 líneas y 169 entradas abiertas, la lista de la que sale «¿y ahora qué?» miente cuatro
+veces de cada cinco. Se verifican las 169 contra el código en abanico, con una pasada que intenta
+REFUTAR cada «hecho», y un guardarraíl para la contradicción concreta que costó la sesión.
+— claude
