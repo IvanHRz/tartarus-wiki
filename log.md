@@ -2246,3 +2246,10 @@ reales, Iván eligió el barrido web: se notifica pero no escribe NADA en ningú
 detections, 0 en events), así que el operador recibe la alerta y al abrir la consola no hay nada.
 Y le falta el candado de «una vez por ventana» que sí tiene el portscan: 200 rutas → ~186 alertas.
 — claude
+
+## [2026-09-16] plan | el aviso del barrido no sale
+Plan aceptado archivado en [[planes/2026-09-16]]. Medido en el registro: 810 avisos suprimidos por
+el limitador, con ámbitos IP:HTTP repetidos 40 veces. De los 41 intentos de una ráfaga sale UNO, y
+es una petición cualquiera: la detección del barrido cae entre los suprimidos. Y se corrige una
+entrada del ROADMAP que yo mismo escribí ayer y que hoy se desmiente (1.418 = 1.418).
+— claude
