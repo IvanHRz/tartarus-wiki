@@ -2196,3 +2196,11 @@ tenía, sin que salgan ni el comando en crudo, ni el usuario, ni la contraseña.
 tocar, que de las siete cosas que se le piden al modelo la plantilla sólo pinta dos, y que dos de
 las descartadas duplicarían el mapeo NIST/ISO que el motor ya hace: eso es decisión de producto.
 — claude
+
+## [2026-09-15] plan | el informe recorta y no lo dice
+Plan aceptado archivado en [[planes/2026-09-15]]. El informe que se entrega al cliente presenta su
+sección de indicadores como si fuera el inventario de lo que hizo el atacante y se deja 135 comandos
+de 235 fuera sin una palabra; lo mismo el STIX, que sale de la misma consulta. Los topes no se
+quitan: se anuncian, con el mismo criterio que ya usan «Equipos en la red» y «Atacantes». Y queda
+anotado el exportable en Markdown con su diseño.
+— claude
