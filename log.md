@@ -2138,3 +2138,11 @@ cerró mandando el barrido de la batería a TEST-NET en vez de quitarlo, y el di
 traducción tenía 48 entradas duplicadas —seis con traducciones distintas, incluido «Periodo» contra
 «Período» en el mismo documento entregable—. Suite 3.060, navegador 114 sin reintentos.
 — claude
+
+## [2026-09-15] plan | dejar la firma de sensores a un interruptor
+Plan aceptado archivado en [[planes/2026-09-15]]. La Pi está conectada pero en otra dirección de la
+que el registro tiene guardada, y arreglar su lado pide un SSH que no tenemos; se trabaja el lado
+del Mac. El obstáculo real para exigir la firma HMAC no era la Pi sino la propia batería de
+navegador, que siembra sin firmar y pondría en rojo el CI. Que firme deja el interruptor a una
+variable, con un contador para poder ver antes quién se rompería.
+— claude
