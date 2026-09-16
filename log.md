@@ -2156,3 +2156,10 @@ propia batería de navegador, que habría puesto el CI en rojo. Ahora firma todo
 hay un contador para poder ver quién se rompería antes de encender el interruptor — que se deja
 apagado a propósito, porque el único que falta es el agente de la Pi. Suite 3.084, navegador 114.
 — claude
+
+## [2026-09-15] plan | el informe espera a un modelo y no lo dice
+Plan aceptado archivado en [[planes/2026-09-15]]. El informe que se entrega al cliente tarda 15-19
+segundos, pero su trabajo propio son 0,26: el resto es una llamada a DeepSeek con tope de 60
+segundos, sin caché y sin que nadie la elija ni la vea. Pasa a ser una elección del operador, con
+tope corto, cacheada y declarada en el propio documento.
+— claude
