@@ -2126,3 +2126,15 @@ resultaron casi todos definicionales; lo que sí importa es que alimentan el inf
 al cliente, y ese informe cubre siete días clavados en el código pase lo que pase con el «Periodo»
 de la pantalla. Se abre cerrando el CI en rojo del commit anterior.
 — claude
+
+## [2026-09-15] cierre | el informe al cliente cubría siete días sin decirlo
+Los ocho umbrales que parecían lo siguiente resultaron casi todos definicionales; lo que importaba
+era quién los consume. El informe que se entrega al cliente se pedía con siete días clavados en el
+código, pase lo que pase con el «Periodo» de la pantalla, y presentaba su periodo como si fuera el
+compromiso entero: 610 sucesos de 630, con el más antiguo del 7 de agosto sin mencionar. Y pasarle
+«todo» no bastaba porque entonces salía vacío. Ahora respeta la pantalla, entiende «todo» y declara
+qué cubre y qué deja fuera. De paso: el CI se había puesto en rojo por el arreglo anterior y se
+cerró mandando el barrido de la batería a TEST-NET en vez de quitarlo, y el diccionario de
+traducción tenía 48 entradas duplicadas —seis con traducciones distintas, incluido «Periodo» contra
+«Período» en el mismo documento entregable—. Suite 3.060, navegador 114 sin reintentos.
+— claude
