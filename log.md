@@ -2146,3 +2146,13 @@ del Mac. El obstáculo real para exigir la firma HMAC no era la Pi sino la propi
 navegador, que siembra sin firmar y pondría en rojo el CI. Que firme deja el interruptor a una
 variable, con un contador para poder ver antes quién se rompería.
 — claude
+
+## [2026-09-15] cierre | la firma de sensores queda a un interruptor
+La Pi está conectada pero en otra dirección de la que el registro guarda: por IPv6 responde entera
+—motor 0.4.0, 2.754 sucesos propios, Ollama con los dos modelos— y lo roto es el enlace de vuelta,
+no el aparato. Entrar a arreglarlo pide un SSH que no tenemos, así que se trabajó el lado del Mac.
+Y ahí apareció que el P1 de exigir la firma no dependía de la Pi: quien mandaba sin firmar era la
+propia batería de navegador, que habría puesto el CI en rojo. Ahora firma todo lo que siembra, y
+hay un contador para poder ver quién se rompería antes de encender el interruptor — que se deja
+apagado a propósito, porque el único que falta es el agente de la Pi. Suite 3.084, navegador 114.
+— claude
