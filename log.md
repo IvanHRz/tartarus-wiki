@@ -2269,3 +2269,12 @@ La refutación encontró que DOS son cebos vivos servidos ahora mismo (/opt/app/
 las cuatro fuentes de inventario. Y la causa raíz es puesta_a_cero.sh, que trunca las tablas sin
 retirar las reglas — mi propia bitácora lo fecha el 11-sep con «80 cebos a 0».
 — claude
+
+## [2026-09-16] cierre | reconciliación del ROADMAP y ciclo de vida de los cebos
+Sesión cerrada. Lo del día: el informe en Markdown (24 secciones), la auditoría de «Trampas» —el
+SSH servía una clínica privada con nombre de Ubuntu estándar—, el menú de descargas que nunca tuvo
+CSS, dos detectores que no producían nada (el barrido web sin rastro y el escaneo de puertos que no
+podía dispararse), y la reconciliación del ROADMAP: 258 entradas, 97 cerradas, 161 abiertas.
+Lo más serio: el guion de limpieza de cebos daba por huérfanas DOS TRAMPAS ARMADAS. Prompt de la
+sesión siguiente actualizado en [[prompt-siguiente-sesion]].
+— claude
