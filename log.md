@@ -2224,3 +2224,10 @@ falta un subconjunto — el Markdown es un espejo completo y las dos gráficas p
 mismos números. El guardarraíl principal compara las secciones de las dos plantillas, para que el
 Markdown no se quede atrás cuando alguien añada una al HTML. Después, la auditoría de «Trampas».
 — claude
+
+## [2026-09-15] plan | auditoría de «Trampas»
+Plan aceptado archivado en [[planes/2026-09-15]]. Tres hallazgos del reconocimiento con el
+navegador: el honeypot SSH sirve una clínica privada mientras la tarjeta lo llama «Ubuntu estándar»
+(enseña el id interno en vez del nombre), la leyenda de colores explica tarjetas que no están en
+pantalla, y «Credenciales cebo» es la única sección de la consola en inglés.
+— claude
