@@ -2238,3 +2238,11 @@ despliega en línea sobre la cabecera. Medido: sus cuatro clases tienen CERO reg
 maquetó. Y en la misma captura, dos defectos más: el botón se queda en inglés tras cualquier
 descarga, y un mensaje del feed manda a un botón que ya no se llama así.
 — claude
+
+## [2026-09-16] plan | el barrido web sin rastro
+Plan aceptado archivado en [[planes/2026-09-16]]. Al verificar los candidatos del traspaso, dos de
+tres ya estaban hechos — el documento que lee primero cada sesión nueva está desfasado. De los
+reales, Iván eligió el barrido web: se notifica pero no escribe NADA en ningún sitio (0 filas en
+detections, 0 en events), así que el operador recibe la alerta y al abrir la consola no hay nada.
+Y le falta el candado de «una vez por ventana» que sí tiene el portscan: 200 rutas → ~186 alertas.
+— claude
