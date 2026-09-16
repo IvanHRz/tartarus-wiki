@@ -2163,3 +2163,15 @@ segundos, pero su trabajo propio son 0,26: el resto es una llamada a DeepSeek co
 segundos, sin caché y sin que nadie la elija ni la vea. Pasa a ser una elección del operador, con
 tope corto, cacheada y declarada en el propio documento.
 — claude
+
+## [2026-09-15] cierre | el informe esperaba a un modelo y nadie lo sabía
+El pendiente decía que generar el informe costaba 10-13 segundos. Lo que hace tarda 0,26: el resto
+era una llamada a un modelo externo que se hacía siempre, en silencio, con tope de un minuto y sin
+caché. Y el tiempo era lo de menos: generar el documento que se entrega al cliente mandaba datos
+del compromiso a un tercero sin que lo dijera la consola ni el propio informe, y si la llamada
+fallaba el documento salía sin esas secciones y sin una palabra. Ahora se pide, está capado, se
+cachea, y el documento declara con qué proveedor se enriqueció o por qué no. De 15-19 s a 0,23.
+Por el camino, tres errores propios de medición que quedan escritos: los índices que sí estaban,
+el entorno del contenedor que no es el del proceso vivo, y una «mejora» de 15 s a 0,13 que era un
+error 500. Suite 3.094, navegador 116.
+— claude
