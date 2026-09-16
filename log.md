@@ -2183,3 +2183,16 @@ de 8 segundos que puse antes garantiza que una generación de 4096 tokens nunca 
 los seis bloques de datos del prompt se pasan vacíos. Se mide cuánto tarda de verdad, se anuncia la
 espera y se llena el contexto con datos que el informe ya tiene.
 — claude
+
+## [2026-09-15] cierre | el informe con IA ya sirve, y el culpable era mi tope
+El pendiente que dejé culpando al IPv6 era un diagnóstico equivocado: DeepSeek responde en 1,18
+segundos. Lo que impedía que el enriquecimiento llegara era el tope de 8 segundos que yo mismo
+había puesto contra una generación que tarda dieciséis — un tope por debajo de lo que la llamada
+tarda no protege de nada, sólo deja la función rota, y el síntoma se lee como si el proveedor
+estuviera caído. Tope nuevo de 45 segundos, medido en dos pasadas. Ahora funciona: dieciséis
+segundos la primera vez, un cuarto de segundo la segunda gracias a la caché. Y el modelo ve por fin
+el compromiso entero: los tres bloques que llegaban vacíos se llenan con datos que el informe ya
+tenía, sin que salgan ni el comando en crudo, ni el usuario, ni la contraseña. Queda anotado, sin
+tocar, que de las siete cosas que se le piden al modelo la plantilla sólo pinta dos, y que dos de
+las descartadas duplicarían el mapeo NIST/ISO que el motor ya hace: eso es decisión de producto.
+— claude
