@@ -2261,3 +2261,11 @@ Con 6.356 líneas y 169 entradas abiertas, la lista de la que sale «¿y ahora q
 veces de cada cinco. Se verifican las 169 contra el código en abanico, con una pasada que intenta
 REFUTAR cada «hecho», y un guardarraíl para la contradicción concreta que costó la sesión.
 — claude
+
+## [2026-09-16] plan | el inventario de cebos vivos está incompleto
+Plan aceptado archivado en [[planes/2026-09-16]]. Llamé «huérfanas» a 15 reglas y propuse borrarlas.
+La refutación encontró que DOS son cebos vivos servidos ahora mismo (/opt/app/.env y
+/home/ana/.ssh/id_rsa), que viven en Redis y no en Postgres: el guion de limpieza consulta dos de
+las cuatro fuentes de inventario. Y la causa raíz es puesta_a_cero.sh, que trunca las tablas sin
+retirar las reglas — mi propia bitácora lo fecha el 11-sep con «80 cebos a 0».
+— claude
