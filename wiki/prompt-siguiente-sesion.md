@@ -8,6 +8,8 @@ tags: [sesion, prompt]
 # Prompt para la siguiente sesión — TARTARUS
 
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
+> **Éste es el prompt del motor y la consola.** Para una sesión de la Raspberry / despliegue de
+> campo, usa [[prompt-sesion-rp5]], que lleva su propio estado medido y sus trampas.
 > Actualizado: **17-sep-2026 (madrugada)**, al cerrar el arranque de la consola y las dos
 > intermitencias. PR **#25**, CI **verde en los seis trabajos** sobre `9e97d94`.
 

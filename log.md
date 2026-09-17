@@ -2311,3 +2311,9 @@ cada una con su comprobador y su prueba (de nueve skills, sólo una tenía prueb
 Atacantes sin redundancias, Personalidades a un menú, la identidad de la persona una sola vez, los
 dos ejes del hub y los labs de Beelzebub verificados.
 — claude
+
+## [2026-09-17] guia | prompt para una sesión dedicada a la Raspberry Pi 5
+Nuevo [[prompt-sesion-rp5]], separado del genérico. Lleva el estado medido el 17-sep —la Pi lleva
+offline 5 días y 15 horas y no responde en ninguna de sus tres IPs— y su trabajo por orden:
+que el guion de montaje la ENROLE, la imagen arm64 publicada, y el arranque en un paso.
+— claude
