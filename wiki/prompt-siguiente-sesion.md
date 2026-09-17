@@ -9,7 +9,7 @@ tags: [sesion, prompt]
 
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
 > Actualizado: **17-sep-2026 (madrugada)**, al cerrar el arranque de la consola y las dos
-> intermitencias. PR **#25**, CI **verde en los seis trabajos** sobre `bf45667`.
+> intermitencias. PR **#25**, CI **verde en los seis trabajos** sobre `c9f63a1`.
 
 ---
 
@@ -97,7 +97,7 @@ FROM flocks f LEFT JOIN events e ON e.flock_id=f.id GROUP BY f.name ORDER BY 2 D
 
 - Python **3.250 pasando**, 11 saltadas aquí (**4** en el CI: son conjuntos distintos — aquí
   faltan `bcrypt` y `DATABASE_URL`, allí no hay YAML de `services/`). Navegador **142**, de las
-  que **140 bloquean** en el CI. CI verde sobre `bf45667`.
+  que **140 bloquean** en el CI. CI verde sobre `c9f63a1`.
 - Consola con sesión: `admin`, contraseña en `.env` (`TARTARUS_ADMIN_PASS`). **Segundo factor
   disponible y apagado**; la batería y los guiones entran con `servicio-local`
   (`TARTARUS_SERVICE_PASS`), que **nunca** puede tener 2FA.
