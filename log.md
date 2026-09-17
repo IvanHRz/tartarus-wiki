@@ -2294,3 +2294,9 @@ Plan aceptado archivado en [[planes/2026-09-16]]. Los tres vocabularios de fase 
 ## [2026-09-16] plan | la consola enseña todo hasta que el JS decide
 Plan aceptado archivado en [[planes/2026-09-16]]. Las 27 secciones arrancan visibles —nada en el HTML las oculta— así que hasta que evalúa `main.js` la consola apila usuarios, auditoría y el alta del segundo factor; y con un `watcher` se ven hasta que vuelve `/auth/me`. Es además el mecanismo de una intermitencia que llevaba dos sesiones saliendo.
 — claude
+
+## [2026-09-16] plan | reordenar el ROADMAP: interfaz, flocks, roles, API, despliegues, cebos, auditoría
+Plan aceptado archivado en [[planes/2026-09-16]]. Meter juntos y con ancla los siete temas que Iván
+pidió —más los dos despliegues que ya existen, Docker y RPi5— y fundir las tres entradas de diseño
+que llevaban semanas dispersas. Sólo documentación.
+— claude
