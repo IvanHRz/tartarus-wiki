@@ -9,7 +9,7 @@ tags: [sesion, prompt]
 
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
 > Actualizado: **17-sep-2026 (madrugada)**, al cerrar el arranque de la consola y las dos
-> intermitencias. PR **#25**, CI **verde en los seis trabajos** sobre `a6dd46b`.
+> intermitencias. PR **#25**, CI **verde en los seis trabajos** sobre `bf45667`.
 
 ---
 
@@ -50,6 +50,13 @@ la rama.
 eso me refiero al RESULTADO, no al mecanismo: se han cerrado pendientes porque «el guion existe»
 con el defecto intacto en disco.
 
+**Y mira las SALTADAS, no sólo las verdes.** El 17-sep, sacar los conteos del CI atados al SHA en
+vez de repetirlos de memoria destapó que la prueba escrita para demostrar que rotar el secreto JWT
+«no fue un gesto» **no corría en ningún entorno** —se saltaba en local y en el CI— y que, de haber
+corrido, **habría pasado sin rotación**: forjaba un token de dos partes que `_verify_token`
+rechaza antes de mirar la firma. Van cuatro casos de prueba que documentaba un agujero como
+correcto. Queda `{#saltos-sin-inventario}` para inventariarlas todas.
+
 **Cualquier borrado masivo en la base, pregúntame antes.** Avanza sin preguntar de más cuando la
 dirección esté clara.
 
@@ -66,7 +73,9 @@ dirección esté clara.
 - `medir-no-suponer` — antes de afirmar una causa o que algo está arreglado.
 
 **Para cualquier cosa de interfaz, abre un navegador.** `npx playwright test` desde la raíz — 142
-pruebas, 27 ficheros, y bloquea en el CI. **No reintenta, y es deliberado.** Tres reglas no
+pruebas, 27 ficheros. **No reintenta, y es deliberado.** Ojo con el «bloquea en el CI»: bloquean
+**140**; las **2** de `trampas.spec.ts` se saltan allí porque exigen un honeypot con la persona
+tramposa aplicada, y en el CI no hay honeypots. Tres reglas no
 opcionales: exige el elemento visible, con caja y en el viewport (`e2e/apoyo.ts`); **no des por
 bueno un spec que no hayas visto en ROJO**; y si una prueba comprueba que algo está vacío, siembra
 en `flockQuieto()` — pero si tu prueba **siembra**, va a `flockDePruebas()`, y sus aserciones son
@@ -86,8 +95,9 @@ FROM flocks f LEFT JOIN events e ON e.flock_id=f.id GROUP BY f.name ORDER BY 2 D
 
 ## Estado al abrir
 
-- Python **3.249 pasando**, 12 saltadas. Navegador **142**, sin reintentos. CI verde sobre
-  `a6dd46b`.
+- Python **3.250 pasando**, 11 saltadas aquí (**4** en el CI: son conjuntos distintos — aquí
+  faltan `bcrypt` y `DATABASE_URL`, allí no hay YAML de `services/`). Navegador **142**, de las
+  que **140 bloquean** en el CI. CI verde sobre `bf45667`.
 - Consola con sesión: `admin`, contraseña en `.env` (`TARTARUS_ADMIN_PASS`). **Segundo factor
   disponible y apagado**; la batería y los guiones entran con `servicio-local`
   (`TARTARUS_SERVICE_PASS`), que **nunca** puede tener 2FA.
