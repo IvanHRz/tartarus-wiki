@@ -2300,3 +2300,7 @@ Plan aceptado archivado en [[planes/2026-09-16]]. Meter juntos y con ancla los s
 pidió —más los dos despliegues que ya existen, Docker y RPi5— y fundir las tres entradas de diseño
 que llevaban semanas dispersas. Sólo documentación.
 — claude
+
+## [2026-09-17] cierre | el arranque de la consola, una skill nueva y el prompt al día
+Cerrada la sesión del arranque de la consola (27 secciones visibles hasta que corría el JS) y las dos intermitencias que llevaban dos sesiones aplazadas. Creada la skill `perseguir-intermitente` —ninguna cubría el caso y las intermitencias de este proyecto han sido defectos del producto—. «Lo siguiente, por orden» renumerado a 33 puntos con los dos P1 nuevos, y [[prompt-siguiente-sesion]] reescrito.
+— claude
