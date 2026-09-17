@@ -2304,3 +2304,10 @@ que llevaban semanas dispersas. Sólo documentación.
 ## [2026-09-17] cierre | el arranque de la consola, una skill nueva y el prompt al día
 Cerrada la sesión del arranque de la consola (27 secciones visibles hasta que corría el JS) y las dos intermitencias que llevaban dos sesiones aplazadas. Creada la skill `perseguir-intermitente` —ninguna cubría el caso y las intermitencias de este proyecto han sido defectos del producto—. «Lo siguiente, por orden» renumerado a 33 puntos con los dos P1 nuevos, y [[prompt-siguiente-sesion]] reescrito.
 — claude
+
+## [2026-09-17] plan | sesiones en paralelo, cinco skills con guardarraíl, y el roadmap de interfaz y colmena
+Plan aceptado archivado en [[planes/2026-09-17]]. Una copia de trabajo por sesión; cinco skills nuevas
+cada una con su comprobador y su prueba (de nueve skills, sólo una tenía prueba); y al ROADMAP
+Atacantes sin redundancias, Personalidades a un menú, la identidad de la persona una sola vez, los
+dos ejes del hub y los labs de Beelzebub verificados.
+— claude

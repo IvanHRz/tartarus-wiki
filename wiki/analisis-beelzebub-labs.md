@@ -153,8 +153,27 @@ La familia más nueva y donde su ventaja es más frágil.
 | 28 | [Cómo atacan los ciberdelincuentes](https://beelzebub.ai/blog/how-cybercriminals-attacks-your-company/) | Divulgación | **No aplica** |
 | **29** | [One Tool Named E: un robacredenciales de LiteLLM (CVE-2026-42271)](https://beelzebub.ai/blog/one-tool-named-e-litellm-cve-2026-42271/) — **NUEVO, 1-sep-2026** | Endpoints MCP de una pasarela LiteLLM que aceptaban JSON-RPC. El atacante manda un robacredenciales disfrazado de servidor MCP. **Retienen el cuerpo de la petición como código fuente, sin ejecutarlo**: 15 variantes, de 1.513 a 66.901 bytes, de 7 secretos vigilados a 72. 2.048 intentos desde 103 IPs | ✅ **Sí (10-sep-2026).** Valida nuestra postura de «guardar sin ejecutar», y el material **ya nos llega**: medido, **240 eventos con `payload.Body` no vacío**. `artefactos` lo retiene como código fuente, sin ejecutarlo, con huella del CONTENIDO y dedup: el mismo cuerpo dos veces es **un artefacto con dos apariciones**, que es la señal del lab. Comprobado con el `POST /containers/create` del señuelo de Docker |
 
-**Recuento (al cierre del 10-sep-2026, sobre 29 labs):** cubrimos del todo **8**, parcialmente
-**3**, no cubrimos **12**, y **6 no aplican**.
+<!-- recuento-maquina: 7/3/14/5 — del todo / parcial / no / no aplica.
+     Lo lee `scripts/verificar_labs.py` del repo TARTARUS. Si cambias un veredicto en la
+     tabla, cambia esta línea: es el contrato entre la wiki y el guion, y una frase en
+     prosa no se puede parsear sin romperse a la primera reescritura. -->
+
+**Recuento (sobre 29 labs)** — ⚠️ **corregido el 17-sep-2026: esta frase se contradecía con sus
+propias filas.** Decía «8 del todo, 3 parciales, 12 no, 6 no aplican»; contando fila a fila salen
+**7 del todo, 3 parciales, 14 que no cubrimos y 5 que no aplican**. Nadie suma una tabla de 29 filas
+a mano dos veces, y por eso desde hoy lo cuenta un guion: `python3 scripts/verificar_labs.py`
+contrasta **tres** recuentos —el suyo, estas filas y esta frase— y además exige que cada lab marcado
+como cubierto tenga **un llamador de producción**, no sólo un símbolo.
+
+Así se destapó que el **lab 17** (el cebo corrupto) llevaba desde el 10-sep marcado ✅ con su
+**único consumidor siendo su propio test**: construido, probado y fuera de producción. Su veredicto
+sigue en «Sí» a propósito —la capacidad está escrita y es correcta— pero el guion lo señala en rojo
+hasta que se cablee, y está en el ROADMAP como `#cebo-corrupto-sin-cablear`.
+
+Los del todo son: **6, 18, 20, 26, 27, 29** y el **17** (con la salvedad de arriba). Parciales:
+**1, 7, 22**. No aplican (investigación de campaña, no capacidad de honeypot): **5, 16, 21, 24, 28**.
+El resto —**14**— no los cubrimos, y el orden para atacarlos está en `#labs-ir-mas-alla`: no el del
+blog, sino el de lo que el cliente tiene de verdad.
 
 Cómo se movió en un solo día, desde el 3/3/16 del 30 de agosto:
 
