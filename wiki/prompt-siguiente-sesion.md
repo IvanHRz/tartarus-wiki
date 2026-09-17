@@ -9,7 +9,7 @@ tags: [sesion, prompt]
 
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
 > Actualizado: **17-sep-2026 (madrugada)**, al cerrar el arranque de la consola y las dos
-> intermitencias. PR **#25**, CI **verde en los seis trabajos** sobre `c9f63a1`.
+> intermitencias. PR **#25**, CI **verde en los seis trabajos** sobre `9e97d94`.
 
 ---
 
@@ -33,7 +33,7 @@ Después `.agents/COORDINACION.md`, la cabecera de `.agents/ROADMAP.md` y las ú
 
 **Y desconfía de las listas de pendientes, incluidas las mías.** El 16-sep se reconciliaron las
 169 abiertas contra el código y **cuatro de cada cinco entradas comprobadas a mano estaban
-desfasadas o eran falsas**. Hoy el plan va por **303 entradas, 103 cerradas y 200 abiertas**, con
+desfasadas o eran falsas**. Hoy el plan va por **309 entradas, 106 cerradas y 203 abiertas** (sácalo, no lo cites: el contador está en `.agents/TRASPASO.md`), con
 ocho bloques nuevos con ancla. **Comprueba en el código antes de ponerte con algo**: lo vigila
 `engine/tests/test_roadmap_coherente.py`, que exige que cada punto de «Lo siguiente» señale su
 entrada con `{#ancla}` y que esa entrada no esté cerrada.
@@ -97,7 +97,7 @@ FROM flocks f LEFT JOIN events e ON e.flock_id=f.id GROUP BY f.name ORDER BY 2 D
 
 - Python **3.250 pasando**, 11 saltadas aquí (**4** en el CI: son conjuntos distintos — aquí
   faltan `bcrypt` y `DATABASE_URL`, allí no hay YAML de `services/`). Navegador **142**, de las
-  que **140 bloquean** en el CI. CI verde sobre `c9f63a1`.
+  que **140 bloquean** en el CI. CI verde sobre `9e97d94`.
 - Consola con sesión: `admin`, contraseña en `.env` (`TARTARUS_ADMIN_PASS`). **Segundo factor
   disponible y apagado**; la batería y los guiones entran con `servicio-local`
   (`TARTARUS_SERVICE_PASS`), que **nunca** puede tener 2FA.
