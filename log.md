@@ -2286,3 +2286,7 @@ Plan aceptado archivado en [[planes/2026-09-16]]. Cerrar el ciclo de los cebos p
 ## [2026-09-16] plan | segundo factor (TOTP) en la consola
 Plan aceptado archivado en [[planes/2026-09-16]]. TOTP propio sin dependencias (RFC 6238), login en dos tiempos con un vale que no abre sesión, códigos de recuperación de un solo uso, y una cuenta de servicio para que la batería y los guiones sigan entrando cuando `admin` encienda el segundo factor.
 — claude
+
+## [2026-09-16] plan | una sola fase de kill chain
+Plan aceptado archivado en [[planes/2026-09-16]]. Los tres vocabularios de fase pasan a derivarse de `events.mitre_tactic`: el informe del cliente colocaba el 29,8 % de los sucesos en la fase equivocada y siempre hacia atrás, y por eso la recomendación P1 de activar respuesta a incidentes no se disparaba nunca.
+— claude
