@@ -239,3 +239,65 @@ cuando la dirección esté clara.
 **decir qué quedó sin hacer y por qué**. Y desconfía de las listas de pendientes, incluidas las
 mías: el 16-sep, de cinco entradas comprobadas a mano, **cuatro estaban desfasadas**. Comprueba en
 el código antes de ponerte con algo.
+
+---
+
+## Añadido el 17-sep-2026 (madrugada, sesión `skills-y-campo`) — dos correcciones antes de que te pongas
+
+> No toqué la Pi ni Ollama: esto sale de leer el código y la documentación de Thinkst. El estudio
+> completo está en `docs/RPI5_DE_LA_CAJA_A_LA_CONSOLA.md` y las entradas nuevas en el ROADMAP,
+> bloque **D-ter**.
+
+### 1 · El punto 1 de tu lista no es esfuerzo S. Es M.
+
+Arriba dice que `{#hardware-nunca-enrola}` es *«lo más grave y lo más barato»*. Lo primero sí; lo
+segundo no. `scripts/sensor-enroll.sh` son 34 líneas que **sólo escriben `flock_id` en un fichero**
+(`:33-34`):
+
+- **no guardan el `sensor_id`**,
+- **no arrancan el agente**,
+- **no configuran `TARTARUS_HMAC_SECRET`**.
+
+Si `setup-rpi.sh` se limita a llamarlo, el aparato queda enrolado y **reportando sin firmar para
+siempre** — que es `#rpi-agente`, el punto 16 de tu propia lista, archivado aparte. **Son un solo
+trabajo.** Cerrar sólo la mitad cambia el bug de cara y lo deja más difícil de ver.
+
+### 2 · Desplegarle el motor al día NO basta. Y la cifra que lo justificaba está desfasada.
+
+El aviso de arriba —«el arreglo no es tocar el ruleset, es desplegarle el motor al día»— es
+correcto y es **insuficiente**. Los YAML de la Pi apuntan Beelzebub **directo** al modelo:
+
+```yaml
+host: "http://172.18.0.1:11434/api/chat"
+```
+
+Con eso, **Beelzebub nunca habla con el motor**. Puedes desplegarle el motor más nuevo del mundo y
+no cambia ni un milisegundo, porque el cerebro determinista no está en el camino. Aquí, con los
+YAML apuntando al shim (`http://engine:8000/v1/chat/completions`), las tres baterías dan
+**`llamadas_llm=0`**: 57 POSIX, 35 Windows, 17 Cisco. Allí, **los 57 pagan 36 s**.
+
+**Hay que hacer las dos cosas:** motor al día **y** reapuntar los YAML al shim, con
+`TARTARUS_LLM_ACTIVE=ollama` como proveedor de respaldo.
+
+**Y por qué se cableó directo:** se midió el paso por el motor en **48-52 s contra 36 s** del
+directo. Esa medición se tomó contra el motor **viejo, sin el barrido de realismo** — medía «la
+misma llamada al modelo, más un salto». Con el motor de hoy `lsof`, `mount`, `netstat`, `ps` y `df`
+se resuelven en código y **no hay llamada que medir**. La cifra ya no vale, y mientras tanto ha
+congelado una decisión de arquitectura en una entrada del ROADMAP marcada ✅.
+
+Entradas nuevas: `#honeypot-salta-el-cerebro` y `#palancas-latencia-local`.
+
+### Y tres cosas menores que te ahorran tiempo
+
+- **`{#rpi5-un-paso}` NO está bloqueado por `{#docker-sin-imagen}`** para el camino de hardware: la
+  `.img` se construye una vez sobre arm64 y la imagen parcheada se hornea dentro
+  (`docker save` → `docker load` al fabricarla). Sin registry y sin `buildx`. Esa dependencia mal
+  puesta es lo único que mantiene aparcada la entrada de más valor.
+- **El punto de acceso WiFi que monta `setup-rpi.sh:50-88` ya es el 80 % de la pantalla de alta de
+  Thinkst** (`192.168.50.1`, con el 8888 ya abierto por `wlan0` en `:141-142`) — y en esa dirección
+  **no se sirve nada**. Entrada nueva: `#pantalla-en-el-aparato`.
+- **Los dos secretos que parecen versionados no lo están:** `.env` lo cubre `.gitignore:2` y los
+  `.bak-*` de `services/` los cubre `.gitignore:48`. `git ls-files` no devuelve ninguno. No hay
+  nada que redactar.
+
+— sesión `skills-y-campo`, que no tocó la Raspberry
