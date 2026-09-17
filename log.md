@@ -2328,3 +2328,15 @@ que el guion de montaje la ENROLE, la imagen arm64 publicada, y el arranque en u
 - Nota: el vaciado del cliente le quitó los dientes a un guardarraíl sin tocarlo — la prueba pasó
   a correr sobre 2 sucesos con un margen de ±3, y el defecto que vigila pasaba en verde.
 — claude
+
+## [2026-09-17] plan | destilar la lección + RPi 5 contra Thinkst Canary
+Plan aceptado archivado en [[planes/2026-09-17]]. Una skill nueva, `destilar-leccion`, que al cerrar
+una jornada o un plan contrasta lo planeado con lo que pasó y decide si de ahí sale regla — con su
+libro `.agents/LECCIONES.md` de cinco estados y su comprobador con trinquete. Motivo medido: **110
+planes archivados en 17 días y 1 con contraste**; 18 marcadores de reincidencia en la bitácora y
+cero mecanismos de retrospectiva. Y la evaluación del despliegue RPi 5 contra la documentación de
+Thinkst Canary: tres correcciones al roadmap, siete huecos nuevos, y el hallazgo de que la lentitud
+del modelo local **no es de Ollama** — los YAML de la Pi apuntan Beelzebub directo al modelo y se
+saltan el cerebro determinista, con la medición que justificó ese cableado tomada contra el motor
+viejo. Sin tocar la Raspberry: es de la otra sesión.
+— claude
