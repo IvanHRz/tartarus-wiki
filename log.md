@@ -2317,3 +2317,14 @@ Nuevo [[prompt-sesion-rp5]], separado del genérico. Lleva el estado medido el 1
 offline 5 días y 15 horas y no responde en ninguna de sus tres IPs— y su trabajo por orden:
 que el guion de montaje la ENROLE, la imagen arm64 publicada, y el arranque en un paso.
 — claude
+
+## [2026-09-17] plan | El vaciado de la batería y la fuga de credenciales cebo entre clientes
+- Plan aceptado archivado verbatim en `wiki/planes/2026-09-17.md` (2ª entrada del día, 01:45 CDMX)
+- Commits en el repo: `c28b982` (código y guardarraíles), `98dbd98` (ROADMAP, traspaso, bitácora)
+- `wiki/prompt-siguiente-sesion.md`: tres cifras que ya no se sostenían — 309→325 entradas del
+  plan, 3.250→3.290 pruebas, y la frase «vaciado, 142/142 tres veces seguidas», que **no se
+  reproduce** (142·141·140 con el arreglo y 142·142·141 en el control). Los puntos 2 y 3 de «por
+  dónde seguir» estaban cerrados y se sustituyen.
+- Nota: el vaciado del cliente le quitó los dientes a un guardarraíl sin tocarlo — la prueba pasó
+  a correr sobre 2 sucesos con un margen de ±3, y el defecto que vigila pasaba en verde.
+— claude
