@@ -10,8 +10,8 @@ tags: [sesion, prompt]
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
 > **Éste es el prompt del motor y la consola.** Para una sesión de la Raspberry / despliegue de
 > campo, usa [[prompt-sesion-rp5]], que lleva su propio estado medido y sus trampas.
-> Actualizado: **17-sep-2026 (madrugada)**, al cerrar el arranque de la consola y las dos
-> intermitencias. PR **#25**, CI **verde en los seis trabajos** sobre `9e97d94`.
+> Actualizado: **17-sep-2026 (mañana)**, al cerrar el vaciado de la batería y la fuga de
+> credenciales cebo entre clientes. PR **#25**, último empujón `98dbd98`.
 
 ---
 
@@ -35,7 +35,7 @@ Después `.agents/COORDINACION.md`, la cabecera de `.agents/ROADMAP.md` y las ú
 
 **Y desconfía de las listas de pendientes, incluidas las mías.** El 16-sep se reconciliaron las
 169 abiertas contra el código y **cuatro de cada cinco entradas comprobadas a mano estaban
-desfasadas o eran falsas**. Hoy el plan va por **309 entradas, 106 cerradas y 203 abiertas** (sácalo, no lo cites: el contador está en `.agents/TRASPASO.md`), con
+desfasadas o eran falsas**. Hoy el plan va por **325 entradas, 109 cerradas y 216 abiertas** (sácalo, no lo cites: el contador está en `.agents/TRASPASO.md`), con
 ocho bloques nuevos con ancla. **Comprueba en el código antes de ponerte con algo**: lo vigila
 `engine/tests/test_roadmap_coherente.py`, que exige que cada punto de «Lo siguiente» señale su
 entrada con `{#ancla}` y que esa entrada no esté cerrada.
@@ -83,11 +83,14 @@ bueno un spec que no hayas visto en ROJO**; y si una prueba comprueba que algo e
 en `flockQuieto()` — pero si tu prueba **siembra**, va a `flockDePruebas()`, y sus aserciones son
 de **subconjunto**, nunca de igualdad.
 
-**🔴 Antes de correr la batería, mira cuánto pesa su cliente.** No se limpia solo. Medido el
-17-sep: con **9.592 sucesos y 107 IPs** en «Pruebas automáticas» daba **1-2 fallos por pasada** en
-sitios distintos; vaciado, **142/142 tres veces seguidas**. Es también por lo que el CI está
-verde y el portátil no. Está como P1 en el ROADMAP (`{#cliente-bateria-engorda}`) y es el punto 2
-de «lo siguiente».
+**🔴 La batería ya se vacía sola, y aun así falla.** Desde el 17-sep por la mañana
+`sesion.setup.ts` vacía **los dos** clientes de prueba al arrancar cada pasada
+(`DELETE /flocks/{id}/datos`; el Default Flock lo rechaza el motor con **409**). Eso quitó una
+causa —el cliente engordaba hasta 9.592 sucesos y daba 1-2 fallos por pasada— pero **no las
+demás**: seis pasadas del 17 dieron **142·141·140** con el arreglo y **142·142·141 en el
+control**. La frase «vaciado, 142/142 tres veces seguidas» **ya no se reproduce: no la cites**.
+Lo que queda está inventariado en `{#bateria-sigue-intermitente}` (P1), y cada espécimen **pasa
+5 de 5 en solitario** — si tu spec hace eso, no lo has roto tú.
 
 ```bash
 docker exec tartarus-postgres psql -U tartarus -d tartarus -tA -F' | ' -c "
@@ -97,9 +100,9 @@ FROM flocks f LEFT JOIN events e ON e.flock_id=f.id GROUP BY f.name ORDER BY 2 D
 
 ## Estado al abrir
 
-- Python **3.250 pasando**, 11 saltadas aquí (**4** en el CI: son conjuntos distintos — aquí
+- Python **3.290 pasando**, 11 saltadas aquí (**4** en el CI: son conjuntos distintos — aquí
   faltan `bcrypt` y `DATABASE_URL`, allí no hay YAML de `services/`). Navegador **142**, de las
-  que **140 bloquean** en el CI. CI verde sobre `9e97d94`.
+  que **140 bloquean** en el CI — y **no dan 142/142 tres veces seguidas** en el portátil.
 - Consola con sesión: `admin`, contraseña en `.env` (`TARTARUS_ADMIN_PASS`). **Segundo factor
   disponible y apagado**; la batería y los guiones entran con `servicio-local`
   (`TARTARUS_SERVICE_PASS`), que **nunca** puede tener 2FA.
@@ -120,11 +123,16 @@ que la produce, está en `.agents/ROADMAP.md`. Los P1 de arriba:
    dueño, y eso —no la red— explica que la Pi figure en `192.168.0.12` y responda en `10.99.0.1`.
    **Desbloquea `{#rpi-agente}` y `{#ip-real-atacante}`, que son otros dos P1.** Ojo: la Pi es
    área de la otra sesión; el guion es de aquí. Coordínalo.
-2. **El cliente de la batería no se vacía nunca** (P1, **S**) `{#cliente-bateria-engorda}`. Va
-   segundo por barato y porque **hace fiable todo lo demás**. Que `sesion.setup.ts` lo vacíe al
-   empezar, o un `make e2e-limpio`. Vacía también «sin ruido»; **nunca** el Default Flock.
-3. **Las credenciales cebo se comparan sin mirar de qué cliente son** (P1, **S**)
-   `{#fuga-honey-creds}`. Fuga entre clientes: riesgo 98 y correo atribuidos al equivocado.
+2. **La batería sigue fallando aunque su cliente ya se vacíe** (P1, M)
+   `{#bateria-sigue-intermitente}`. Sustituye al vaciado, que se cerró el 17 por la mañana y **no
+   bastó**: 142·141·140 con el arreglo, 142·142·141 en el control. Siete especímenes, cada uno
+   pasa 5 de 5 en solitario. Empieza por `fases_coherentes`, que es el que más sale y el único
+   que salió también en el control.
+3. ~~**Las credenciales cebo se comparan sin mirar de qué cliente son**~~ — **HECHO el 17-sep
+   (mañana)**, con A/B por la cola real: el cebo del cliente A daba 98 y `HONEY_CRED_MATCH` en el
+   suceso del B, y hoy da 85 sin etiqueta. En su lugar, de la misma familia:
+   **borrar una regla de asignación deja sus sucesos en `flock_id NULL`, que es el Default Flock**
+   (P2, S) `{#asignacion-borrada-deja-huerfanos}` — o sea, en tu vista.
 4. **El cebo corrupto está construido y no lo llama nadie** (P1, M) `{#cebo-corrupto-sin-cablear}`.
    Comprobado el 17-sep: `gen_cred_corrupta` y `es_corrupto` sólo los llama su propio test. Es la
    pieza de decepción contra agentes de IA más avanzada que hay y está desconectada.
