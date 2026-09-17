@@ -2290,3 +2290,7 @@ Plan aceptado archivado en [[planes/2026-09-16]]. TOTP propio sin dependencias (
 ## [2026-09-16] plan | una sola fase de kill chain
 Plan aceptado archivado en [[planes/2026-09-16]]. Los tres vocabularios de fase pasan a derivarse de `events.mitre_tactic`: el informe del cliente colocaba el 29,8 % de los sucesos en la fase equivocada y siempre hacia atrás, y por eso la recomendación P1 de activar respuesta a incidentes no se disparaba nunca.
 — claude
+
+## [2026-09-16] plan | la consola enseña todo hasta que el JS decide
+Plan aceptado archivado en [[planes/2026-09-16]]. Las 27 secciones arrancan visibles —nada en el HTML las oculta— así que hasta que evalúa `main.js` la consola apila usuarios, auditoría y el alta del segundo factor; y con un `watcher` se ven hasta que vuelve `/auth/me`. Es además el mecanismo de una intermitencia que llevaba dos sesiones saliendo.
+— claude
