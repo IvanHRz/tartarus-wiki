@@ -1,15 +1,15 @@
 ---
 tipo: guia
 creado: 2026-09-11
-actualizado: 2026-09-16
+actualizado: 2026-09-17
 tags: [sesion, prompt]
 ---
 
 # Prompt para la siguiente sesión — TARTARUS
 
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
-> Actualizado: **16-sep-2026 (noche)**, al cerrar la reconciliación del ROADMAP y el ciclo de vida
-> de los cebos. PR **#25**, CI **verde en los seis trabajos** sobre `fd31b32`.
+> Actualizado: **17-sep-2026 (madrugada)**, al cerrar el arranque de la consola y las dos
+> intermitencias. PR **#25**, CI **verde en los seis trabajos** sobre `a6dd46b`.
 
 ---
 
@@ -20,119 +20,114 @@ Trabajo en **TARTARUS**, plataforma de decepción (honeypots) para respuesta a i
   consola JS vanilla en `ui/src` (`main.js` + `index.html` + `css/tartarus.css`), Postgres en
   `db/init.sql`, honeypots Beelzebub. Motor en `localhost:9001`, consola en `:8888`.
 - Wiki aparte: `/Users/ivanhuerta/Documents/Wikis/wiki-tartarus` (repo propio, privado).
-- **HAY OTRA SESIÓN DE CLAUDE trabajando el mismo repo** (la Raspberry / Ollama). Antes de tocar
-  nada, lee `.agents/COORDINACION.md` y anota ahí qué vas a editar. Reparto vigente: la otra
-  sesión lleva la Pi (Ollama, latencia, despliegue de campo); esta sesión lleva el motor y la
-  consola. **Nunca `git add -A`**: rutas explícitas siempre.
+- **HAY OTRA SESIÓN DE CLAUDE** en el mismo repo (la Raspberry / Ollama). Antes de tocar nada lee
+  `.agents/COORDINACION.md` y anota ahí qué vas a editar. Reparto vigente: la otra lleva la Pi;
+  ésta, el motor y la consola. **Nunca `git add -A`**: rutas explícitas siempre.
 
 ## Antes de nada, lee esto
 
-`.agents/TRASPASO.md` — el mapa: los números que no hay que volver a medir, qué se hizo, qué falta
-por orden y **las trampas que ya costaron una sesión cada una**. Después `.agents/COORDINACION.md`,
-la cabecera de `.agents/ROADMAP.md` y las últimas entradas de `.agents/BITACORA.md`.
+`.agents/TRASPASO.md` — el mapa: los números que no hay que volver a medir, «Lo siguiente, por
+orden» y **las trampas que ya costaron una sesión cada una** (son muchas y son reales; léelas).
+Después `.agents/COORDINACION.md`, la cabecera de `.agents/ROADMAP.md` y las últimas entradas de
+`.agents/BITACORA.md`.
 
-**Y desconfía de las listas de pendientes, incluidas las mías.** El 16-sep comprobé cinco entradas
-del plan a mano y **cuatro estaban desfasadas o eran falsas** — dos las había escrito yo esa misma
-semana. Se reconciliaron las 169 abiertas contra el código: quedan **258 entradas, 97 cerradas y
-161 abiertas**, y las cerradas llevan su evidencia (fichero y símbolo). Aun así: **comprueba en el
-código antes de ponerte con algo.** Lo vigila `engine/tests/test_roadmap_coherente.py`.
+**Y desconfía de las listas de pendientes, incluidas las mías.** El 16-sep se reconciliaron las
+169 abiertas contra el código y **cuatro de cada cinco entradas comprobadas a mano estaban
+desfasadas o eran falsas**. Hoy el plan va por **303 entradas, 103 cerradas y 200 abiertas**, con
+ocho bloques nuevos con ancla. **Comprueba en el código antes de ponerte con algo**: lo vigila
+`engine/tests/test_roadmap_coherente.py`, que exige que cada punto de «Lo siguiente» señale su
+entrada con `{#ancla}` y que esa entrada no esté cerrada.
 
 ## Cómo quiero que trabajes
 
-Documentación en español llano, cronológica. Todo plan aceptado se archiva verbatim en
+Documentación en **español llano y cronológico**. Todo plan aceptado se archiva verbatim en
 `wiki/planes/YYYY-MM-DD.md` (skill `registrar-plan`) **antes** de ejecutarlo; al cerrar, skill
-`pendientes-roadmap`. Commits en español, **sin Co-Authored-By**, excluyendo `presentacion/`.
-El trabajo va al **PR #25** y se comprueba el **CI atado al SHA del commit**, no al último run de
+`pendientes-roadmap`. Commits en español, **sin `Co-Authored-By`**, excluyendo `presentacion/`.
+El trabajo va al PR **#25** y **el CI se comprueba atado al SHA del commit**, no al último run de
 la rama.
 
 **Verifica en vivo y enséñame números — y verifica CONTENIDOS, no códigos de respuesta.** Y con
-eso me refiero al RESULTADO, no al mecanismo: el 16-sep di por cerrado un pendiente porque «el
-guion existe», y el defecto que describía seguía intacto en disco.
+eso me refiero al RESULTADO, no al mecanismo: se han cerrado pendientes porque «el guion existe»
+con el defecto intacto en disco.
 
-Cualquier borrado masivo en la base, pregúntame antes. Avanza sin preguntar de más cuando la
-dirección esté clara. Al tocar cualquier control de la consola, skill `sin-ambiguedad`
-(`python3 scripts/revisar_controles.py`). Tras tocar un protocolo, skill `verificar-protocolo` y
-pega su salida. **No toques `beelzebub/configurations/personalities/portal-gobmx.yml`** (trabajo en
-vivo mío). Los YAML de `beelzebub/configurations/services/` **no están versionados** (llevan la
-clave); `.agents/` **sí** se versiona.
+**Cualquier borrado masivo en la base, pregúntame antes.** Avanza sin preguntar de más cuando la
+dirección esté clara.
 
-**Para cualquier cosa de interfaz, abre un navegador.** `npx playwright test` **desde la raíz** —
-**128 pruebas en ~2 min 30 s**, 22 ficheros, y corre en el CI en el trabajo «Navegador (E2E)», que
-bloquea. **La batería NO reintenta, ni aquí ni en el CI**, y es deliberado. Tres reglas que no son
-opcionales:
+**Las skills del proyecto no son opcionales** (`.claude/skills/`, y están listadas en `CLAUDE.md`
+§10). Las que más se disparan:
 
-- Exige que el elemento esté **visible, con caja y dentro del viewport** (`e2e/apoyo.ts`:
-  `visibleDeVerdad`, `seVeAlAbrirlo`).
-- **No des por bueno un spec que no hayas visto en ROJO** contra el defecto que vigila.
-- Si una prueba comprueba que algo está **vacío**, siembra en `flockQuieto()`. Y si siembra, que
-  **reconozca lo suyo al terminar** (`/api/alert-ux/acknowledge/{ip}`): sembrar 60 sucesos en el
-  cliente compartido tumbó a otra prueba.
+- `sin-ambiguedad` — al añadir, renombrar o quitar cualquier control (`python3
+  scripts/revisar_controles.py`).
+- **`consola-usable`** — al tocar `index.html`, cualquier JS de `ui/src/js/` o el CSS.
+- **`perseguir-intermitente`** — **nueva, 17-sep**: cuando la batería falle una pasada y pase la
+  siguiente, o un fallo no se reproduzca en solitario. Nada de «ya no lo vi».
+- `verificar-protocolo` — tras tocar un protocolo, una persona, un prompt o un árbol. Pega su
+  salida o no se dice que funciona.
+- `medir-no-suponer` — antes de afirmar una causa o que algo está arreglado.
 
-**Si algo sale intermitente, no te encojas de hombros.** Cinco veces en solitario y cinco dentro de
-la suite: si sólo falla acompañado, busca qué carga el motor. Las cuatro intermitencias de esta
-semana eran **defectos del producto**, no pruebas nerviosas.
+**Para cualquier cosa de interfaz, abre un navegador.** `npx playwright test` desde la raíz — 142
+pruebas, 27 ficheros, y bloquea en el CI. **No reintenta, y es deliberado.** Tres reglas no
+opcionales: exige el elemento visible, con caja y en el viewport (`e2e/apoyo.ts`); **no des por
+bueno un spec que no hayas visto en ROJO**; y si una prueba comprueba que algo está vacío, siembra
+en `flockQuieto()` — pero si tu prueba **siembra**, va a `flockDePruebas()`, y sus aserciones son
+de **subconjunto**, nunca de igualdad.
 
-## Qué pasó, en corto (contexto, no para repetirlo)
+**🔴 Antes de correr la batería, mira cuánto pesa su cliente.** No se limpia solo. Medido el
+17-sep: con **9.592 sucesos y 107 IPs** en «Pruebas automáticas» daba **1-2 fallos por pasada** en
+sitios distintos; vaciado, **142/142 tres veces seguidas**. Es también por lo que el CI está
+verde y el portátil no. Está como P1 en el ROADMAP (`{#cliente-bateria-engorda}`) y es el punto 2
+de «lo siguiente».
 
-Del 11 al 13 de septiembre se cerraron los agujeros de seguridad **propia**: la consola sin sesión,
-«Salir» que no cerraba, el comando del atacante ejecutándose como JavaScript en la pantalla del
-analista, seis endpoints hacia la red interna. La madrugada del 14, lo que quedaba: **el atacante
-ya no redacta el informe forense de su propio ataque** y **el CI abre un navegador**.
-
-Del 14 al 15 hicimos **cinco auditorías por partes de la consola**, y el patrón se repitió en las
-cinco: **lo que yo señalaba como «raro» era siempre un defecto real** — tres relojes en la misma
-pantalla, una línea de tiempo que escondía el 45 % de los sucesos, tres secciones describiendo al
-mismo atacante, y el honeypot SSH sirviendo una clínica privada mientras la tarjeta lo llamaba
-«Ubuntu estándar».
-
-El 15 por la noche y el 16, el **informe que se entrega al cliente**: cubría siete días sin
-decirlo, llamaba a un modelo externo **siempre y en silencio**, escondía elementos de sus listas
-sin avisar, y sólo se bajaba en HTML o PDF. Ahora respeta el periodo, declara qué cubre y si lo
-escribió una IA, dice cuánto esconde, y **se baja también en Markdown** con sus 24 secciones.
-
-El 16 por la tarde, **dos detectores que no producían nada**: el barrido web no escribía en ningún
-sitio y su aviso se lo comía el propio barrido; y el escaneo de puertos **no podía dispararse
-nunca** —pedía 10 puertos distintos y la plataforma expone 7—.
-
-## Por dónde seguir
-
-Elige tú y dime por qué; esto es mi orden, no una orden. Los anclas `{#id}` llevan a su entrada en
-el ROADMAP.
-
-1. **`plant_token()` acuña cebos que nacen huérfanos** (P1, M) {#plant-token-sin-hash}. Devuelve
-   un `bool` y nunca el hash, así que nadie puede guardarlo: **cada pasada de
-   `scripts/deploy_canary_tokens.py` son 10 reglas Sigma irretirables**. Pasa hoy, no es deuda
-   histórica. **Lo más urgente de lo que no depende de la Raspberry.**
-2. **Se registra la regla de cebo ANTES de insertar su fila** (P2, S)
-   {#registrar-antes-de-insertar}, con el INSERT en un `try/except` que sólo avisa.
-3. **Segundo factor** (P2, L) {#segundo-factor}. Lo pedí yo y está abierto de verdad: cero `totp`
-   en todo el repo. Ojo al radio: `e2e/sesion.setup.ts` abre sesión una vez y reparte la cookie a
-   las 128 pruebas, así que tiene que ser **opcional por usuario y apagado por defecto**, con
-   códigos de recuperación.
-4. **Tres vocabularios de fase conviven** (P2, M) {#vocabularios-fase}, y `kill_chain_tracer`
-   escribe en una tabla que no lee nadie.
-5. **Recuperar la IP real del atacante** (P1, M) {#ip-real-atacante} y **exigir la firma HMAC**
-   (P1, S) {#hmac-exigir}: los dos dependen de la Raspberry, que sigue `offline` desde el 11-sep.
-   Es área de la otra sesión, pero desbloquea lo demás.
+```bash
+docker exec tartarus-postgres psql -U tartarus -d tartarus -tA -F' | ' -c "
+SELECT f.name, COUNT(e.id), COUNT(DISTINCT e.source_ip)
+FROM flocks f LEFT JOIN events e ON e.flock_id=f.id GROUP BY f.name ORDER BY 2 DESC;"
+```
 
 ## Estado al abrir
 
-- Suite de Python: **3.167 pasando**, 12 saltadas. `cd engine && python3 -m pytest tests/ -q`.
-- Batería de navegador: **128 pruebas**, 22 ficheros, **sin reintentos**. `npx playwright test`.
-- CI: **seis trabajos, los seis bloqueantes**. Verde sobre `fd31b32`.
-- ROADMAP: **258 entradas, 97 cerradas, 161 abiertas** — reconciliado el 16-sep.
-- Consola con **sesión encendida**. Usuario `admin`, contraseña en `.env` (`TARTARUS_ADMIN_PASS`).
-- **Clientes (flocks): 6.** «Default Flock» es el mío, con **630 sucesos**. «Pruebas automáticas» y
-  «Pruebas automáticas · sin ruido» son de la batería: **no los mires como datos**.
-- Sensores: **9 activos de 10**; el caído es la Raspberry.
-- Reglas Sigma: **88** base versionada, este motor carga **103** (15 de cebo, **9 huérfanas**) y
-  **95 pueden disparar**. YARA: **439** reglas en **95** ficheros. Honeypots: **10**.
-- **🔴 `scripts/reconcile_decoy_rules.py --apply` — mira el dry-run antes.** El 16-sep ese guion
-  daba por huérfanas **dos trampas ARMADAS** porque su inventario miraba dos de las cuatro fuentes.
-  Ya mira las cuatro y **falla cerrado** sin Redis, pero la costumbre de mirar los números primero
-  se queda.
-- El motor del Mac está en **DeepSeek**; la Pi en **Ollama** (`gemma3:4b`). Lo de *AI Settings*
-  vive en el volumen `ai_estado` y sobrevive a recrear el contenedor.
-- **Sobre el IPv6 de esta máquina:** se traga las conexiones a `api.github.com` (con `curl -4`
-  responden). **Lo de `api.deepseek.com` quedó DESMENTIDO el 15-sep**: contesta en 1,18 s. Si una
-  llamada al modelo tarda, busca el motivo, no lo achaques a la red.
+- Python **3.249 pasando**, 12 saltadas. Navegador **142**, sin reintentos. CI verde sobre
+  `a6dd46b`.
+- Consola con sesión: `admin`, contraseña en `.env` (`TARTARUS_ADMIN_PASS`). **Segundo factor
+  disponible y apagado**; la batería y los guiones entran con `servicio-local`
+  (`TARTARUS_SERVICE_PASS`), que **nunca** puede tener 2FA.
+- **6 flocks.** «Default Flock» es el mío, **630 sucesos** — los dos de «Pruebas automáticas» son
+  de la batería: no los mires como datos.
+- Sensores **9 de 10**; el caído es la Raspberry. Sigma **94 cargadas** (88 base + 6 de cebo, **0
+  huérfanas**), 86 pueden disparar. YARA 439. Honeypots 10, **los diez con cerebro**.
+- Motor en DeepSeek; la Pi en Ollama.
+
+## Por dónde seguir
+
+**Elige tú y dime por qué; es mi orden, no una orden.** El detalle, con su medición y el comando
+que la produce, está en `.agents/ROADMAP.md`. Los P1 de arriba:
+
+1. **El guion que monta la Raspberry nunca la enrola** (P1, **S**) `{#hardware-nunca-enrola}`.
+   Lo más grave, y barato. `grep -i "enroll\|token\|flock"` sobre `setup-rpi.sh` y
+   `push-to-rpi.sh` devuelve **cero** — comprobado el 17-sep. El aparato queda montado y sin
+   dueño, y eso —no la red— explica que la Pi figure en `192.168.0.12` y responda en `10.99.0.1`.
+   **Desbloquea `{#rpi-agente}` y `{#ip-real-atacante}`, que son otros dos P1.** Ojo: la Pi es
+   área de la otra sesión; el guion es de aquí. Coordínalo.
+2. **El cliente de la batería no se vacía nunca** (P1, **S**) `{#cliente-bateria-engorda}`. Va
+   segundo por barato y porque **hace fiable todo lo demás**. Que `sesion.setup.ts` lo vacíe al
+   empezar, o un `make e2e-limpio`. Vacía también «sin ruido»; **nunca** el Default Flock.
+3. **Las credenciales cebo se comparan sin mirar de qué cliente son** (P1, **S**)
+   `{#fuga-honey-creds}`. Fuga entre clientes: riesgo 98 y correo atribuidos al equivocado.
+4. **El cebo corrupto está construido y no lo llama nadie** (P1, M) `{#cebo-corrupto-sin-cablear}`.
+   Comprobado el 17-sep: `gen_cred_corrupta` y `es_corrupto` sólo los llama su propio test. Es la
+   pieza de decepción contra agentes de IA más avanzada que hay y está desconectada.
+5. **Un cliente no puede conseguir la imagen de Docker** (P1, M) `{#docker-sin-imagen}` y
+   **el despliegue en la RPi5 en un paso** (P1, M) `{#rpi5-un-paso}`.
+6. **La barra de notificaciones** (P1, M) `{#campos-sin-etiqueta}` — 13 campos, cero `<label>`, y
+   guardar tras recargar **borra la contraseña SMTP**. Cuelga de `{#tokens-de-diseno}` (P1, L),
+   que es el paraguas de todo lo de interfaz.
+7. **La carga inicial ahoga lo que el operador pide a mano** (P1, M) `{#rafaga-carga-inicial}`.
+   Medido: 18 cargadores de golpe, **33 peticiones en vuelo**, 6 conexiones por host, y un clic
+   durante la carga tarda **15,2 s** para un endpoint de **7 ms**. Ya se probó y **descartó**
+   estrangularlo en tandas; el arreglo bueno es **no pedir datos de paneles ocultos**.
+
+**Bloqueado por la Raspberry** (offline desde el 11-sep): `{#rpi-agente}`, `{#ip-real-atacante}`.
+Y **`{#hmac-exigir}` NO se puede decidir hoy** aunque parezca que sí: el contador de quién manda
+sin firmar (`hmac_verifier._sin_firma`) es un **diccionario en memoria** que se borra en cada
+reinicio, así que «cero» significa «nadie desde el último reinicio». Cierra antes
+`{#contador-sin-firmar-en-memoria}`.
