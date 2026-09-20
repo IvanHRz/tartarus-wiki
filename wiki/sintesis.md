@@ -1,8 +1,8 @@
 ---
 tipo: sintesis
 creado: 2026-07-09
-actualizado: 2026-08-07
-commit_ref: PR#12 (rama feature/tier0-deployment-readiness)
+actualizado: 2026-09-20
+commit_ref: f854217 (PR#25, rama feature/tier0-deployment-readiness)
 ---
 
 # TARTARUS — el proyecto en una página
@@ -23,6 +23,37 @@ Modelo de operación: **MSSP multi-cliente**. Cada cliente es un *flock* aislado
 dos niveles (madre = visión global; workspace = un cliente) los gobierna.
 
 ## Dónde estamos hoy
+
+> **Foto del 20-sep-2026.** PR **#25**, CI verde en los seis trabajos. Suite **3.393 pasando** y
+> 9 saltadas —todas declaradas—; batería de navegador **157** pruebas. El plan va por **360
+> entradas, 117 cerradas**.
+
+**Septiembre fue el mes de cerrar la seguridad propia**, y conviene decir qué significa eso: no
+que aparecieran agujeros nuevos, sino que **se fueron a buscar y se midieron**. Lo que se cerró,
+por familias:
+
+- **Aislamiento entre clientes.** Una credencial cebo del cliente A disparaba la alerta más fuerte
+  de la plataforma en un suceso del B. Un atacante que golpeaba a dos clientes producía **un solo
+  rastro** de kill chain —con la evidencia de los dos dentro— y **la segunda víctima no generaba
+  ninguno**. Y borrar una regla de atribución mandaba los sucesos a la vista del operador sin
+  decirlo. Los tres, cerrados y verificados en vivo con A/B.
+- **Roles.** Un `watcher` —el rol de sólo mirar— podía **silenciar una IP para todo el equipo**.
+  Lo grave no fue la ruta: fue que el control que decía vigilarlo **eximía al router entero**.
+- **Las dos puertas de máquina.** La ingesta de sensores y los tres shims de honeypot siguen
+  abiertas **a propósito**, y ahora por primera vez se sabe a quién se dejaría fuera al cerrarlas.
+  Ver [[0013-modo-aviso-antes-de-exigir]].
+
+**Lo que esto le dice a dirección:** la plataforma pasó de «funciona» a «se puede demostrar que
+funciona». Casi todo lo anterior se encontró **midiendo**, no revisando — y seis pruebas del
+repositorio documentaban un agujero como correcto, dos de ellas porque **no se ejecutaban en
+ningún entorno**. El activo que deja el mes no son los arreglos: es que ahora hay controles que
+fallan cuando eso vuelve a pasar.
+
+Detalle vivo: [[estado-y-rumbo]] · [[roadmap]] · [[0013-modo-aviso-antes-de-exigir]] ·
+[[0012-api-soc-menor-privilegio]].
+
+## La foto anterior (agosto)
+
 
 El periodo pasado cerró el **salto a MSSP** (multi-tenancy: flocks, RBAC, dos niveles, acknowledge,
 attack-map — todo con su ADR). Sobre esa base, la sesión más reciente entregó dos programas grandes,
@@ -54,26 +85,28 @@ Eso ya se movió:
 
 ## A dónde vamos — la tensión de ahora
 
-El chasis y el motor están; **falta pulir la cabina y cerrar el aislamiento fino**. Tras probar la
-consola en vivo salieron **13 brechas de producto** (ver [[estado-y-rumbo]] y `ROADMAP` Tier F). Los
-tres hilos que importan:
+La tensión de agosto era *«chasis sólido, falta pulir la cabina y cerrar el aislamiento fino»*.
+**El aislamiento fino se cerró** —los tres hilos de multi-cliente, el recorte por rol y la
+atribución— y la cabina sigue pendiente. La de hoy es otra, y es más incómoda:
 
-1. **Aislamiento multi-cliente fino.** El backend **sí aísla** los datos por flock, pero (a) un guard
-   cosmético de la UI hacía *parecer* que se mezclaban los totales, (b) dos vistas (kill-chain,
-   correlación) salían sin filtrar, y (c) —lo de fondo— la asignación *usuario→cliente* todavía **no
-   restringe** qué datos puede pedir un usuario. Para un MSSP real, cerrar (c) es la pieza de seguridad.
-2. **Claridad de la consola.** Varias secciones son potentes pero no se explican solas (Session
-   Correlation, Threat Intelligence, Breadcrumbs/Personalities, el memo del analista que no guardaba
-   con Enter). Regla de oro adoptada: **intuición y facilidad** — una alerta se resuelve en 5–8 campos.
-3. **El motor de IA del honeypot.** La llave de OpenAI está bien fuera de git, pero expuesta en el
-   artefacto de despliegue; y falta un **panel para editar los "prompts de persona"** desde la app
-   (que el señuelo actúe como Windows/PowerShell, no solo Ubuntu) — la base ya existe.
+1. **Lo que falta para cerrar las dos puertas no es código: es otro equipo.** La firma de sensores
+   y los shims esperan dos cosas de la Raspberry y de la configuración de Beelzebub. Una decisión
+   que depende de otro se queda esperando si nadie la empuja; por eso quedan en estado
+   **👁 en monitoreo**, con su criterio escrito. Ver [[0013-modo-aviso-antes-de-exigir]].
+2. **La batería de pruebas de interfaz no es fiable, y eso cuesta horas.** 155·153·157 en tres
+   pasadas: cada fallo obliga a descartar antes de poder creerse nada. Es el impuesto que paga
+   todo lo demás, y es el P1 con más retorno.
+3. **Un cliente todavía no puede desplegar solo.** No hay imagen de Docker publicada, el despliegue
+   en la Raspberry no es de un paso, y faltan los dos modos nuevos (Tailscale e instalador con
+   token). Es lo que separa «lo desplegamos nosotros» de «producto».
+4. **La consola sigue sin sistema de diseño.** 13 variables contra 133 colores y 116 espaciados.
+   Es el paraguas de casi todo lo de interfaz que queda.
 
 ## En una frase
 
-**TARTARUS ya es una plataforma MSSP desplegable y verificable; el trabajo ahora es de producto:
-cerrar el aislamiento fino, hacer la consola auto-explicable, y validar de punta a punta que los
-cebos y las alertas realmente jalan.**
+**TARTARUS ya no sólo funciona: se puede demostrar que funciona, y cuando deja de hacerlo hay un
+control que lo dice.** Lo que queda es producto —que un cliente lo despliegue solo y que la consola
+se explique sola— y una deuda de fiabilidad en las pruebas de interfaz que encarece todo lo demás.
 
 ## Enlaces
 - [[estado-y-rumbo]] — qué tenemos, qué se evalúa/mejora, próximas acciones con estimados.
