@@ -10,8 +10,8 @@ tags: [sesion, prompt]
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
 > **Éste es el prompt del motor y la consola.** Para una sesión de la Raspberry / despliegue de
 > campo, usa [[prompt-sesion-rp5]], que lleva su propio estado medido y sus trampas.
-> Actualizado: **17-sep-2026 (mañana)**, al cerrar el vaciado de la batería y la fuga de
-> credenciales cebo entre clientes. PR **#25**, último empujón `98dbd98`.
+> Actualizado: **20-sep-2026 (madrugada)**, al dejar la firma HMAC en monitoreo y los tres shims
+> contando. PR **#25**, último empujón `f854217`, CI verde en los seis.
 
 ---
 
@@ -35,7 +35,7 @@ Después `.agents/COORDINACION.md`, la cabecera de `.agents/ROADMAP.md` y las ú
 
 **Y desconfía de las listas de pendientes, incluidas las mías.** El 16-sep se reconciliaron las
 169 abiertas contra el código y **cuatro de cada cinco entradas comprobadas a mano estaban
-desfasadas o eran falsas**. Hoy el plan va por **325 entradas, 109 cerradas y 216 abiertas** (sácalo, no lo cites: el contador está en `.agents/TRASPASO.md`), con
+desfasadas o eran falsas**. Hoy el plan va por **360 entradas, 117 cerradas y 243 abiertas** (sácalo, no lo cites: el contador está en `.agents/TRASPASO.md`), con
 ocho bloques nuevos con ancla. **Comprueba en el código antes de ponerte con algo**: lo vigila
 `engine/tests/test_roadmap_coherente.py`, que exige que cada punto de «Lo siguiente» señale su
 entrada con `{#ancla}` y que esa entrada no esté cerrada.
@@ -74,7 +74,7 @@ dirección esté clara.
   salida o no se dice que funciona.
 - `medir-no-suponer` — antes de afirmar una causa o que algo está arreglado.
 
-**Para cualquier cosa de interfaz, abre un navegador.** `npx playwright test` desde la raíz — 142
+**Para cualquier cosa de interfaz, abre un navegador.** `npx playwright test` desde la raíz — 157
 pruebas, 27 ficheros. **No reintenta, y es deliberado.** Ojo con el «bloquea en el CI»: bloquean
 **140**; las **2** de `trampas.spec.ts` se saltan allí porque exigen un honeypot con la persona
 tramposa aplicada, y en el CI no hay honeypots. Tres reglas no
@@ -83,14 +83,18 @@ bueno un spec que no hayas visto en ROJO**; y si una prueba comprueba que algo e
 en `flockQuieto()` — pero si tu prueba **siembra**, va a `flockDePruebas()`, y sus aserciones son
 de **subconjunto**, nunca de igualdad.
 
-**🔴 La batería ya se vacía sola, y aun así falla.** Desde el 17-sep por la mañana
-`sesion.setup.ts` vacía **los dos** clientes de prueba al arrancar cada pasada
-(`DELETE /flocks/{id}/datos`; el Default Flock lo rechaza el motor con **409**). Eso quitó una
-causa —el cliente engordaba hasta 9.592 sucesos y daba 1-2 fallos por pasada— pero **no las
-demás**: seis pasadas del 17 dieron **142·141·140** con el arreglo y **142·142·141 en el
-control**. La frase «vaciado, 142/142 tres veces seguidas» **ya no se reproduce: no la cites**.
-Lo que queda está inventariado en `{#bateria-sigue-intermitente}` (P1), y cada espécimen **pasa
-5 de 5 en solitario** — si tu spec hace eso, no lo has roto tú.
+**🔴 La batería: una a la vez, y aun así falla.** Dos cosas que ahorran media hora cada una.
+
+**Una a la vez.** Las tres copias de trabajo comparten stack, y `sesion.setup.ts` **vacía los dos
+clientes de prueba al arrancar**: la segunda batería que empieza le borra los datos a la primera.
+Desde el 18-sep hay turno (`e2e/cerrojo.ts`, fichero en el `.git` común): si otra copia lo tiene,
+la batería **muere en el arranque diciendo quién**. Antes de culpar a tu cambio de una racha rara,
+`ps aux | grep '[p]laywright'`.
+
+**Y aun así falla.** Vaciar el cliente quitó **una** causa, no todas: 20-sep **155·153·157** con el
+stack en exclusiva. La frase «vaciado, 142/142 tres veces seguidas» **no se reproduce: no la
+cites**. Lo que queda está inventariado en `{#bateria-sigue-intermitente}` (P1), y cada espécimen
+**pasa 5 de 5 en solitario** — si tu spec hace eso, no lo has roto tú.
 
 ```bash
 docker exec tartarus-postgres psql -U tartarus -d tartarus -tA -F' | ' -c "
@@ -100,9 +104,11 @@ FROM flocks f LEFT JOIN events e ON e.flock_id=f.id GROUP BY f.name ORDER BY 2 D
 
 ## Estado al abrir
 
-- Python **3.290 pasando**, 11 saltadas aquí (**4** en el CI: son conjuntos distintos — aquí
-  faltan `bcrypt` y `DATABASE_URL`, allí no hay YAML de `services/`). Navegador **142**, de las
-  que **140 bloquean** en el CI — y **no dan 142/142 tres veces seguidas** en el portátil.
+- Python **3.393 pasando**, **9 saltadas** aquí y **2** en el CI — y desde el 18-sep esas nueve
+  están **declaradas** en `engine/tests/test_saltos_vivos.py`: si añades una prueba con `skip`,
+  hay que apuntarla ahí, y **no se puede declarar en los dos entornos** (eso es una prueba que no
+  corre en ninguno; van seis en este repo). Navegador **157**, de las que **155 bloquean** en el
+  CI — y **no dan 157/157 tres veces seguidas** en el portátil.
 - Consola con sesión: `admin`, contraseña en `.env` (`TARTARUS_ADMIN_PASS`). **Segundo factor
   disponible y apagado**; la batería y los guiones entran con `servicio-local`
   (`TARTARUS_SERVICE_PASS`), que **nunca** puede tener 2FA.
@@ -115,19 +121,36 @@ FROM flocks f LEFT JOIN events e ON e.flock_id=f.id GROUP BY f.name ORDER BY 2 D
 ## Por dónde seguir
 
 **Elige tú y dime por qué; es mi orden, no una orden.** El detalle, con su medición y el comando
-que la produce, está en `.agents/ROADMAP.md`. Los P1 de arriba:
+que la produce, está en `.agents/ROADMAP.md`.
 
-1. **El guion que monta la Raspberry nunca la enrola** (P1, **S**) `{#hardware-nunca-enrola}`.
-   Lo más grave, y barato. `grep -i "enroll\|token\|flock"` sobre `setup-rpi.sh` y
-   `push-to-rpi.sh` devuelve **cero** — comprobado el 17-sep. El aparato queda montado y sin
-   dueño, y eso —no la red— explica que la Pi figure en `192.168.0.12` y responda en `10.99.0.1`.
-   **Desbloquea `{#rpi-agente}` y `{#ip-real-atacante}`, que son otros dos P1.** Ojo: la Pi es
-   área de la otra sesión; el guion es de aquí. Coordínalo.
-2. **La batería sigue fallando aunque su cliente ya se vacíe** (P1, M)
-   `{#bateria-sigue-intermitente}`. Sustituye al vaciado, que se cerró el 17 por la mañana y **no
-   bastó**: 142·141·140 con el arreglo, 142·142·141 en el control. Siete especímenes, cada uno
-   pasa 5 de 5 en solitario. Empieza por `fases_coherentes`, que es el que más sale y el único
-   que salió también en el control.
+**👁 Antes de elegir, mira lo que está en monitoreo** — son dos y **no necesitan código**:
+
+```bash
+curl -s localhost:9001/metrics/tartarus | grep -E "sin_firmar_desde |sin_firmar_total\{|shim_sin_credencial_total\{"
+```
+· `{#hmac-exigir}`: se enciende cuando haya **cero remitentes sin firmar durante una semana** Y
+`TARTARUS_HMAC_SECRET` esté en el systemd de la Pi. Ventana abierta el 19-sep 22:53.
+· `{#shims-sin-auth}`: los tres shims cuentan y **no rechazan**. Se cierra poniendo un token de
+verdad en los YAML de `beelzebub/configurations/services/` (no versionados) y
+`TARTARUS_SHIM_TOKEN` en el motor. **Cerrar esa puerta de golpe dejó nueve de los diez honeypots
+sin cerebro tres días**; hay una prueba que fija el modo aviso a propósito.
+
+Y los P1 que sí son código:
+
+1. **El guion que monta la Raspberry nunca la enrola** (P1, **M** — no S, lo midió campo)
+   `{#hardware-nunca-enrola}`. `sensor-enroll.sh` sólo escribe el `flock_id` en un fichero: no
+   guarda el `sensor_id`, no arranca el agente y no configura `TARTARUS_HMAC_SECRET`. Se funde
+   con `{#rpi-agente}`. La Pi es área de la sesión de campo; coordínalo.
+2. **La batería sigue fallando aunque su cliente se vacíe y haya turno** (P1, M)
+   `{#bateria-sigue-intermitente}`. 20-sep: **155·153·157** en exclusiva. Es lo que más estorba a
+   todo el mundo — cada fallo cuesta media hora de descarte. Ya hay dos especímenes cerrados con
+   veredicto y el método probado: **cinco pasadas en solitario**, y si pasa, es de este
+   inventario. Empieza por los de `ventana_tiempo`, que son los que más salen.
+3. **Un cliente no puede conseguir la imagen de Docker** (P1, M) `{#docker-sin-imagen}`. El que
+   más bloquea fuera del equipo, y nadie lo ha tocado en cuatro días: sin `Dockerfile`, sin
+   registry, sólo `arm64`, y el compose cae a la de upstream **sin los seis parches**, con la
+   clave de host SSH cambiando en cada reinicio.
+
 3. ~~**Las credenciales cebo se comparan sin mirar de qué cliente son**~~ — **HECHO el 17-sep
    (mañana)**, con A/B por la cola real: el cebo del cliente A daba 98 y `HONEY_CRED_MATCH` en el
    suceso del B, y hoy da 85 sin etiqueta. En su lugar, de la misma familia:
