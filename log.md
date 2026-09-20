@@ -2340,3 +2340,53 @@ del modelo local **no es de Ollama** — los YAML de la Pi apuntan Beelzebub dir
 saltan el cerebro determinista, con la medición que justificó ese cableado tomada contra el motor
 viejo. Sin tocar la Raspberry: es de la otra sesión.
 — claude
+
+## [2026-09-17] bitacora | Aislamiento entre clientes: el vaciado de la batería y la fuga de cebos
+- Commits: `c28b982`..`98dbd98` (4)
+- Dos P1 cerrados. **El cliente de la batería no se vaciaba nunca** — 9.592 sucesos acumulados y
+  1-2 fallos por pasada; ahora `DELETE /flocks/{id}/datos` con el «nunca el Default Flock» como
+  **409 en el motor**, no como comprobación en las pruebas. Y **la credencial cebo del cliente A
+  disparaba riesgo 98 en un suceso del B**: A/B por la cola real, antes 98+`HONEY_CRED_MATCH` en
+  los dos, después 85 y sin etiqueta en el ajeno.
+- Nota para dirección: vaciar el cliente **no** arregló la batería (142·141·140 con el arreglo y
+  142·142·141 en el control). La frase «142/142 tres veces» que circulaba en los documentos no se
+  reproduce y se retiró de los tres sitios donde estaba escrita.
+— claude
+
+## [2026-09-17] bitacora | Un rastro de kill chain es de un cliente, no de «la IP»
+- Commits: `e50a3bb`, `164483e`, `01369dc` (3)
+- `{#fuga-kill-chain}`: un atacante que golpeaba a dos clientes producía **un solo rastro**, con
+  los sucesos de los dos dentro, y **la segunda víctima no generaba ninguno**. A/B por la cola
+  real con atribución por puerto. Cerrado también `{#asignacion-borrada-deja-huerfanos}`: borrar
+  una regla dejaba los sucesos en `flock_id NULL`, que **es** el Default Flock.
+- Y un efecto del arreglo anterior que nadie esperaba: **el vaciado del cliente rompió el trabajo
+  en paralelo**. Las tres copias comparten los mismos clientes de prueba, así que la segunda
+  batería le borraba los datos a la primera. Anotado y arreglado al día siguiente con un turno.
+— claude
+
+## [2026-09-18] bitacora | Roles: un watcher podía silenciar una IP para todo el equipo
+- Commits: `3d7a3b0`, `cc6bea6`, `938e44e`, `c67b824`, `e869557`, `4ee78f8` (6)
+- `{#rutas-sin-rol}` por el lado del motor. De 106 rutas de escritura, las sueltas eran **dos**
+  —no las siete que decía el plan— y el motivo de que nadie las viera es lo que importa: el
+  guardarraíl de roles **eximía al router entero**. Ahora se comprueba ruta a ruta.
+- `{#saltos-sin-inventario}`: al cruzar por fin las saltadas de los dos entornos aparecieron **dos
+  pruebas que no se ejecutaban en ninguno** —el filtro del propio eco del sensor ICMP y el árbol
+  de Windows contra su shell—. Van seis en el repo. Local pasa de 11 a 9 saltadas; el CI, de 4 a 2.
+- Y hay turno para la batería (`e2e/cerrojo.ts`): una a la vez, y la segunda muere diciendo quién.
+— claude
+
+## [2026-09-20] bitacora | Las dos puertas de máquina ya se pueden cerrar, y ninguna está cerrada
+- Commits: `fa2a0b7`, `43ed9c1`, `d0a7c32`, `e6e4743`, `092b70f`, `f854217` (6)
+- **Lo que hay que saber en una línea:** Tartarus tiene dos entradas de máquina a máquina —la
+  ingesta de sensores (firma HMAC) y los tres shims de honeypot— y ninguna está cerrada porque
+  **no se sabía a quién se tiraría al cerrarlas**. Ahora se sabe.
+- `{#contador-sin-firmar-en-memoria}`: el contador vivía en un diccionario del proceso y el
+  comentario del código decía «si esto está a cero, nadie se rompe». Era falso: cero significaba
+  «nadie desde el último reinicio». Persistido, con la ventana declarada.
+- `{#hmac-exigir}` queda **👁 EN MONITOREO** —estado nuevo en el plan, con guardarraíl que exige
+  decir qué se mira, cada cuánto y con qué criterio— y `{#shims-sin-auth}` a medias: los tres
+  shims **cuentan y no rechazan**.
+- Decisión de fondo, con ADR: **modo aviso antes de exigir**. Ver [[adr/0013-modo-aviso-antes-de-exigir]].
+- Nada se encendió a propósito: las dos condiciones que faltan son de campo (el secreto en la Pi,
+  un token en los YAML de Beelzebub).
+— claude
