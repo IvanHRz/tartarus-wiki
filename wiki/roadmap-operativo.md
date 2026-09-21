@@ -2,7 +2,7 @@
 
 **Versión del documento:** 2.0
 **Fecha:** 7 de julio de 2026 · **última revisión de cifras:** 10 de septiembre de 2026
-**Directorio del proyecto:** `/Users/ivanhuerta/Documents/Tartarus`
+**Directorio del proyecto:** `~/Documents/Tartarus`
 **Alcance:** Todo lo pendiente por construir + cómo construirlo (archivos, técnica, validación)
 
 > Fuente de verdad del pendiente. Sustituye la sección "Next Sprint" de `.agents/MANDATES.md` (v2.3). El estado real verificado del código está por delante de STATUS.md — ver §1.

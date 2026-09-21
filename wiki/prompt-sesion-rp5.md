@@ -19,10 +19,10 @@ Trabajo en **TARTARUS**, plataforma de decepción (honeypots) para respuesta a i
 sesión es **sólo del despliegue de campo: la Raspberry Pi 5**. Ollama y el modelo local quedan
 fuera a propósito; son otro hilo.
 
-- Código: `/Users/ivanhuerta/Documents/Tartarus` (github.com/IvanHRz/Tartarus — **repo PRIVADO**).
+- Código: `~/Documents/Tartarus` (github.com/IvanHRz/Tartarus — **repo PRIVADO**).
 - Rama `feature/tier0-deployment-readiness`, PR **#25**. Motor Python/FastAPI en `engine/`, consola
   en `ui/src`, honeypots Beelzebub. Motor en `localhost:9001`, consola en `:8888`.
-- Wiki aparte: `/Users/ivanhuerta/Documents/Wikis/wiki-tartarus`.
+- Wiki aparte: `~/Documents/Wikis/wiki-tartarus`.
 
 ## Lo primero, antes de leer nada más
 
@@ -30,7 +30,7 @@ fuera a propósito; son otro hilo.
 copia de trabajo o le pisarás cosas:
 
 ```bash
-cd /Users/ivanhuerta/Documents/Tartarus
+cd ~/Documents/Tartarus
 scripts/sesion_paralela.sh nueva pi          # crea ../Tartarus-pi, con su índice y su stash
 cd ../Tartarus-pi
 ```
@@ -159,8 +159,9 @@ la microSD.
 
 - `{#seis-caminos-de-despliegue}` (P2, S) — son **siete** guiones y ninguno hace el trabajo entero.
   Dejar **uno**.
-- `{#wifi-en-el-guion}` (P3, XS) — `WIFI_PASS="tartarus2026"` en `scripts/setup-rpi.sh:18`,
-  versionado. Todo aparato sale con la misma.
+- `{#wifi-en-el-guion}` (P3, XS) — la contraseña del WiFi de campo está **escrita y versionada**
+  en el guion de instalación, así que todo aparato sale con la misma.
+  [recorte 21-sep: el valor y su fichero, en `#wifi-en-el-guion` del ROADMAP privado — esta wiki es pública]
 
 ## Un aviso que te ahorra perseguir fantasmas
 

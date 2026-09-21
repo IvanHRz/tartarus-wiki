@@ -19,10 +19,10 @@ tags: [sesion, prompt, bateria, ci, base-limpia]
 
 Trabajo en **TARTARUS**, plataforma de decepción (honeypots) para respuesta a incidentes.
 
-- Código: `/Users/ivanhuerta/Documents/Tartarus` (github.com/IvanHRz/Tartarus — repo **privado**).
+- Código: `~/Documents/Tartarus` (github.com/IvanHRz/Tartarus — repo **privado**).
 - Rama única: **`feature/tier0-deployment-readiness`**. Motor Python/FastAPI en `engine/`, consola
   JS sin frameworks en `ui/src/`, Postgres, Beelzebub. Motor en `:9001`, consola en `:8888`.
-- Wiki aparte: `/Users/ivanhuerta/Documents/Wikis/wiki-tartarus`.
+- Wiki aparte: `~/Documents/Wikis/wiki-tartarus`.
 
 ## Antes de nada
 
@@ -32,7 +32,7 @@ la cabecera de `.agents/ROADMAP.md`.
 **Crea tu propia copia de trabajo y decláratela:**
 
 ```bash
-cd /Users/ivanhuerta/Documents/Tartarus
+cd ~/Documents/Tartarus
 scripts/sesion_paralela.sh nueva limpia         # crea ../Tartarus-limpia
 # declara tu sección en .agents/COORDINACION.md con la plantilla del principio (se INSERTA)
 python3 scripts/revisar_sesiones.py             # tiene que salir verde
@@ -49,7 +49,7 @@ python3 scripts/revisar_sesiones.py             # tiene que salir verde
 2. **NO SE EMPUJA A GITHUB HASTA EL 1 DE OCTUBRE.** Hay un gancho de `pre-push` puesto el 20-sep
    a las 23:41 que lo impide y **caduca solo** ese día. No es un error: empujar ahora no verifica
    nada y gasta cuota. **Commitea normal** — y para que las demás copias lo vean, adelanta la rama
-   **en local**: `git -C /Users/ivanhuerta/Documents/Tartarus merge --ff-only <tu commit>` (mira
+   **en local**: `git -C ~/Documents/Tartarus merge --ff-only <tu commit>` (mira
    antes que no pise nada sin commitear). Si de verdad hiciera falta: `TARTARUS_PERMITIR_PUSH=1`.
    **La wiki sí se empuja**: es otro repo y no tiene Actions.
 3. **Hay otras sesiones en el mismo repo.** `.agents/COORDINACION.md`, y **se inserta con anclas,
@@ -148,7 +148,7 @@ o `engine/tests/`.
 
 ```bash
 scripts/base_limpia.sh                                   # la batería entera, base vacía
-cd /Users/ivanhuerta/Documents/Tartarus-limpia && npx playwright test   # y contra la de trabajo
+cd ~/Documents/Tartarus-limpia && npx playwright test   # y contra la de trabajo
 ```
 
 Las dos verdes, **y el recuento de saltadas de cada una escrito y explicado** — que es el

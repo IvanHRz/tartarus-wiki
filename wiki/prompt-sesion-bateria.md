@@ -15,20 +15,20 @@ tags: [sesion, prompt, bateria]
 
 Trabajo en **TARTARUS**, plataforma de decepción (honeypots) para respuesta a incidentes.
 
-- Código: `/Users/ivanhuerta/Documents/Tartarus` (github.com/IvanHRz/Tartarus — repo **privado**).
+- Código: `~/Documents/Tartarus` (github.com/IvanHRz/Tartarus — repo **privado**).
 - Rama única: **`feature/tier0-deployment-readiness`**. Motor Python/FastAPI en `engine/`, consola
   JS sin frameworks en `ui/src/`, Postgres, Beelzebub. Motor en `:9001`, consola en `:8888`.
-- Wiki aparte: `/Users/ivanhuerta/Documents/Wikis/wiki-tartarus`.
+- Wiki aparte: `~/Documents/Wikis/wiki-tartarus`.
 
 ## Antes de nada
 
 Lee en este orden: `CLAUDE.md` → `.agents/TRASPASO.md` → `.agents/COORDINACION.md` →
 la cabecera de `.agents/ROADMAP.md`.
 
-**Crea tu propia copia de trabajo y decláratela** — no trabajes en `/Users/ivanhuerta/Documents/Tartarus`:
+**Crea tu propia copia de trabajo y decláratela** — no trabajes en `~/Documents/Tartarus`:
 
 ```bash
-cd /Users/ivanhuerta/Documents/Tartarus
+cd ~/Documents/Tartarus
 scripts/sesion_paralela.sh nueva bateria        # crea ../Tartarus-bateria
 # declara tu sección en .agents/COORDINACION.md con la plantilla del principio
 python3 scripts/revisar_sesiones.py             # tiene que salir verde
@@ -99,7 +99,7 @@ Sus reglas, que no son negociables:
 ### Cómo sabes que has terminado
 
 ```bash
-cd /Users/ivanhuerta/Documents/Tartarus-bateria
+cd ~/Documents/Tartarus-bateria
 npx playwright test                      # desde la RAÍZ; hoy son 162 pruebas en 31 ficheros
 ```
 

@@ -31,11 +31,11 @@ tags: [sesion, prompt]
 
 Trabajo en **TARTARUS**, plataforma de decepción (honeypots) para respuesta a incidentes.
 
-- Código: `/Users/ivanhuerta/Documents/Tartarus` (github.com/IvanHRz/Tartarus — **repo PRIVADO**).
+- Código: `~/Documents/Tartarus` (github.com/IvanHRz/Tartarus — **repo PRIVADO**).
 - Rama `feature/tier0-deployment-readiness`, PR **#25**. Motor Python/FastAPI en `engine/`,
   consola JS vanilla en `ui/src` (`main.js` + `index.html` + `css/tartarus.css`), Postgres en
   `db/init.sql`, honeypots Beelzebub. Motor en `localhost:9001`, consola en `:8888`.
-- Wiki aparte: `/Users/ivanhuerta/Documents/Wikis/wiki-tartarus` (repo propio, privado).
+- Wiki aparte: `~/Documents/Wikis/wiki-tartarus` (repo propio, privado).
 - **HAY OTRA SESIÓN DE CLAUDE** en el mismo repo (la Raspberry / Ollama). Antes de tocar nada lee
   `.agents/COORDINACION.md` y anota ahí qué vas a editar. Reparto vigente: la otra lleva la Pi;
   ésta, el motor y la consola. **Nunca `git add -A`**: rutas explícitas siempre.
