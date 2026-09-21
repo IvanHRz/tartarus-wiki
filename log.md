@@ -2437,3 +2437,11 @@ Plan aceptado archivado en [[planes/2026-09-20]]. Ampliar el reparto por rol a l
 `ui/src/js/`, cerrar el `addEventListener` con manejador ternario que tiraba `#btnDplDeploy` en
 silencio, y dar `id` a los dos botones de modal que nacen por `createElement`.
 — claude
+
+## [2026-09-21] plan | la batería entera contra una base recién nacida
+Plan aceptado archivado en [[planes/2026-09-21]]. Correr las 162 pruebas de navegador contra una
+base recién creada —lo único que el CI hacía y el portátil no— para contestar cuáles de los seis
+`test.skip` condicionales disparan allí, qué se cae con la base vacía y pasa aquí, y dar veredicto
+a cinco intermitentes sin cerrar. El entregable es el recuento de saltadas de cada entorno,
+escrito y explicado.
+— claude
