@@ -7,6 +7,10 @@ tags: [sesion, prompt, bateria, ci, base-limpia]
 
 # Prompt — sesión «la batería contra una base recién nacida»
 
+> **⚠️ Esta wiki es PÚBLICA** (`IvanHRz/tartarus-wiki`) y el repo de código no. Antes de archivar
+> aquí un plan o una bitácora, léelo y quita credenciales, clientes reales y la receta de un fallo
+> abierto — regla 0 del schema.
+>
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
 > **Esta sesión NECESITA el turno de la batería** aunque levante su propio stack: el cerrojo lo
 > toma igual (ver abajo). Es la continuación natural de [[prompt-sesion-bateria]].
@@ -42,10 +46,16 @@ python3 scripts/revisar_sesiones.py             # tiene que salir verde
    la cuenta y no se renueva hasta entonces (`#ci-caido-por-facturacion`). Ya está mitigado —
    `paths-ignore` para documentos y los seis trabajos con `if: … draft == false`— pero **hasta
    octubre toda verificación es local y el commit tiene que decirlo**.
-2. **Hay otras sesiones en el mismo repo.** `.agents/COORDINACION.md`, y **se inserta con anclas,
+2. **NO SE EMPUJA A GITHUB HASTA EL 1 DE OCTUBRE.** Hay un gancho de `pre-push` puesto el 20-sep
+   a las 23:41 que lo impide y **caduca solo** ese día. No es un error: empujar ahora no verifica
+   nada y gasta cuota. **Commitea normal** — y para que las demás copias lo vean, adelanta la rama
+   **en local**: `git -C /Users/ivanhuerta/Documents/Tartarus merge --ff-only <tu commit>` (mira
+   antes que no pise nada sin commitear). Si de verdad hiciera falta: `TARTARUS_PERMITIR_PUSH=1`.
+   **La wiki sí se empuja**: es otro repo y no tiene Actions.
+3. **Hay otras sesiones en el mismo repo.** `.agents/COORDINACION.md`, y **se inserta con anclas,
    nunca se reescribe entero**: una reescritura desde una lectura vieja borra lo de la otra y git
    la acepta sin decir nada. Ojo: ese fichero **viaja por rama**.
-3. **Nunca `git add -A`.** Rutas explícitas. Commits en español, sin `Co-Authored-By`.
+4. **Nunca `git add -A`.** Rutas explícitas. Commits en español, sin `Co-Authored-By`.
    Y **no toques `beelzebub/configurations/personalities/portal-gobmx.yml`**: es trabajo en vivo
    de Iván, sin commitear, y un `git reset --hard` mal dirigido ya se lo llevó una vez (`L-029`).
    Comando que borra → ruta explícita, nunca encadenado a un `cd`.
