@@ -2390,3 +2390,17 @@ viejo. Sin tocar la Raspberry: es de la otra sesión.
 - Nada se encendió a propósito: las dos condiciones que faltan son de campo (el secreto en la Pi,
   un token en los YAML de Beelzebub).
 — claude
+
+## [2026-09-20] plan | Ordenar la casa y repartir la noche: dos sesiones, un OpenCode y una rama sola
+- Plan archivado verbatim en `wiki/planes/2026-09-20.md` (bloque de las 20:55 CDMX), **antes de
+  ejecutarlo**, que es lo que exige `L-018`.
+- Cuatro decisiones de Iván al planear: verificación **sólo local** esta noche —GitHub Actions está
+  caído por facturación desde las 06:20Z y los seis trabajos del PR #26 mueren en 3 s—, **dos
+  sesiones nuevas de Claude + OpenCode** en paralelo, OpenCode **edita y commitea pero no empuja**,
+  y **reconciliar las dos ramas antes** de sacar nada nuevo de ellas.
+- Lo que salió al medir para planearlo, y cambia lo que había que hacer: la cifra de `main.py` **no
+  hay que re-declararla** (`d0a7c32` ya extrajo el código y la dejó en 459; el DRIFT sólo existe en
+  la rama que no lleva ese commit), pero **`endpoints` está a dos decoradores de romper** (225 de un
+  tope de 228, y su colector cuenta también los tests); el umbral C2 dice **500 en tres sitios y
+  600 en el CI**; y las dos ramas asignaron **L-025 a lecciones distintas**, sobre un **L-023 que ya
+  estaba duplicado** y que no vigila nadie.
