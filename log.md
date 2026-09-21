@@ -2452,3 +2452,9 @@ dos intermitentes que quedaban sobre base limpia, el cerrojo que pide turno aunq
 propio stack, la última rama muerta de `e2e/`, y una entrada P1 que ya estaba hecha y nadie había
 cerrado.
 — claude
+
+## [2026-09-21] plan | la barra de arriba, con la forma de Thinkst
+Plan aceptado archivado en [[planes/2026-09-21]]. Adelgazar la cabecera de 8 a 6 elementos con el
+criterio de Canary —lo que es de un panel vuelve a su panel—, que deje de romperse por debajo de
+1100 px (hoy no la mide ningún spec), «AI Settings» al español y la deuda de nombre `gear-menu`.
+— claude
