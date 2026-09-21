@@ -2404,3 +2404,30 @@ viejo. Sin tocar la Raspberry: es de la otra sesión.
   tope de 228, y su colector cuenta también los tests); el umbral C2 dice **500 en tres sitios y
   600 en el CI**; y las dos ramas asignaron **L-025 a lecciones distintas**, sobre un **L-023 que ya
   estaba duplicado** y que no vigila nadie.
+
+## [2026-09-20] bitacora | El rastro de auditoría, una sola línea de trabajo, y tres frentes para la noche
+- **El «data lake» ya contesta la pregunta por la que existe.** `console_audit` eran 64.774 filas
+  con **86,6 filas de auditoría por cada suceso de ataque** —el registro de quién tocó la evidencia
+  pesaba 3,28× más que la evidencia—, el 61,5 % latido de sensores, y **cero filas de una persona**
+  en todo el 19-sep. Ahora las exclusiones se derivan de tres señales del código, las descargas
+  dejan rastro con el número de filas que se llevaron, y el login dice quién. A/B en vivo: el mismo
+  latido escribe **+1 fila en el motor de hoy y +0 en el nuevo**; sobre el corpus histórico,
+  **−62,7 %**. Detalle en `.agents/BITACORA.md` (20-sep, noche).
+- **Dos fugas cerradas de camino:** un usuario del cliente por defecto veía **63.129 filas que no
+  eran suyas** (`flock_where` es correcto en `events` y equivocado en `console_audit`), y el
+  reinicio de fábrica **truncaba la auditoría**, o sea borraba la prueba de que hubo un reinicio.
+  Lo segundo lo decidió Iván: sale del truncado.
+- **Una sola línea de trabajo.** Las dos ramas llevaban 9 y 10 commits divergiendo sobre los mismos
+  cuatro documentos, con más sesiones a punto de salir de ahí. Reconciliadas. El único choque real
+  fue el libro de lecciones: **las dos ramas habían dado `L-025` a lecciones distintas**, sobre un
+  **`L-023` duplicado que no había visto nadie**. Renumerado, y ahora hay un trinquete que lo caza.
+- **🔴 No hay CI desde las 06:20Z**, y no es del código: GitHub Actions no arranca los trabajos
+  porque la cuenta tiene un problema de facturación. Es lo primero que hay que resolver — sin CI se
+  pierde lo único que corre sobre una base vacía, y ese mismo día cazó un defecto que cinco pasadas
+  en el portátil no vieron. `main` sigue **157 commits por detrás**.
+- **Tres frentes montados para la noche**, con sus prompts en la wiki:
+  [[prompt-sesion-bateria]] (la batería no da el mismo número dos veces: 155·153·157),
+  [[prompt-sesion-rol-consola]] (el reparto por rol no llega a `deploy_hub.js`, que tiene cinco
+  `fetch` mutantes sobre controles que nacen por `innerHTML`), y **OpenCode** con un modelo barato
+  moliendo lo mecánico en su propia copia, con permisos cerrados y el criterio de «hecho» puesto en
+  un comando en vez de en una opinión.

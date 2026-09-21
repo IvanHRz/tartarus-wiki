@@ -1,17 +1,31 @@
 ---
 tipo: guia
 creado: 2026-09-11
-actualizado: 2026-09-17
+actualizado: 2026-09-20
 tags: [sesion, prompt]
 ---
 
 # Prompt para la siguiente sesión — TARTARUS
 
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
-> **Éste es el prompt del motor y la consola.** Para una sesión de la Raspberry / despliegue de
-> campo, usa [[prompt-sesion-rp5]], que lleva su propio estado medido y sus trampas.
-> Actualizado: **20-sep-2026 (madrugada)**, al dejar la firma HMAC en monitoreo y los tres shims
-> contando. PR **#25**, último empujón `f854217`, CI verde en los seis.
+> **Éste es el prompt GENERAL del motor y la consola.** Hay tres más, cada uno con su trabajo ya
+> elegido y sus trampas:
+>
+> | Prompt | Para qué | ¿Necesita el stack? |
+> |---|---|---|
+> | [[prompt-sesion-bateria]] | la batería que no da el mismo número dos veces (`#bateria-sigue-intermitente`) | **sí**, y el turno en exclusiva |
+> | [[prompt-sesion-rol-consola]] | el reparto por rol no llega a `deploy_hub.js` (`#rol-fuera-de-main-js`) | no, hasta el final |
+> | [[prompt-sesion-rp5]] | la Raspberry / despliegue de campo | la Pi |
+>
+> **Los dos primeros se pueden correr a la vez**: uno pide el turno de la batería y el otro no lo
+> toca. Creados el 20-sep-2026 al repartir la noche.
+> Actualizado: **20-sep-2026 (noche)**, al reconciliar las dos ramas en una sola línea de
+> trabajo. PR **#25**.
+>
+> **🔴 NO HAY CI.** GitHub Actions no arranca ningún trabajo desde las 06:20Z del 20-sep:
+> *«recent account payments have failed or your spending limit needs to be increased»*. Los seis
+> trabajos mueren en 2-3 segundos. **Verificación 100 % local mientras dure**, y que el commit lo
+> diga — el CI es lo único que corre sobre una base vacía.
 
 ---
 
