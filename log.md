@@ -2431,3 +2431,9 @@ viejo. Sin tocar la Raspberry: es de la otra sesión.
   `fetch` mutantes sobre controles que nacen por `innerHTML`), y **OpenCode** con un modelo barato
   moliendo lo mecánico en su propia copia, con permisos cerrados y el criterio de «hecho» puesto en
   un comando en vez de en una opinión.
+
+## [2026-09-20] plan | rol-consola: el comprobador mira un fichero de ocho
+Plan aceptado archivado en [[planes/2026-09-20]]. Ampliar el reparto por rol a los 8 ficheros de
+`ui/src/js/`, cerrar el `addEventListener` con manejador ternario que tiraba `#btnDplDeploy` en
+silencio, y dar `id` a los dos botones de modal que nacen por `createElement`.
+— claude
