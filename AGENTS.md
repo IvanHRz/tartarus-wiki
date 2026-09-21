@@ -10,6 +10,15 @@ Nunca documentes aquí lo que un `grep` en el repo responde mejor. Si una págin
 
 ## Reglas duras
 
+0. **ESTA WIKI ES PÚBLICA.** `github.com/IvanHRz/tartarus-wiki` — cualquiera la lee, y el repo de
+   código (`IvanHRz/Tartarus`) es **privado**. Lo que se escribe aquí sale de casa: antes de
+   publicar cualquier cosa, **quita** credenciales y valores de `.env` (los nombres de variable
+   valen; los valores no), nombres de clientes reales, direcciones de despliegues vivos, y **la
+   receta reproducible de un fallo que siga abierto** — el *qué* se puede contar («el catálogo se
+   releía veinte veces»), el *cómo tumbarlo* no («tres clientes pidiendo X lo dejan en 8,6 s»).
+   Eso último va al ROADMAP del repo privado. Si es de seguridad y toca a un cliente, `wiki-mabe`.
+   **Ojo con `registrar-plan`:** manda copiar los planes **verbatim**, y un plan se escribe
+   pensando en una sesión interna. **Léelo antes de pegarlo.**
 1. **`.raw/repo` es inmutable desde esta wiki.** Es un symlink a `~/Documents/Tartarus`. Lees; nunca editas código desde aquí. Para tocar código, se abre el repo directamente (que tiene su propio `CLAUDE.md`).
 2. **`wiki/`, `index.md`, `log.md` son tuyos.**
 3. Toda afirmación técnica se ancla a un commit, PR, archivo o issue. Formato: `` `a1b2c3d` `` o `engine/parser.py:L88`.
