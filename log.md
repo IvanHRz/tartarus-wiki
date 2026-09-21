@@ -2445,3 +2445,10 @@ base recién creada —lo único que el CI hacía y el portátil no— para cont
 a cinco intermitentes sin cerrar. El entregable es el recuento de saltadas de cada entorno,
 escrito y explicado.
 — claude
+
+## [2026-09-21] plan | cerrar del todo el hilo de la batería
+Plan aceptado archivado en [[planes/2026-09-21]]. Continuación del plan de las 00:25: cerrar los
+dos intermitentes que quedaban sobre base limpia, el cerrojo que pide turno aunque corra contra su
+propio stack, la última rama muerta de `e2e/`, y una entrada P1 que ya estaba hecha y nadie había
+cerrado.
+— claude
