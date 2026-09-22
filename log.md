@@ -2458,3 +2458,10 @@ Plan aceptado archivado en [[planes/2026-09-21]]. Adelgazar la cabecera de 8 a 6
 criterio de Canary —lo que es de un panel vuelve a su panel—, que deje de romperse por debajo de
 1100 px (hoy no la mide ningún spec), «AI Settings» al español y la deuda de nombre `gear-menu`.
 — claude
+
+## [2026-09-21] plan | integrar la sesión de la base limpia
+Plan aceptado archivado en [[planes/2026-09-21]]. Fusionar los 25 commits de la sesión con la línea
+principal —que avanzó 36—, resolver los dos conflictos de documentos compartidos sin perder lo de
+nadie, y reconciliar lo que la fusión deja mintiendo: un defecto que ya arreglaron, dos cifras
+desfasadas y una contradicción propia.
+— claude
