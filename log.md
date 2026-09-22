@@ -2479,3 +2479,9 @@ día y no copiadas de la entrada: 13 variables contra 133 colores, 22 tamaños d
 y 6 en `rem`, que la entrada no decía— y 371 `style=` en línea. Lleva las siete trampas de esta
 consola que ya costaron sesiones.
 — claude
+
+## [2026-09-21] cierre | la sesión de la base limpia, integrada
+Los 25 commits fusionados con la línea principal en dos vueltas —la punta se movió a mitad— y la
+principal al día por `--ff-only`. Lo que más enseñó no fue la fusión: fue que había cerrado una
+entrada del roadmap al ver el commit de otro, sin medirla, y la base limpia dice que sigue abierta.
+— claude
