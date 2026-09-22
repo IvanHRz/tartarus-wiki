@@ -2485,3 +2485,11 @@ Los 25 commits fusionados con la línea principal en dos vueltas —la punta se 
 principal al día por `--ff-only`. Lo que más enseñó no fue la fusión: fue que había cerrado una
 entrada del roadmap al ver el commit de otro, sin medirla, y la base limpia dice que sigue abierta.
 — claude
+
+## [2026-09-21] guia | prompt para la sesión de las puertas de máquina
+Nuevo [[prompt-sesion-puertas-de-maquina]]: las tres entradas que no usa una persona sino una
+máquina —ingesta, latido y los tres shims— siguen aceptando a quien no se identifica, y el contador
+que se construyó para poder decidir ya tiene datos. Se puede correr a la vez que
+[[prompt-sesion-diseno]] y [[prompt-sesion-rp5]]. De paso, las cifras del prompt de diseño quedan al
+día: los tres intermitentes que citaba ya están cerrados con veredicto.
+— claude
