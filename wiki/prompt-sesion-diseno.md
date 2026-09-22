@@ -112,7 +112,14 @@ La noche del 21-sep se rehízo **la cabecera** (`{#cabecera-rigida}`, cerrada). 
 6. **Un verde sin holgura es una trampa que aún no saltó** → `L-039`. El menú de «Descargar»
    llevaba desde el 16-sep cabiendo **por 19 píxeles** con su prueba en verde; ensanchar otra cosa
    170 px lo tiró. Cuando una aserción sea geométrica, que el mensaje lleve el margen medido.
-7. **Si tu comprobador lleva una lista de ids a ignorar, cámbiala por una pila** → `L-038`. Dos
+7. **El gancho de pre-commit NO corre la batería si tu commit no lleva un `.py`.** Y esta sesión
+   va a hacer commits de sólo `.css` y `.html` todo el rato. `.pre-commit-config.yaml:53` filtra
+   `files: '\.py$'`, así que verás «Run pytest … (no files to check) **Skipped**» y el gancho en
+   verde — mientras **31 ficheros de `engine/tests/` vigilan `index.html`, `main.js`,
+   `tartarus.css` y los `.agents/*.md`**. La noche del 21-sep se colaron dos pruebas en rojo por
+   ahí. **Corre la batería a mano antes de cada commit de consola**, no confíes en el gancho. Está
+   registrado como `#pre-commit-ciego-a-los-documentos` (P1·S), con las tres salidas medidas.
+8. **Si tu comprobador lleva una lista de ids a ignorar, cámbiala por una pila** → `L-038`. Dos
    veces el mismo día una lista de excepciones intentó responder una pregunta de anidamiento.
 
 ## Cómo se trabaja aquí
