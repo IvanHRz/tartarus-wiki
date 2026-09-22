@@ -2465,3 +2465,10 @@ principal —que avanzó 36—, resolver los dos conflictos de documentos compar
 nadie, y reconciliar lo que la fusión deja mintiendo: un defecto que ya arreglaron, dos cifras
 desfasadas y una contradicción propia.
 — claude
+
+## [2026-09-21] cierre | la cabecera, y tres lecciones de método
+Cosecha del plan en [[planes/2026-09-21]]. A 768 px el menú de usuario se salía de la pantalla y
+era la única puerta a cerrar sesión; el selector de cliente llevaba meses cortado a todos los
+anchos. Las tres lecciones (L-037/038/039) son de método: un color que sale por la causa
+equivocada, una lista de excepciones haciendo de pila, y un verde con 19 px de holgura.
+— claude
