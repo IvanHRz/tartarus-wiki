@@ -2493,3 +2493,11 @@ que se construyó para poder decidir ya tiene datos. Se puede correr a la vez qu
 [[prompt-sesion-diseno]] y [[prompt-sesion-rp5]]. De paso, las cifras del prompt de diseño quedan al
 día: los tres intermitentes que citaba ya están cerrados con veredicto.
 — claude
+
+## [2026-09-21] plan | cerrar los dos pendientes abiertos al acotar el inventario de sensores
+Plan aceptado archivado en [[planes/2026-09-21]]. Los dos pendientes que se abrieron al cerrar el
+trabajo anterior estaban mal medidos por quien los escribió, y en direcciones opuestas: uno mucho
+más pequeño —la tabla que decía necesitar una columna no la escribe nadie— y el otro siete veces
+más grande. Se cierra el primero, se le pone trinquete al segundo y se reescriben las dos entradas
+con lo medido.
+— claude
