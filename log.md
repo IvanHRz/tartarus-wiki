@@ -2517,3 +2517,13 @@ riesgo cambia de forma respecto al paso 1: ya no es tokenizar un `max-width`, es
 selectores** — el detector de anchos muertos exige una clase sola pegada a la llave y se queda
 ciego en silencio si se agrupa.
 — claude
+
+## [2026-09-22] plan | las tres puertas de máquina (firma HMAC, shims, sensor entre clientes)
+Plan aceptado archivado en [[planes/2026-09-22]]. Cerrar las tres entradas que no usa una persona
+sino una máquina. Salieron cerradas dos —la firma se EXIGE desde hoy, y mover un sensor de cliente
+pasa a ser de `global_admin`— y la tercera se deja **instrumentada y decidible** a propósito: los
+shims de honeypot ya tienen ventana, «último» y un token por servicio, pero siguen sin rechazar,
+porque cerrar esa puerta de golpe es lo que dejó nueve de los diez honeypots sin cerebro tres días
+el 13-sep. **Archivado con dos recortes marcados**: al publicarlo esa tercera puerta seguía
+abierta.
+— claude
