@@ -2501,3 +2501,19 @@ más pequeño —la tabla que decía necesitar una columna no la escribe nadie�
 más grande. Se cierra el primero, se le pone trinquete al segundo y se reescriben las dos entradas
 con lo medido.
 — claude
+
+## [2026-09-22] plan | el sistema de diseño de la consola: los tokens
+Plan aceptado archivado en [[planes/2026-09-22]]. Sustituir ~1.100 valores escritos a pelo por
+tokens en `:root` **sin mover un píxel**, y demostrarlo con un arnés que vuelca 45 propiedades
+calculadas de 25 vistas y las compara con tolerancia cero. Ejecutado entero: 13 variables pasan a
+55, los colores a pelo de 289 usos a 104, y por el camino salen cuatro defectos visibles que nadie
+veía porque el comando que los buscaba sólo leía el CSS. Lleva su cosecha escrita.
+— claude
+
+## [2026-09-22] plan | el sistema de diseño de la consola: la segunda mitad
+Plan aceptado archivado en [[planes/2026-09-22]]. Fundir las cinco cáscaras de modal y las seis
+familias de campo, bajar los 398 `style=` a la hoja y dejar el guardarraíl que hoy no existe. El
+riesgo cambia de forma respecto al paso 1: ya no es tokenizar un `max-width`, es **agrupar
+selectores** — el detector de anchos muertos exige una clase sola pegada a la llave y se queda
+ciego en silencio si se agrupa.
+— claude
