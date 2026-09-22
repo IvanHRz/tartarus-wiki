@@ -145,17 +145,25 @@ La noche del 21-sep se rehízo **la cabecera** (`{#cabecera-rigida}`, cerrada). 
 ## Verificación
 
 ```bash
-cd engine && python3 -m pytest tests/ -q          # 3.480 pasando · 11 saltadas al 21-sep
-TARTARUS_UI_URL=http://localhost:88XX npx playwright test   # 174; 3 intermitentes conocidos
+cd engine && python3 -m pytest tests/ -q          # 3.493 pasando · 11 saltadas al 21-sep noche
+TARTARUS_UI_URL=http://localhost:88XX npx playwright test   # 176 en 33 ficheros · CERO test.skip
 python3 scripts/revisar_anchos.py                 # 104 campos · 0 sin rótulo · 0 rótulos rotos
 python3 scripts/revisar_envoltorios.py
 python3 scripts/revisar_controles.py              # skill sin-ambiguedad
 python3 scripts/validate_docs.py
 ```
 
-Los tres intermitentes ya registrados son `fases_coherentes:60` y `:96` e
-`ingesta_y_conteos:657`: **en solitario dan verde 3 de 3**, así que no son tuyos. Si te sale otro,
-córrelo cinco veces en solitario antes de acusar a tu cambio.
+**Actualizado el 21-sep por la noche:** los tres intermitentes que esta línea citaba
+—`fases_coherentes:60` y `:96` e `ingesta_y_conteos:657`— **ya están cerrados con veredicto**, y
+ninguno era del producto. La batería da **176 · 176 · 176** sobre la base de trabajo con **0
+saltadas en los dos entornos**.
+**Los dos que quedan son TUYOS y salen sólo sobre base limpia**, medidos y entregados:
+`exportacion.spec.ts:40` (`{#menu-descargas-fuera-de-pantalla}` — el arreglo de la cabecera cambió
+un extremo por el otro: ya cabe en pantalla pero **se despega de su botón**, 2 de 4 pasadas) y
+`editor_persona_rotulos.spec.ts:50`/`:64` (`{#rotulos-persona-sin-catalogo}` — **4 de 4**, allí no
+hay catálogo de personas, igual que en el CI).
+Si te sale otro, córrelo cinco veces en solitario antes de acusar a tu cambio — y mira si hay otra
+batería corriendo, que el turno no ve a quien no haya hecho `pull`.
 
 Al cerrar: skill `destilar-leccion` (la cosecha del plan y el libro de lecciones — la última es
 `L-039`, **mira cuál es la última antes de numerar, hay cuatro copias escribiendo a la vez**),
