@@ -2472,3 +2472,10 @@ era la única puerta a cerrar sesión; el selector de cliente llevaba meses cort
 anchos. Las tres lecciones (L-037/038/039) son de método: un color que sale por la causa
 equivocada, una lista de excepciones haciendo de pila, y un verde con 19 px de holgura.
 — claude
+
+## [2026-09-21] prompt | sesión de diseño
+Nuevo [[prompt-sesion-diseno]] para `#tokens-de-diseno` (P1·L), con las cifras **re-medidas** ese
+día y no copiadas de la entrada: 13 variables contra 133 colores, 22 tamaños de letra —16 en `px`
+y 6 en `rem`, que la entrada no decía— y 371 `style=` en línea. Lleva las siete trampas de esta
+consola que ya costaron sesiones.
+— claude

@@ -16,7 +16,10 @@ tags: [sesion, prompt]
 > | [[prompt-sesion-bateria]] | la batería que no da el mismo número dos veces (`#bateria-sigue-intermitente`) | **sí**, y el turno en exclusiva |
 > | [[prompt-sesion-rol-consola]] | el reparto por rol no llega a `deploy_hub.js` (`#rol-fuera-de-main-js`) | no, hasta el final |
 > | [[prompt-sesion-rp5]] | la Raspberry / despliegue de campo | la Pi |
+| [[prompt-sesion-diseno]] | el sistema de diseño que no existe (`#tokens-de-diseno`) | no, hasta el final |
 >
+> **`diseno` es el siguiente por orden** (21-sep): es lo que Iván pidió desde el principio y la
+> causa de casi todo lo que se ha arreglado a mano estas dos semanas.
 > **Los dos primeros se pueden correr a la vez**: uno pide el turno de la batería y el otro no lo
 > toca. Creados el 20-sep-2026 al repartir la noche.
 > Actualizado: **20-sep-2026 (noche)**, al reconciliar las dos ramas en una sola línea de
