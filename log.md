@@ -2606,3 +2606,12 @@ el recuento de un hueco entre clientes que sigue abierto.
 - Lección `L-044`: el «Cómo» de la entrada era correcto y habría medido verde sin servir para
   nada; lo destapó medir el DEFECTO antes que el arreglo
 — claude
+
+## [2026-09-23] plan | secreto por sensor, segunda parte: la puerta que sí puede abrirse
+Plan aceptado archivado en [[planes/2026-09-23]] (tercera sección del día, con su Cosecha). La puerta
+que decide si se puede retirar el secreto compartido no podía decir «sí» nunca, y era un defecto del
+mismo día; ahora decide por la evidencia de quién firma. Los dos canarios del laboratorio quedan con
+su propio secreto y el único bloqueante es el equipo de campo. **Sin recortes en el cuerpo del plan**
+—comprobado, no nombra ni el aparato ni su cliente ni ninguna dirección— y uno en la cosecha, dicho
+en su sitio.
+— claude
