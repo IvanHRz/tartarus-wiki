@@ -2597,3 +2597,12 @@ de despliegue lleva un token de un solo uso y nunca el secreto de la flota. **Va
 en su sitio:** fuera el identificador del cliente vivo, el del equipo de campo (deriva de su MAC) y
 el recuento de un hueco entre clientes que sigue abierto.
 — claude
+
+## [2026-09-23] plan | notificaciones: la configuración deja de tener una sola copia
+- Plan aceptado y archivado: wiki/planes/2026-09-23.md (entrada de las 11:20), con su Cosecha
+- Commits: `c41c655`, `2e247b5` — `{#smtp-sin-copia-en-el-entorno}` cerrada
+- Recortado antes de publicar: el detalle operativo de cómo se reproduce el borrado desde la API,
+  porque el pendiente que queda de eso sigue abierto. En el ROADMAP del repo privado
+- Lección `L-044`: el «Cómo» de la entrada era correcto y habría medido verde sin servir para
+  nada; lo destapó medir el DEFECTO antes que el arreglo
+— claude
