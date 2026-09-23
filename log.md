@@ -2567,3 +2567,14 @@ uso y nunca el secreto de la flota. Escrita con la regla 0 aplicada desde el pri
 del disco, sin direcciones de despliegues vivos y sin receta de nada abierto — lo que hace falta
 saber se señala por ancla del ROADMAP, que es privado.
 — claude
+
+## [2026-09-23] plan | segunda parte de la sesión de diseño
+Plan aceptado archivado en [[planes/2026-09-23]]. Cierra lo que quedó de `{#tokens-de-diseno}`:
+fusionar los 20 commits de diseño con la rama principal —que se ha separado más, y hoy chocan
+cinco ficheros y no siete—, resolver las 26 clases que el JS aplica y el CSS no define, bajar a
+clases los 126 `style=` de los dos modales que quedan, y enseñarle a Iván las fusiones que sí
+mueven píxeles antes de aplicar ninguna. Lleva dos hallazgos que el prompt no traía: al fusionar
+salen **dos lecciones L-040 distintas** escritas con cuatro minutos de diferencia, y la prueba que
+vigila las clases del JS estaba verde sin significado —su expresión regular nunca casaba con
+`querySelector(`, sólo con `querySelectorAll(`—. Archivado con un recorte, señalado en su sitio.
+— claude
