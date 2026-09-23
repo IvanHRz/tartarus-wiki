@@ -119,7 +119,7 @@ se explique sola— y una deuda de fiabilidad en las pruebas de interfaz que enc
 
 Y una lección que ya va por su cuarta aparición y merece decirse aquí: **un comprobador que mira
 donde la cosa estaba se queda verde cuando la cosa se mueve.** No falla — enmudece, que es peor,
-porque además tranquiliza. Pasó cuatro veces en un solo día de refactor, y es `L-040`.
+porque además tranquiliza. Pasó cuatro veces en un solo día de refactor, y es `L-047` (nació `L-040`; se renumeró el 23-sep al fusionar).
 
 ## Enlaces
 - [[estado-y-rumbo]] — qué tenemos, qué se evalúa/mejora, próximas acciones con estimados.

@@ -2624,3 +2624,20 @@ en su sitio.
 - Lección: ninguna nueva. `L-030` reapareciendo, cerrada escribiendo su regla. El agravante que no
   contemplaba: el lector equivocado puede ser el propio autor
 — claude
+
+## [2026-09-23] bitacora | la segunda parte del sistema de diseño, y tres comprobadores que no comprobaban
+Ejecutado el plan de [[planes/2026-09-23]], con su cosecha escrita. Doce commits en la copia de
+diseño: los veinte commits que ninguna rama alcanzaba ya están fusionados, y se cerraron cuatro
+entradas del roadmap más una quinta midiendo que **no aplicaba**. Los `style=` en línea de la
+consola bajan de 398 a 262, y los dos modales que concentraban el 78 % de la cola larga, de 126 a
+66.
+Lo que enseñó de verdad no estaba en el plan: **tres comprobadores llevaban meses en verde sin
+comprobar nada** —una expresión regular que nunca casaba con la forma que el código usa, tres
+trinquetes declarados que ninguna prueba ejecutaba, y un contador que miraba una unidad y no la
+otra— y **el arnés visual puede dar cero por la caché del navegador**, que es el único fallo suyo
+que da permiso para empujar. Los cuatro quedan cerrados con su guardarraíl, visto en rojo.
+Y una reincidencia que se repitió dentro de su propio arreglo: numerar una lección mirando dos
+copias en vez de las once. Ahora hay una orden que lo dice.
+[[prompt-sesion-diseno-2]] queda marcado como ejecutado, con las tres cifras suyas que salieron
+mal al medirlas.
+— claude

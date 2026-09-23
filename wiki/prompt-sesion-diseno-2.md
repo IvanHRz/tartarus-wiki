@@ -7,6 +7,18 @@ tags: [sesion, prompt, consola, diseno]
 
 # Prompt para la sesión de diseño (segunda parte) — lo que quedó de `{#tokens-de-diseno}`
 
+> **✅ EJECUTADO el 23-sep-2026.** Doce commits. Se cerraron `{#clases-que-no-hacen-nada}`,
+> `{#fusiones-medidas}`, `{#canary-modal-sin-escape}`, `{#dos-empates-de-z-index}` y
+> `{#etiqueta-en-ingles-ajustes-ia}`; `{#dos-modales-sin-bajar}` bajó de 126 a 66 `style=` y sigue
+> abierta a propósito. Los veinte commits ya los alcanza una rama compartida.
+>
+> **Tres cifras de este prompt salieron mal al medirlas**, y conviene saberlo si se reutiliza como
+> plantilla: chocaban **cinco** ficheros y no siete, las clases sin regla eran **26** y no 27 —una
+> era un falso positivo del extractor de la propia entrada— y la lección que aquí se llama `L-040`
+> es hoy **`L-047`**, renumerada al fusionar.
+>
+> El plan que salió de aquí está en `wiki/planes/2026-09-23.md`, con su cosecha.
+
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
 >
 > **Por qué éste.** La sesión del 22-sep dejó `{#tokens-de-diseno}` hecha en lo esencial —19
@@ -163,7 +175,7 @@ ficheros (`js_todos`) y salió verde; el que falta es el del HTML.
    si la grabas con tu cambio ya metido, el verde no prueba nada. Se hizo mal una vez el 22-sep.
    Y **la primera pasada de `grabar` sólo calienta la caché de API: la buena es la segunda.**
    Comprueba que dos pasadas seguidas dan cero antes de creerle.
-3. **`L-040`, y es la que más va a doler.** En esta consola hay comprobadores que leen el CSS con
+3. **`L-047`, y es la que más va a doler.** En esta consola hay comprobadores que leen el CSS con
    expresiones regulares, y **mover un valor de sitio los deja en verde sin significado**. No
    fallan: enmudecen. Pasó **cuatro veces** el 22-sep. **Antes de mover un valor, `grep` del nombre
    de la propiedad por `scripts/` y `engine/tests/`.** Los sitios concretos:
@@ -241,5 +253,5 @@ Thinkst tiene una pantalla) · `#editor-persona-82-controles` (P2·L) ·
 `#campos-que-caben-sin-guion` (P2·S) · `#skill-interfaz` (P2·S).
 
 Al cerrar: skill `destilar-leccion` (**mira cuál es la última antes de numerar** — la última es
-`L-040` y hay nueve copias escribiendo a la vez), luego `pendientes-roadmap`, y `registrar-plan`
+`L-050` al cerrar el 23-sep, y hay once copias escribiendo a la vez; pídelo con `destilar_leccion.py --siguiente`), luego `pendientes-roadmap`, y `registrar-plan`
 cuando Iván acepte el plan. **La wiki es pública: lee el plan antes de pegarlo ahí.**
