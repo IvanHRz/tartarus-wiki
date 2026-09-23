@@ -2578,3 +2578,14 @@ salen **dos lecciones L-040 distintas** escritas con cuatro minutos de diferenci
 vigila las clases del JS estaba verde sin significado —su expresión regular nunca casaba con
 `querySelector(`, sólo con `querySelectorAll(`—. Archivado con un recorte, señalado en su sitio.
 — claude
+
+## [2026-09-23] plan | imagen del honeypot: reproducible aquí, y un guardián que sí guarda
+- Plan aceptado y archivado: wiki/planes/2026-09-23.md (entrada de las 01:45), con su Cosecha
+- Commits: `520452c`..`7b86f45` (5) — `{#docker-sin-imagen}` a medias (Iván descartó publicar en
+  un registro) y `{#el-gancho-no-ve-los-documentos}` cerrada
+- Recortado antes de publicar: cómo se distinguiría desde fuera un honeypot del despliegue de
+  campo mientras ese punto siga abierto, y las rutas de los ficheros no versionados con
+  credenciales. Las dos, en el ROADMAP del repo privado
+- Nota: lo que el plan no vio fue que el artefacto multi-arquitectura NO se puede `docker load`
+  en un daemon normal — se entrega además un tarball por arquitectura
+— claude
