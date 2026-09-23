@@ -2527,3 +2527,13 @@ porque cerrar esa puerta de golpe es lo que dejó nueve de los diez honeypots si
 el 13-sep. **Archivado con dos recortes marcados**: al publicarlo esa tercera puerta seguía
 abierta.
 — claude
+
+## [2026-09-22] cierre | el sistema de diseño de la consola, y cuatro comprobadores ciegos
+Cosecha de los cuatro planes en [[planes/2026-09-22]]. `{#tokens-de-diseno}` hecha en lo esencial:
+13 variables pasan a 55, los colores a pelo de 289 usos a 104, y los `style=` de 398 a 335 — todo
+con **cambio visual cero demostrado** por un arnés que compara 45 propiedades calculadas de 25
+vistas con tolerancia cero. Por el camino salieron cuatro defectos visibles que nadie veía y la
+lección `L-040`: *un comprobador que mira donde ya estaba la cosa se queda verde cuando la cosa se
+mueve*, cuatro veces en el mismo día. Corregidas también las horas de los dos primeros planes, que
+se habían escrito de memoria.
+— claude
