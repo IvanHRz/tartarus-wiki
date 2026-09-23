@@ -2557,3 +2557,13 @@ fichero de `ui/`—, la lista de fusiones que espera el visto bueno de Iván, lo
 [[prompt-sesion-diseno]] queda marcado como cumplido, y [[sintesis]] deja de decir que la consola
 no tiene sistema de diseño.
 — claude
+
+## [2026-09-23] ingest | prompt de la sesión del secreto por sensor
+Nueva guía en [[prompt-sesion-secreto-por-sensor]]. La firma HMAC se exige desde el 22-sep, y eso
+convierte `{#un-secreto-por-sensor}` de «dureza que falta» en **el camino crítico del despliegue de
+campo**: un aparato sin secreto no reporta, y el alta no entrega ninguno. Es además lo que
+desbloquea el guion del hub, porque la decisión tomada es que ese guion lleve el token de un solo
+uso y nunca el secreto de la flota. Escrita con la regla 0 aplicada desde el principio: sin rutas
+del disco, sin direcciones de despliegues vivos y sin receta de nada abierto — lo que hace falta
+saber se señala por ancla del ROADMAP, que es privado.
+— claude
