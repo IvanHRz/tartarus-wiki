@@ -2537,3 +2537,13 @@ lección `L-040`: *un comprobador que mira donde ya estaba la cosa se queda verd
 mueve*, cuatro veces en el mismo día. Corregidas también las horas de los dos primeros planes, que
 se habían escrito de memoria.
 — claude
+
+## [2026-09-22] plan | los seis pendientes de las puertas de máquina
+Plan aceptado archivado en [[planes/2026-09-22]], con su cosecha. Cuatro cerrados —la credencial
+del shim para `verificar-protocolo`, los tres puntos ciegos del comprobador de prosa, la dimensión
+nueva del trinquete de aislamiento y el `Makefile` que daba veredictos sobre el árbol de otra
+sesión— y tres entregados con la medición escrita, porque están en ficheros de sesiones abiertas.
+**Y un recorte que se me escapó anoche:** el plan anterior publicó las dos líneas exactas de un
+hueco entre clientes que sigue abierto. Recortado hoy del texto; sigue en el historial de git, que
+eso no lo arregla un recorte. Avisado arriba del fichero del día.
+— claude
