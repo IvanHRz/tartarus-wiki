@@ -2615,3 +2615,12 @@ su propio secreto y el único bloqueante es el equipo de campo. **Sin recortes e
 —comprobado, no nombra ni el aparato ni su cliente ni ninguna dirección— y uno en la cosecha, dicho
 en su sitio.
 — claude
+
+## [2026-09-23] plan | el escáner de secretos, y una entrada que dictaba el fallo
+- Plan aceptado y archivado: wiki/planes/2026-09-23.md (entrada de las 16:30), con su Cosecha
+- Commits: `0d5a8e7`, `bce091c`
+- **Recorte grande:** de esta sesión salió una vulnerabilidad P1 que sigue ABIERTA y aquí no se
+  describe — ni qué filtra, ni por dónde, ni cómo reproducirla. Está en el ROADMAP del repo privado
+- Lección: ninguna nueva. `L-030` reapareciendo, cerrada escribiendo su regla. El agravante que no
+  contemplaba: el lector equivocado puede ser el propio autor
+— claude
