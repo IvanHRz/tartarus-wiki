@@ -2589,3 +2589,11 @@ vigila las clases del JS estaba verde sin significado —su expresión regular n
 - Nota: lo que el plan no vio fue que el artefacto multi-arquitectura NO se puede `docker load`
   en un daemon normal — se entrega además un tarball por arquitectura
 — claude
+
+## [2026-09-23] plan | secreto por sensor, y el hub que deja de dejar mudo al aparato
+Plan aceptado archivado en [[planes/2026-09-23]] (segunda sección del día). Cada sensor pasa a tener
+su propio secreto de firma y el compartido queda sólo como respaldo de la migración; el guion del hub
+de despliegue lleva un token de un solo uso y nunca el secreto de la flota. **Va con recortes, dichos
+en su sitio:** fuera el identificador del cliente vivo, el del equipo de campo (deriva de su MAC) y
+el recuento de un hueco entre clientes que sigue abierto.
+— claude
