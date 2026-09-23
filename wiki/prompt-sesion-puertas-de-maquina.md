@@ -79,9 +79,10 @@ Un `curl` pelado, instalado por el propio despliegue en cada aparato. **Eso es l
 firmar antes de encender**, y es la mitad del trabajo de esta sesión. Pasos en
 `docs/FIRMA_DE_SENSORES.md`; el ayudante de firma que ya usan los agentes está en `sensors/`.
 
-**Y falta la prueba negativa**, que la entrada lleva pidiendo desde el 11-sep: intentar el latido
-desde fuera **sin firma** y comprobar que se rechaza. Sólo tiene sentido con la exigencia
-encendida, así que va con ella. `engine/tests/test_todos_firman.py` ya deriva del código quién
+**La prueba negativa YA NO FALTA** (actualizado el 22-sep): otra sesión escribió
+`e2e/latido_sin_firma.spec.ts` esa misma noche — intentar el latido desde fuera **sin firma** y
+comprobar qué pasa. Léela antes de escribir nada: lo que queda es que con la exigencia encendida
+compruebe que se **rechaza**, no sólo que se apunta. `engine/tests/test_todos_firman.py` ya deriva del código quién
 tiene que firmar —no de una lista a mano, que es como se olvidaron los tres shims—: **apóyate en
 él, no escribas otra lista.**
 
@@ -93,6 +94,11 @@ motor. Hoy **cuentan** quién llega sin credencial y **no rechazan a nadie**:
 ```
 tartarus_shim_sin_credencial_total{ruta="/v1/chat/completions",honeypot="model:gpt-4o"} 226
 ```
+
+**Y ya se sabe de quién es buena parte de esas 226, medido el 21-sep por otra sesión: de
+`verificar-protocolo`**, que es una skill obligatoria de esta casa. O sea que el contador mezcla
+honeypots de verdad con nuestras propias comprobaciones — separarlo es la primera mitad del
+trabajo, igual que arriba.
 
 Misma disciplina que arriba: **mira quién es antes de cerrar**. El 13-sep se cerró de golpe una
 puerta parecida y nueve de los diez honeypots se quedaron sirviendo la plantilla de reserva
