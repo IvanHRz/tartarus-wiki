@@ -130,7 +130,9 @@ pregúntale a Iván antes de cambiarlo.
    estar sirviendo la plantilla de reserva (`L-028`, `sustrato-que-miente`).
 3. **Un control positivo ejecuta el defecto de verdad** → `L-035`. Si el defecto destruye algo, se
    reproduce **contra el stack desechable** (`scripts/base_limpia.sh`), no contra el de trabajo. El
-   21-sep costó la contraseña SMTP de la plataforma, que no es recuperable.
+   21-sep costó la contraseña SMTP de la plataforma: se recuperó al día siguiente **porque Iván la
+   tenía guardada aparte**, no porque el sistema supiera devolverla — el motor la guarda y no la
+   puede leer, y no había copia en ningún `.env`. Contar con esa suerte no es un plan.
 4. **Ninguna prueba cuenta hasta verla fallar contra su defecto**, y hay que comprobar la causa del
    color: que la inyección cambió de verdad el fichero y contra qué diana corrió.
 5. **Un guardarraíl verde no dice cuánta holgura le queda** → `L-039`.
