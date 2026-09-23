@@ -7,6 +7,18 @@ tags: [sesion, prompt, consola]
 
 # Prompt para la sesión de diseño — `{#tokens-de-diseno}`
 
+> **✅ CUMPLIDO el 22-sep-2026.** Esta sesión se ejecutó: 19 commits, `{#tokens-de-diseno}` hecha
+> en lo esencial y **con cambio visual cero demostrado**. Las cifras: 13 variables → **55**, los
+> colores a pelo de 289 usos → **104**, los `style=` de 398 → **335**. La cosecha completa, con lo
+> que el plan acertó y lo que no vio, está en [[planes/2026-09-22]].
+>
+> **Lo que quedó tiene su propio prompt: [[prompt-sesion-diseno-2]]** — la fusión de los 19
+> commits (que ninguna rama alcanza todavía), la lista de fusiones que espera el visto bueno de
+> Iván, y los dos modales con 126 `style=` ya repartidos en clases.
+>
+> Se deja entero y sin tocar: su valor ahora es el contraste entre lo que se pidió y lo que pasó.
+
+
 > Copia todo lo que hay debajo de la línea y pégalo como primer mensaje de la conversación nueva.
 >
 > **Por qué éste y no otro.** Es lo que Iván pidió desde el principio —«nos falta orden, mejor uso

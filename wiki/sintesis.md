@@ -1,7 +1,7 @@
 ---
 tipo: sintesis
 creado: 2026-07-09
-actualizado: 2026-09-20
+actualizado: 2026-09-23
 commit_ref: f854217 (PR#25, rama feature/tier0-deployment-readiness)
 ---
 
@@ -99,14 +99,27 @@ atribución— y la cabina sigue pendiente. La de hoy es otra, y es más incómo
 3. **Un cliente todavía no puede desplegar solo.** No hay imagen de Docker publicada, el despliegue
    en la Raspberry no es de un paso, y faltan los dos modos nuevos (Tailscale e instalador con
    token). Es lo que separa «lo desplegamos nosotros» de «producto».
-4. **La consola sigue sin sistema de diseño.** 13 variables contra 133 colores y 116 espaciados.
-   Es el paraguas de casi todo lo de interfaz que queda.
+4. **~~La consola sigue sin sistema de diseño.~~ Hecho el 22-sep-2026.** De 13 variables a **55**,
+   con escalas de espaciado, radios, tipografía y capas; los colores a pelo bajaron de 289 usos a
+   **104** y los `style=` en línea de 398 a **335**. Todo **con cambio visual cero demostrado**: hay
+   un arnés que compara 45 propiedades calculadas de 25 vistas con tolerancia cero. Y lo deja
+   vigilado —`scripts/revisar_tokens.py`, once cifras derivadas—, que es lo que no existía: antes no
+   había ni un linter de CSS ni una prueba que contara variables.
+   De paso salieron **cuatro defectos visibles** que nadie veía, todos de variables CSS usadas sin
+   valor de respaldo —que no es «el valor por defecto» sino una declaración inválida que el
+   navegador descarta entera—: dos paneles transparentes, un enlace que salía gris como texto
+   normal, 17 nombres de equipo apagados y cuatro errores en un rojo ajeno a la paleta.
+   Lo que queda es decisión de producto, no deuda: [[prompt-sesion-diseno-2]].
 
 ## En una frase
 
 **TARTARUS ya no sólo funciona: se puede demostrar que funciona, y cuando deja de hacerlo hay un
 control que lo dice.** Lo que queda es producto —que un cliente lo despliegue solo y que la consola
 se explique sola— y una deuda de fiabilidad en las pruebas de interfaz que encarece todo lo demás.
+
+Y una lección que ya va por su cuarta aparición y merece decirse aquí: **un comprobador que mira
+donde la cosa estaba se queda verde cuando la cosa se mueve.** No falla — enmudece, que es peor,
+porque además tranquiliza. Pasó cuatro veces en un solo día de refactor, y es `L-040`.
 
 ## Enlaces
 - [[estado-y-rumbo]] — qué tenemos, qué se evalúa/mejora, próximas acciones con estimados.

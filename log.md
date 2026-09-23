@@ -2547,3 +2547,13 @@ sesión— y tres entregados con la medición escrita, porque están en ficheros
 hueco entre clientes que sigue abierto. Recortado hoy del texto; sigue en el historial de git, que
 eso no lo arregla un recorte. Avisado arriba del fichero del día.
 — claude
+
+## [2026-09-23] prompt | la segunda parte de la sesión de diseño
+Nuevo [[prompt-sesion-diseno-2]] con lo que quedó de `#tokens-de-diseno`, medido y sin volver a
+medir: **los 19 commits que ninguna rama alcanza todavía** —creada `diseno/tokens-de-diseno` para
+que no desaparezcan, y los conflictos de la fusión son los siete documentos compartidos, ningún
+fichero de `ui/`—, la lista de fusiones que espera el visto bueno de Iván, los dos modales con 126
+`style=` ya repartidos en clases, y las 27 clases que el JavaScript aplica y el CSS no define.
+[[prompt-sesion-diseno]] queda marcado como cumplido, y [[sintesis]] deja de decir que la consola
+no tiene sistema de diseño.
+— claude
