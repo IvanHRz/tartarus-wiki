@@ -2641,3 +2641,14 @@ copias en vez de las once. Ahora hay una orden que lo dice.
 [[prompt-sesion-diseno-2]] queda marcado como ejecutado, con las tres cifras suyas que salieron
 mal al medirlas.
 — claude
+
+## [2026-09-23] plan | cerrar los dos cabos de la sesión de diseño
+Segundo plan del día, archivado en [[planes/2026-09-23]] con un recorte señalado. Cierra lo que el
+primero dejó fuera: llevar la rama de diseño al tronco —que volvió a moverse, así que ya no es un
+avance rápido— y resolver por qué el arnés visual falla ocho veces contra una base recién nacida.
+La decisión sobre el arnés es la que vale la pena: **se queda fuera de ese entorno, con el motivo
+escrito y un guardarraíl que impide que la exclusión crezca**, en vez de hacerle grabar allí su
+propia referencia. Lo segundo daría ocho verdes que no prueban nada, porque un arnés que compara
+contra un «antes» inexistente no está silenciado: es inaplicable. Es exactamente el falso verde que
+esta misma sesión destiló horas antes.
+— claude
