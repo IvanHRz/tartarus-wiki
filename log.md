@@ -2652,3 +2652,19 @@ propia referencia. Lo segundo daría ocho verdes que no prueban nada, porque un 
 contra un «antes» inexistente no está silenciado: es inaplicable. Es exactamente el falso verde que
 esta misma sesión destiló horas antes.
 — claude
+
+## [2026-09-23] bitacora | cerrados los dos cabos: la rama al tronco y el arnés fuera de la base limpia
+Ejecutado el plan de las 22:52. **La rama de diseño ya está en el tronco** —hubo que traerlo tres
+veces en el día, porque se movía mientras se cerraba— y el arnés visual queda **fuera de la base
+limpia con el motivo escrito**, no arreglado a la fuerza. La base recién nacida pasa de **11 fallos
+a 3**, y los tres tienen ancha desde el 21-sep: eso es la diferencia entre un número y una lista de
+deberes.
+Lo que enseñó: el guardarraíl que escribí para fijar esa exclusión **pasó en verde con la línea
+comentada**, porque buscaba la cadena en el texto crudo. Sexta vez que en este repositorio un
+comentario cuenta como código — y esta vez dentro del guardarraíl que venía a impedir *otra* forma
+de falso verde. Nace [[L-051]] con su regla ya escrita en la skill, y con la consecuencia práctica
+que faltaba: al inyectar el defecto, **comentar la línea en vez de borrarla**.
+Y [[L-052]], que es el reverso de [[L-030]]: una medición sobre algo compartido —el tronco, el
+stack, las otras copias— **caduca entre que la haces y que actúas**. Lo medí al cerrar, lo escribí
+en tres documentos, y horas después era falso. Tres veces el mismo día.
+— claude
