@@ -2668,3 +2668,10 @@ Y [[L-052]], que es el reverso de [[L-030]]: una medición sobre algo compartido
 stack, las otras copias— **caduca entre que la haces y que actúas**. Lo medí al cerrar, lo escribí
 en tres documentos, y horas después era falso. Tres veces el mismo día.
 — claude
+
+## [2026-09-23] plan | el comprobador de secretos, cerrado por los dos lados
+- Plan aceptado y archivado: wiki/planes/2026-09-23.md (entrada de las 22:40), con su Cosecha
+- Commits: `a0a13cc`, `5372487`, `39e612b`
+- Recortado: los dos huecos que siguen abiertos en ese mismo comprobador. En el ROADMAP privado
+- Sin lección nueva: la de hoy es una que ya estaba, ampliada con la cara que su regla no cubría
+— claude
