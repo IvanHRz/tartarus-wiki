@@ -2690,3 +2690,21 @@ materializaciones y no una, la tercera ya estaba arreglada —lo cerraron donde 
 descartable y lo dejaron vivo donde es obligatoria—, y su nota de coordinación apuntaba a una
 sesión que no reclama esos ficheros.
 — claude
+
+## [2026-09-24] bitacora | la cuarta fuga entre clientes, y ésta filtraba credenciales
+Cerrada `{#fuga-secretos-del-proveedor-al-cliente}`. Las tres anteriores filtraban **datos**; ésta
+filtraba **credenciales**: el primer guardado de la configuración de alertas de cualquier cliente
+se llevaba a su fila, en claro, las del proveedor. Estaba armada y sin disparar.
+El arreglo salió **más corto que el que proponía la entrada** —ninguno de los cinco puntos de
+envío se tocó— y **sin escribir la pieza central**: la función de fusión que hacía falta la había
+escrito otra sesión ese mismo día, para otra cosa, con la semántica exacta. Eso sólo se ve
+mirando antes de escribir.
+Tres cosas que la entrada decía mal quedan corregidas dentro de ella, y la que más importa no es
+una cifra: su nota de coordinación mandaba a pedir permiso a una sesión que no reclamaba esos
+ficheros. Una nota así no bloquea a nadie ruidosamente — hace que el siguiente no coja la entrada.
+Y la lección del día es un síntoma, no un fallo: **una prueba que se pone roja cuando el arreglo
+es bueno no es estricta, mira otra cosa.** Las de esta entrada rehacían a mano lo que hace la ruta
+en vez de llamarla; nacieron bien, en rojo contra el defecto, y por eso costó verlo. Reescritas
+contra la ruta de verdad y afirmando sobre lo que sale hacia la base, cazaron al primer intento un
+sitio que se había dado por hecho. Es [[L-025]], que con esto gana su regla.
+— claude
