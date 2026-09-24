@@ -327,3 +327,30 @@ el HTML a mano (frágil), ahora al abrir una pestaña se reordenan sus secciones
 comprobado con un navegador de verdad, cero errores. Suite en **1861 verde**. Sin subir. Detalle en
 [[roadmap-operativo]] y en `.agents/ROADMAP.md`, sección «ESTADO — Bloque A-quater cerrado».
 — claude
+
+## [2026-09-23] bitacora | El shell SSH, mirado por un atacante: once cosas que lo delatan
+Iván abrió una sesión SSH real contra el honeypot y trabajó con ella como lo haría un intruso. El shell
+aguanta —responde como una máquina de verdad y ya no se inventa los comandos frecuentes—, así que lo que
+queda es más fino y más caro: **detalles que no cuadran entre sí**. Un intruso no descubre un honeypot
+porque un comando falle, sino porque dos comandos dicen cosas distintas de la misma cosa; a partir de ahí
+deja de creerse la máquina y el engaño no sirve. Aparecieron once puntos así, y los dos más graves son
+justo de ese tipo: un listado que se corta sin avisar —de modo que hay carpetas que un comando enseña y
+otro jura que no existen— y las fechas de una misma carpeta cambiando según desde dónde se mire. Los dos
+los decide el programa, no la IA, así que se arreglan con certeza y no con suerte.
+
+Se documentaron los once con la forma de reproducirlos ya medida, para que la sesión que los arregle no
+empiece midiendo. **Ese expediente y el prompt de trabajo se quedan en el repositorio privado, y es una
+decisión, no un olvido:** describen cómo se nota que una máquina es un honeypot, y eso publicado le sirve
+al adversario. Es la tercera vez que aparece esta forma de fuga y la primera que se corta antes de subir
+nada.
+
+También se aclaró un falso problema: el contador de tiempo que parecía asomar dentro de la sesión era el
+cronómetro de la propia terminal de Iván, no del honeypot. De paso dio una medición limpia: las sesiones
+se cortan a los diez minutos exactos **desde que se conectan**, no por estar quietas, así que cortan a
+media frase. Eso se cambia a inactividad, y va al final del trabajo porque reiniciar el honeypot corta
+las sesiones de quien esté mirando.
+
+Queda pendiente de decisión de Iván qué deben ser los tres puertos SSH: hoy los tres sirven la misma
+máquina, y lo razonable es que sigan a la personalidad elegida. Sin cambios en el producto en esta
+jornada: análisis, documentación y traspaso. Detalle en `.agents/ROADMAP.md` (expediente del shell SSH).
+— claude
