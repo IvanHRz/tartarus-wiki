@@ -2675,3 +2675,18 @@ en tres documentos, y horas después era falso. Tres veces el mismo día.
 - Recortado: los dos huecos que siguen abiertos en ese mismo comprobador. En el ROADMAP privado
 - Sin lección nueva: la de hoy es una que ya estaba, ampliada con la cara que su regla no cubría
 — claude
+
+## [2026-09-24] plan | la fuga de secretos del proveedor a la fila del cliente
+Plan aceptado archivado en [[planes/2026-09-24]], **con el recorte más grande que se le ha hecho a
+ninguno**: es el arreglo de un fallo de seguridad que sigue abierto cuando se archiva, así que el
+trazado, la petición que lo dispara y la consulta que enseña lo filtrado se quedan en el ROADMAP,
+que es privado. Los cinco cortes van señalados en su sitio.
+Lo que sí se puede contar: dos sesiones distintas la señalaron el mismo día como lo más grave que
+quedaba suelto, y **es la misma**. El diseño sale más corto que el que proponía la entrada porque
+la función que hace falta **ya existe** —la escribió otra sesión ese mismo día para otra cosa, con
+la semántica exacta— y porque, si la configuración efectiva se funde al leerla, los cinco puntos
+de envío no se tocan. Y al medirla aparecen tres cosas que la entrada no decía: son **tres**
+materializaciones y no una, la tercera ya estaba arreglada —lo cerraron donde la copia era
+descartable y lo dejaron vivo donde es obligatoria—, y su nota de coordinación apuntaba a una
+sesión que no reclama esos ficheros.
+— claude
