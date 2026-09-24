@@ -2725,3 +2725,10 @@ Se registra y **no se arregla nada**: el prompt manda remedir primero, con cada 
 del comando que la produce. Queda escrito además lo que se miró y **no** es un defecto, para que
 el siguiente no lo persiga.
 — claude
+
+## [2026-09-24] plan | prompt de sesión: caso de uso HTTP→MCP→SSH encadenado
+Plan aceptado archivado en [[planes/2026-09-24]]. Un solo atacante recorre los tres protocolos
+—reconoce por HTTP, roba un honeytoken por MCP, entra y lo reutiliza por SSH— y el motor lo cuenta
+como UNA kill chain con detección de reúso de cebo. El entregable es el prompt que arranca la
+sesión que construye y ensaya la demo.
+— claude
