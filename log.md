@@ -2708,3 +2708,20 @@ en vez de llamarla; nacieron bien, en rojo contra el defecto, y por eso costó v
 contra la ruta de verdad y afirmando sobre lo que sale hacia la base, cazaron al primer intento un
 sitio que se había dado por hecho. Es [[L-025]], que con esto gana su regla.
 — claude
+
+## [2026-09-24] ingest | el frente de la fachada web, medido antes de tocarlo
+Nueva guía en [[prompt-sesion-http]]. Iván configuró una portada en un honeypot HTTP y el editor de
+la persona le enseñó otra URL distinta. Medido antes de escribir nada, salen **cinco** cosas y
+ninguna estaba registrada — y las dos que él reportó no eran lo que parecían: la consola **sí**
+dice qué página copió, sólo que en otra pantalla y sin que ninguna nombre a la otra; y el barrido
+de pruebas coincide con la fachada desplegada en **18 de 19** rutas.
+La que falla es la portada, y ahí está lo que importa: el comparador de superficies da `0 / 19` en
+web **porque tiene esa fila excusada como «excepción conocida»**. El guardarraíl más caro de la
+fachada está en verde sobre la ruta que ve primero cualquiera que llegue.
+De barrer alrededor salieron tres más, y la mejor es que la fachada devuelve **dos páginas 404
+distintas** según si la ruta está en una lista: eso no dice «no existe», dice «aquí hay una lista»,
+que es justo lo que un señuelo no puede contar de sí mismo.
+Se registra y **no se arregla nada**: el prompt manda remedir primero, con cada cifra acompañada
+del comando que la produce. Queda escrito además lo que se miró y **no** es un defecto, para que
+el siguiente no lo persiga.
+— claude
