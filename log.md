@@ -2754,3 +2754,11 @@ antes de tocar nada, y no caben en 200k. Se ataca consultando el ROADMAP en vez 
 que ya no existen. Archivar las entradas cerradas del ROADMAP se DESCARTA: está medido que no
 hace que quepa y ciega dos comprobadores.
 — claude
+
+## [2026-09-28] cosecha | el arranque de sesión, de 310k tokens a 40k
+Ejecutado el plan de las 13:50. El protocolo que este proyecto exige cumplir no se podía
+cumplir: mandaba leer 1.270.441 B antes de tocar nada. Ahora son 164.003, con un trinquete que
+deriva del propio protocolo qué hay que leer. Se descartó, con la medición delante, la idea que
+parecía obvia —archivar las entradas cerradas del ROADMAP—, porque no hacía que cupiera y
+cegaba dos comprobadores.
+— claude
