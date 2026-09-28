@@ -2732,3 +2732,10 @@ Plan aceptado archivado en [[planes/2026-09-24]]. Un solo atacante recorre los t
 como UNA kill chain con detección de reúso de cebo. El entregable es el prompt que arranca la
 sesión que construye y ensaya la demo.
 — claude
+
+## [2026-09-28] plan | entorno y skills: que las demás sesiones rindan más por hora y por token
+Plan aceptado archivado en [[planes/2026-09-28]]. Los dos costes que dominan, medidos: arrancar
+una sesión cuesta ~307k tokens de lectura obligatoria —no cabe en una ventana de 200k— y cada
+commit cuesta 192,62 s, de los que el 65 % es un solo guion ejecutado cuatro veces. El plan los
+ataca y pone un trinquete para que el ahorro no se deshaga a 69 KB/día.
+— claude
