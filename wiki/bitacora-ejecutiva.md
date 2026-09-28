@@ -1,8 +1,8 @@
 ---
 tipo: estado
 creado: 2026-08-10
-actualizado: 2026-09-14
-commit_ref: 94abfd0 (rama feature/tier0-deployment-readiness, PR #25, CI en verde)
+actualizado: 2026-09-28
+commit_ref: 8475912 (rama feature/tier0-deployment-readiness; verificado en local, sin CI)
 tags: [ejecutivo, seguridad, flocks, cebos]
 ---
 
@@ -734,6 +734,40 @@ vez, manteniendo los datos de cada uno separados de los demás.
 | Pantalla de administración de clientes (crear, renombrar, entrar, salud de cada uno) y selector de cliente en los ajustes de avisos | Cerrar la parte visual de lo que ya funciona por debajo | Media | siguiente iteración |
 | Panel de proveedor para gestionar varias instalaciones | Para cuando se venda el servicio: ver todos los despliegues de cada cliente y darles soporte | Media | por planificar (tras la venta) |
 
+### 28 de septiembre de 2026 — El aparato de campo deja de compartir su llave con toda la flota
+
+> **Nota de continuidad:** entre el 14 y el 28 de septiembre hubo trabajo que **no está contado
+> aquí**. Esta entrada sólo cubre lo del 28. El detalle técnico de esas dos semanas está en la
+> bitácora interna del repositorio.
+
+- **Qué se logró.** Hasta hoy, el único aparato físico instalado firmaba todo lo que enviaba a la
+  consola con **una llave común a todos los sensores**. Desde hoy tiene **la suya propia**. Es la
+  diferencia entre «si alguien se lleva un aparato, puede hacerse pasar por cualquier otro» y «sólo
+  puede hacerse pasar por sí mismo», y se puede anular esa llave sola, sin tocar el resto. El
+  mecanismo existía desde el 23 de septiembre; lo que faltaba era aplicarlo al equipo de verdad.
+- **Qué problema apareció, y tiene gracia.** La tarea llevaba días parada porque dos intentos
+  anteriores concluyeron que **no teníamos forma de entrar al aparato**: pedía contraseña y la
+  rechazaba. La contraseña era correcta desde el principio. Lo que rechazaba no era el aparato: era
+  **nuestro propio señuelo**, que corre en ese mismo equipo y está construido precisamente para
+  responder como un servidor real a quien intenta entrar sin permiso. **El producto funcionó tan
+  bien que engañó a quien lo fabrica.**
+- **Cómo se resolvió.** Se distinguen por el cartel de presentación que anuncia cada servicio: el
+  señuelo dice ser un sistema operativo distinto del que el aparato lleva de verdad. Cinco segundos
+  de comprobación, y dos sesiones perdidas por no hacerla. Queda escrito como norma: **antes de dar
+  por inaccesible cualquier equipo de esta plataforma, comprobar que no estamos hablando con el
+  señuelo**, porque todos los equipos llevan uno en los puertos habituales.
+- **Qué apareció además, y es lo que queda por hacer.** Al terminar, el panel de control **seguía
+  avisando de que el aparato usaba la llave común**, cuando ya era imposible que la usara. El
+  indicador cuenta usos acumulados desde siempre, así que **no distingue «la usó antes de migrar» de
+  «la usa ahora»**. Tiene un lado peor: un aparato mal migrado puede aparecer **en verde** mientras
+  sigue usando la llave común. Se ha registrado como el siguiente paso y **va antes de retirar la
+  llave compartida**, no después: hasta que el panel sepa distinguirlo, no podemos fiarnos de que
+  esté todo migrado.
+- **Impacto para el cliente.** Baja el daño de que alguien robe un aparato instalado en sus
+  oficinas, que es el escenario realista en un despliegue en sitio. Y el aparato, que figuraba como
+  caído desde el 11 de septiembre, lleva **diez días funcionando** e informando cada 30 segundos:
+  el despliegue en casa del cliente deja de estar bloqueado.
+
 ## Riesgos y pendientes de seguridad conocidos (sin alarmismo)
 
 - ~~El inicio de sesión viene apagado por defecto.~~ **Resuelto el 13-14 de septiembre.** Está
@@ -745,9 +779,13 @@ vez, manteniendo los datos de cada uno separados de los demás.
   botones que siempre le fallarán. No es un agujero —el sistema sí rechaza la operación— pero es
   confuso, y hay que arreglarlo antes de dar de alta al primer usuario que no sea el
   administrador.
-- **Un aparato de campo lleva caído desde el 11 de septiembre.** No afecta a lo que está
-  desplegado en el laboratorio, pero es lo que bloquea las mejoras del despliegue en sitio del
-  cliente.
+- ~~Un aparato de campo lleva caído desde el 11 de septiembre.~~ **Resuelto el 28 de septiembre**
+  — y no estaba caído: llevaba diez días funcionando. Ya usa su propia llave, no la común.
+- **El panel no distingue «usó la llave común» de «la usa ahora».** Es el pendiente que deja lo
+  anterior: el indicador cuenta usos acumulados, así que un aparato ya migrado sigue apareciendo en
+  rojo y —lo que importa— **uno mal migrado puede aparecer en verde**. No es un agujero abierto: es
+  que todavía no podemos demostrar con el panel que la migración esté completa. **Hay que cerrarlo
+  antes de retirar la llave compartida.**
 - **Las notificaciones todavía se configuran de forma única y global.** Funciona, pero conviene
   separarlas por cliente antes de operar con varios a la vez (ya está agendado).
 - **Reparto de carga entre clientes.** El freno de avisos y el silenciado ya son por cliente;
