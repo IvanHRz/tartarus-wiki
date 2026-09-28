@@ -2739,3 +2739,10 @@ una sesión cuesta ~307k tokens de lectura obligatoria —no cabe en una ventana
 commit cuesta 192,62 s, de los que el 65 % es un solo guion ejecutado cuatro veces. El plan los
 ataca y pone un trinquete para que el ahorro no se deshaga a 69 KB/día.
 — claude
+
+## [2026-09-28] plan | tanda 1: el guion que corre cuatro veces en cada commit
+Plan aceptado archivado en [[planes/2026-09-28]]. El gancho de pre-commit tarda ~193 s y 124 son
+`buscar_sin_cablear.py` ejecutado cuatro veces idénticas. Se ataca en dos pasos —caché de las
+llamadas primero, que no puede cambiar el número, y el índice de identificadores después— con el
+control de que las dos listas salgan idénticas símbolo a símbolo.
+— claude
