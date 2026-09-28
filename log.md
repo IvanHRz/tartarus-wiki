@@ -2746,3 +2746,11 @@ Plan aceptado archivado en [[planes/2026-09-28]]. El gancho de pre-commit tarda 
 llamadas primero, que no puede cambiar el número, y el índice de identificadores después— con el
 control de que las dos listas salgan idénticas símbolo a símbolo.
 — claude
+
+## [2026-09-28] plan | que arrancar una sesión quepa en la ventana
+Plan aceptado archivado en [[planes/2026-09-28]]. El protocolo manda leer 1.270.441 B ≈ 310k tokens
+antes de tocar nada, y no caben en 200k. Se ataca consultando el ROADMAP en vez de leerlo
+(`tablero.py --bloque`/`--ancla`) y podando COORDINACION, que es un 95 % de secciones de copias
+que ya no existen. Archivar las entradas cerradas del ROADMAP se DESCARTA: está medido que no
+hace que quepa y ciega dos comprobadores.
+— claude
