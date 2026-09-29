@@ -2781,3 +2781,10 @@ Plan aceptado archivado en [[planes/2026-09-29]]. Cae el detector de anclas sosp
 precisión plana en 25 %, y el guardarraíl que iba a construir ya existe con 81/94 %—. Queda el
 gancho en modo aviso (0,43 s), los prompts que citan cifras falsas 7 de 10, y traer la nube.
 — claude
+
+## [2026-09-29] plan | la puerta de arranque
+Plan aceptado archivado en [[planes/2026-09-29]]. El P0 que el tablero puso en cabeza: que un
+despliegue que nadie configuró no nazca sin aislamiento entre clientes. Dos decisiones — el clon
+limpio genera lo que falta y avisa (producción se niega), y las ~98 pruebas reciben sesión en vez
+de que se les apague la bandera. Con cinco correcciones medidas al prompt de origen.
+— claude
