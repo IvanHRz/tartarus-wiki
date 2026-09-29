@@ -2788,3 +2788,11 @@ despliegue que nadie configuró no nazca sin aislamiento entre clientes. Dos dec
 limpio genera lo que falta y avisa (producción se niega), y las ~98 pruebas reciben sesión en vez
 de que se les apague la bandera. Con cinco correcciones medidas al prompt de origen.
 — claude
+
+## [2026-09-29] plan | rendir mi rama del P0 y verificarlo en el portátil
+Plan aceptado archivado en [[planes/2026-09-29]]. Dos sesiones hicimos el mismo P0 en paralelo;
+la suya es mejor y la mía tenía dos agujeros —mi puerta dejaba pasar mis propias plantillas de
+ejemplo, y mi `.env.example` apagaba la sesión—. Me rindo a la suya y devuelvo encima sólo cuatro
+piezas acotadas. Lo que de verdad falta es verificar el P0 en vivo: ellos trabajaron en la nube,
+sin Docker, y lo dejaron pedido por escrito.
+— claude
