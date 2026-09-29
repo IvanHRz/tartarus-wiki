@@ -2769,3 +2769,9 @@ están cerradas y el tablero cuenta como pendientes, y ponerle el guardarraíl q
 vuelva a llenar solo. Medido: ensanchar la ventana del detector arreglaba 5, no 42, y el mapa
 mentía un 15 % —213 jornadas contra 181—, no un factor.
 — claude
+
+## [2026-09-28] plan | que las sesiones dejen de pisarse
+Plan aceptado archivado en [[planes/2026-09-28]]. Reconstruido el día: 79 commits, 8 copias, 10
+sesiones, 21 incidentes de choque o retrabajo — y en ninguno falló el conocimiento. Seis
+mecanismos derivados de git y CERO skills nuevas: hay ~450 instaladas y ninguna cruza sesiones.
+— claude
