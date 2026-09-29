@@ -2775,3 +2775,9 @@ Plan aceptado archivado en [[planes/2026-09-28]]. Reconstruido el día: 79 commi
 sesiones, 21 incidentes de choque o retrabajo — y en ninguno falló el conocimiento. Seis
 mecanismos derivados de git y CERO skills nuevas: hay ~450 instaladas y ninguna cruza sesiones.
 — claude
+
+## [2026-09-29] plan | lo que queda del flujo de trabajo
+Plan aceptado archivado en [[planes/2026-09-29]]. Cae el detector de anclas sospechosas —medido:
+precisión plana en 25 %, y el guardarraíl que iba a construir ya existe con 81/94 %—. Queda el
+gancho en modo aviso (0,43 s), los prompts que citan cifras falsas 7 de 10, y traer la nube.
+— claude
