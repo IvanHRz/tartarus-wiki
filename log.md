@@ -2762,3 +2762,10 @@ deriva del propio protocolo qué hay que leer. Se descartó, con la medición de
 parecía obvia —archivar las entradas cerradas del ROADMAP—, porque no hacía que cupiera y
 cegaba dos comprobadores.
 — claude
+
+## [2026-09-28] plan | el tablero que no miente
+Plan aceptado archivado en [[planes/2026-09-28]]. Reconciliar las 33 entradas del ROADMAP que
+están cerradas y el tablero cuenta como pendientes, y ponerle el guardarraíl que impide que se
+vuelva a llenar solo. Medido: ensanchar la ventana del detector arreglaba 5, no 42, y el mapa
+mentía un 15 % —213 jornadas contra 181—, no un factor.
+— claude
