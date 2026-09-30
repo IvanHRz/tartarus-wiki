@@ -1437,7 +1437,7 @@ cuando (a) vas a un cliente enterprise con PKI → cert de CA interna, o (b) nec
 ### ⏳ PENDIENTE — Notificaciones (P2, no urge)
 - **Canal SMS** (Twilio: SID + token + from; falta `_send_sms` en `notifier.py`).
 - **Remitente dedicado "Tartarus IQSEC"** (cuenta real) en vez de la de prueba
-  `inhoboris@gmail.com` (destinatario actual `ivan.huerta@iqsec.com.mx`).
+  una cuenta de correo de prueba (destinatario actual el correo del operador).
 - **Selector de zona horaria en la UI** de ajustes de notificación (backend ya listo:
   `POST /notifications/config {"timezone"}`, default `America/Mexico_City`).
 
@@ -1515,8 +1515,8 @@ cuando (a) vas a un cliente enterprise con PKI → cert de CA interna, o (b) nec
 
 ### 🟠 P1 — Notificaciones (base hecha; faltan mejoras)
 - **Canal SMS** (Twilio: SID/token/from + `_send_sms` en `notifier.py`) — pospuesto por el usuario.
-- **Remitente dedicado "Tartarus IQSEC"** (hoy cuenta de prueba `inhoboris@gmail.com`; destino
-  `ivan.huerta@iqsec.com.mx`).
+- **Remitente dedicado "Tartarus IQSEC"** (hoy cuenta de prueba una cuenta de correo de prueba; destino
+  el correo del operador).
 - **Selector de zona horaria en la UI** de ajustes de notificación (backend listo: `POST
   /notifications/config {"timezone"}`, default CDMX; hoy forzado a CDMX vía `fmtTime`).
 
@@ -1709,7 +1709,7 @@ Filosofía Thinkst: **alta fidelidad + cero ruido**. Cada alerta se resuelve ley
   la UI). **Hora en zona local** (default **America/Mexico_City / CDMX**, configurable vía
   `NOTIFY_TIMEZONE` o `POST /notifications/config {"timezone"}`). **Futuro (no urge):** (a) selector de
   **zona horaria en la UI** de ajustes de notificación (backend ya listo); (b) cuenta de correo
-  **dedicada "Tartarus IQSEC"** como remitente en vez de la de prueba `inhoboris@gmail.com`; (c) canal
+  **dedicada "Tartarus IQSEC"** como remitente en vez de la cuenta de correo de prueba; (c) canal
   **SMS** (Twilio) cuando se pida.
 - **G-6 Despliegue de cebos + timestomp (P1) — parcial:** `scripts/deploy_canary_tokens.py` genera y
   DESPLIEGA un cebo de cada tipo (docs reales docx/pdf/xlsx con web-bug vía `/document`; creds vía
@@ -3305,7 +3305,7 @@ Detalle y pendientes menores en `.agents/ROADMAP.md`.
 
 ## 31-ago-2026 (4ª tanda) — Clonar una página real como personalidad + curar los menús
 
-- **Clonar y adaptar**: das el enlace de un portal (p. ej. Fonacot), TARTARUS copia su HTML
+- **Clonar y adaptar**: das el enlace de un portal (p. ej. la dependencia de prueba), TARTARUS copia su HTML
   con su CSS/imágenes y lo sirve como la portada del honeypot, sobre el stack elegido
   (banner, reglas, LLM, cebo). Los formularios capturan lo que teclea el atacante. Si el
   sitio bloquea el copiado (WAF), la fachada del stack se queda como está. Se sirve solo en

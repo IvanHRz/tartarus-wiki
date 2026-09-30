@@ -1589,7 +1589,7 @@ Dos features verificadas en vivo: (1) dar una URL, clonar su HTML con CSS/imáge
 servirlo como portada del stack elegido, sobre la maquinaria del honeypot (cloner.clonar_para_
 personalidad + web_facade portada_html + endpoint /clone/web/apply + campo en la UI); formularios
 al login del stack (sin el tell /tartarus/capture), SSRF-safe, fallback con gracia si el sitio
-bloquea (Fonacot da 403 a un fetch). (2) Curación: windows/ubuntu a solo SSH, fortigate/jenkins/
+bloquea (la dependencia de prueba da 403 a un fetch). (2) Curación: windows/ubuntu a solo SSH, fortigate/jenkins/
 synology a primera clase en HTTP, y guardarraíl que impide ofrecer un protocolo sin contenido.
 Menú HTTP = solo web/appliances; SSH = shells; Telnet = cisco. Suite 1944 verde, aislamiento 0
 fugas. 4 commits más (38 sin subir en la rama).
@@ -1614,7 +1614,7 @@ respuesta — se limpia en el Bloque G (prompts «output ONLY the body»). Suite
 
 ## [2026-09-10] plan | familia weblogic y páginas de error por stack
 Plan aceptado archivado en [[planes/2026-09-10]]. Añadir la familia `weblogic` (el 404 de
-Oracle WebLogic que sirve el portal real de Fonacot) y conseguir que las diez familias de
+Oracle WebLogic que sirve el portal real de una dependencia de prueba) y conseguir que las diez familias de
 `web_facade` sirvan cada una SU página de error, comprobado con un curl externo contra :8880.
 Al medir salieron tres delatores más: jenkins anuncia Jetty y firma Tomcat, fortigate sirve la
 maqueta de Apache diciendo «nginx», y las respuestas del motor salen SIN cabecera `Server`

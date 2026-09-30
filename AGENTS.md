@@ -16,7 +16,7 @@ Nunca documentes aquí lo que un `grep` en el repo responde mejor. Si una págin
    valen; los valores no), nombres de clientes reales, direcciones de despliegues vivos, y **la
    receta reproducible de un fallo que siga abierto** — el *qué* se puede contar («el catálogo se
    releía veinte veces»), el *cómo tumbarlo* no («tres clientes pidiendo X lo dejan en 8,6 s»).
-   Eso último va al ROADMAP del repo privado. Si es de seguridad y toca a un cliente, `wiki-mabe`.
+   Eso último va al ROADMAP del repo privado. Si es de seguridad y toca a un cliente, la wiki privada de casos.
    **Ojo con `registrar-plan`:** manda copiar los planes **verbatim**, y un plan se escribe
    pensando en una sesión interna. **Léelo antes de pegarlo.**
 1. **`.raw/repo` es inmutable desde esta wiki.** Es un symlink a `~/Documents/Tartarus`. Lees; nunca editas código desde aquí. Para tocar código, se abre el repo directamente (que tiene su propio `CLAUDE.md`).
@@ -61,7 +61,7 @@ Una ADR **jamás se edita para cambiar de opinión**. Se marca `reemplazada-por`
 
 ### Postmortem — `wiki/postmortems/YYYY-MM-DD-slug.md`
 Secciones: **Impacto** → **Timeline** → **Causa raíz** → **Fix** (con commit) → **Cómo lo detectamos** → **Qué lo habría prevenido**.
-Sin culpables. Si el postmortem es de seguridad y toca a un cliente, va en `wiki-mabe`, no aquí.
+Sin culpables. Si el postmortem es de seguridad y toca a un cliente, va en la wiki privada de casos, no aquí.
 
 ### Módulo — `wiki/modulos/<componente>.md`
 Obligatorio: `commit_ref` + una línea `> Verificado contra \`<commit>\` el <fecha>. Si el HEAD actual difiere mucho, esta página miente.`
