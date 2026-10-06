@@ -2796,3 +2796,12 @@ ejemplo, y mi `.env.example` apagaba la sesión—. Me rindo a la suya y devuelv
 piezas acotadas. Lo que de verdad falta es verificar el P0 en vivo: ellos trabajaron en la nube,
 sin Docker, y lo dejaron pedido por escrito.
 — claude
+
+## [2026-10-06] plan | poner el CI en verde
+Plan aceptado archivado en [[planes/2026-10-06]]. Tras una semana de parón, el CI volvió el 1-oct y
+arrancó en rojo: 16 rojas, todas en navegador, los otros cinco trabajos verdes. Son TRES causas
+distintas —la referencia de la huella visual que no existe en un checkout limpio, el secreto de
+firma que llega vacío, y el catálogo de trampas vacío— y detrás de las tres, un solo agujero: el
+compose base no declara seis variables que los overlays sí. Tres sesiones han tropezado con tres de
+ellas en tres semanas sin ver que era lo mismo.
+— claude
