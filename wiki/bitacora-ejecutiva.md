@@ -1,8 +1,8 @@
 ---
 tipo: estado
 creado: 2026-08-10
-actualizado: 2026-09-28
-commit_ref: 8475912 (rama feature/tier0-deployment-readiness; verificado en local, sin CI)
+actualizado: 2026-10-06
+commit_ref: 6c158e8 (rama feature/tier0-deployment-readiness; CI en verde los seis trabajos)
 tags: [ejecutivo, seguridad, flocks, cebos]
 ---
 
@@ -767,6 +767,68 @@ vez, manteniendo los datos de cada uno separados de los demás.
   oficinas, que es el escenario realista en un despliegue en sitio. Y el aparato, que figuraba como
   caído desde el 11 de septiembre, lleva **diez días funcionando** e informando cada 30 segundos:
   el despliegue en casa del cliente deja de estar bloqueado.
+
+### 29 de septiembre de 2026 — Un despliegue que nadie configura ya no nace abierto
+
+- **Qué se logró.** Hasta ahora, una instalación recién montada arrancaba **sin separación entre
+  clientes** mientras nadie la configurara: quien la levantara veía los datos de todos. Desde hoy
+  **no arranca** si no está configurada. Es el cambio que convierte «se puede desplegar» en «se
+  puede vender»: el estado por defecto pasa de abierto a cerrado.
+- **Qué problema apareció.** El cambio dejó en rojo **102 comprobaciones automáticas** repartidas
+  en 21 archivos. Ninguna era un fallo nuevo: todas daban por hecho el mundo viejo, el de la puerta
+  abierta. Se corrigieron una a una antes de dar nada por bueno.
+- **Qué queda.** La sesión que lo hizo trabajaba sin acceso al laboratorio, así que **nadie había
+  ejecutado la batería de pruebas de pantalla contra ese cambio**. Se verificó en el laboratorio el
+  6 de octubre.
+
+### Del 1 al 6 de octubre de 2026 — Vuelven las pruebas automáticas, y aparece lo que tapaban
+
+- **Qué se logró.** Las pruebas automáticas que se ejecutan en cada cambio llevaban **cinco días
+  apagadas** por agotamiento de la cuota mensual del servicio que las corre. La cuota se renovó
+  sola el 1 de octubre y arrancaron **en rojo**: 16 comprobaciones fallando. El 6 de octubre
+  quedaron **las seis en verde por primera vez desde el 20 de septiembre**.
+- **Qué problema apareció, y era uno solo con tres caras.** Las 16 no eran 16 problemas: el fichero
+  de configuración que usan tanto las pruebas automáticas como una instalación nueva **no declaraba
+  seis ajustes** que sí tenían las configuraciones de desarrollo. Consecuencia medida: una
+  instalación limpia servía **cero personalidades de señuelo teniendo 26 guardadas**. Tres sesiones
+  distintas habían tropezado con tres de esos seis ajustes en tres semanas sin ver que era el mismo
+  agujero.
+- **Qué queda.** Nada de eso. Lo que sí queda, y es trabajo normal, está en el plan interno.
+
+### 6 de octubre de 2026 — El día que se auditaron los instrumentos, no el producto
+
+- **Qué se logró, y es lo que se ve.** Delante de un cliente, **un fallo del motor y un cliente sin
+  señuelos desplegados se veían exactamente igual**: la pantalla decía «todavía no hay ninguna
+  trampa de este cliente» en los dos casos, y el contador marcaba cero. Ahora se distinguen, y el
+  contador dice «sin leer» en vez de inventarse un cero. La lectura equivocada era la peligrosa:
+  invita a desplegar otra vez encima de algo que ya está puesto.
+- **Y un fallo que sólo se habría visto en casa de un cliente.** La configuración de una instalación
+  nueva montaba el catálogo de señuelos **en sólo lectura**, con el motor escribiendo en él. En
+  nuestro laboratorio no se notaba, porque una capa de desarrollo lo corrige. En una instalación
+  limpia, aplicar una personalidad o apagar un señuelo habrían fallado — y las pruebas automáticas
+  **no lo cazaban**, porque no aplican ninguna. Corregido y con una comprobación nueva que lo
+  vigila.
+- **Qué problema apareció, y es el hallazgo del día.** Tres de nuestros propios verificadores
+  **estaban dando resultados falsos**, y a uno se le creyó. El que vigila que no se pierda trabajo
+  entre sesiones daba por perdidos **22 cambios que estaban guardados a salvo** — eran las dos
+  únicas alarmas del repositorio y las dos eran falsas. Otro **borraba el archivo histórico entero**
+  cada vez que se ejecutaba, incluso cuando no tenía nada que archivar. Y un tercero se quedaba
+  callado justo en el caso que más importaba.
+- **Cómo se resolvió, y qué se aprendió.** Los tres se corrigieron con una comprobación que los
+  pone en rojo contra su propio fallo antes de darlos por buenos. La lección quedó escrita: **un
+  verificador equivocado cuesta más que no tenerlo**, porque se le cree — y la señal de alarma es
+  *esperar un rojo y que salga verde*. Así se cazó uno de ellos: el propio verificador que se
+  acababa de escribir salía verde con el defecto delante.
+- **Y una mejora de fondo que no se ve pero se paga todos los días.** El protocolo interno obligaba
+  a cada sesión a leer varios documentos antes de empezar, y esos documentos **crecen con cada
+  sesión**. El margen se había consumido hasta el punto de que **la siguiente sesión que se
+  declarara rompía el proceso de verificación de todas las demás** — y pasó. Se redujo lo que hay
+  que leer de 180 KB a 142 KB sacando lo que se puede derivar automáticamente, y el coste de
+  declararse pasó a ser **cero**. Dicho en corto: el equipo puede crecer sin que el protocolo se
+  ahogue.
+- **Qué queda.** Trabajo normal, todo anotado con su medición: pulir la pantalla de señuelos,
+  reducir lo que cuesta arrancar una sesión, y un puñado de mejoras de herramientas internas.
+
 
 ## Riesgos y pendientes de seguridad conocidos (sin alarmismo)
 

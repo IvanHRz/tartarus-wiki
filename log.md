@@ -3,6 +3,21 @@
 Bitácora de actualizaciones. Append-only.
 `grep "^## \[" log.md | tail -5`
 
+## [2026-10-06] update | Bitácora ejecutiva al día: del 29-sep al 6-oct
+- Páginas: `wiki/bitacora-ejecutiva.md` (tres entradas nuevas), `commit_ref` → `6c158e8`.
+- Cubre: la puerta de arranque (un despliegue sin configurar ya no nace abierto), la vuelta de
+  las pruebas automáticas y las seis en verde por primera vez desde el 20-sep, y la jornada del
+  6-oct — el fallo del motor que se leía como «este cliente no tiene señuelos», el catálogo
+  montado en sólo lectura, los tres verificadores que daban resultados falsos, y la reducción del
+  coste de arrancar una sesión de 180 KB a 142 KB.
+- **Redactado para wiki pública:** sin nombres de instituciones, sin correos, sin prefijos de
+  claves y sin recetas de detección. Comprobado término a término contra `424abcb`, el commit con
+  el que se despublicaron esos datos el 30-sep.
+- **Diez commits de planes y cosechas que llevaban semanas sin empujar** quedan arriba, rebasados
+  **sobre** esa redacción: el árbol resultante no reintroduce ninguno de los cinco términos. Se
+  comprobó antes de empujar, no después.
+— claude
+
 ## [2026-07-09] bootstrap | Wiki inicializada
 - Estructura creada: raw/repo (symlink a ~/Documents/Tartarus), wiki/{adr,postmortems,modulos,releases}
 - Schema: CLAUDE.md
