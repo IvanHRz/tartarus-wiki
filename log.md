@@ -2868,3 +2868,12 @@ aprobacion de «pendientes» queda como ancla nueva con el riesgo escrito. Se ve
 punta re-enrolando la Raspberry de verdad. Recortado: wiki publica, sin direcciones ni el texto de
 ningun token.
 — claude
+
+## [2026-10-11] plan | los dos P1 de proceso: el choque que no se ve y el intérprete de producción
+Plan aceptado archivado en [[planes/2026-10-11]]. Engaño ya no tiene nada que quepa antes del 23-oct
+—sus dos P1 son de 32 h—, así que van los dos que sí caben y atacan lo mismo: que el proceso falla
+en silencio. Avisar de lo commiteado y sin empujar (esta wiki va cinco commits por delante ahora
+mismo, de dos sesiones distintas, y nada lo vigila), leer las secciones del remoto y no sólo las del
+disco, y que la versión de Python del CI no pueda divergir de la de las imágenes. La entrada del CI
+ofrecía dos caminos y uno estaba mal: el CI pina 3.12 porque es lo que corre producción.
+— claude
