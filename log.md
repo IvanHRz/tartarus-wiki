@@ -2846,3 +2846,15 @@ receta de verificación de la kill chain que manda a un camino deprecado —publ
 corregida en este mismo plan—. **Va recortado**: el plan citaba fichero y línea de cuatro defectos
 que siguen abiertos, y eso no se publica; cada recorte está marcado en su sitio.
 — claude
+
+## [2026-10-11] plan | la Pi conectada: el canal de vuelta
+Plan aceptado archivado en [[planes/2026-10-11]]. Con la Raspberry por fin en la misma red, lo
+primero que se ve al mirarla es que llevaba **24 días muda** y nadie lo sabía: su unidad de systemd
+clava la dirección de la consola y el DHCP había movido el portátil. Es la cuarta forma del mismo
+fallo, y el arreglo que cerró la anterior —clavarla por IP, porque el mDNS de esa Pi no resuelve— es
+la causa de ésta. Así que la sesión va de eso: un parche que la devuelve hoy, y después el arreglo
+de verdad (Tailscale), que es la respuesta que el propio ROADMAP ya nombraba sin que nadie la
+hubiera hecho. Después, la IP real del atacante — empezando por reproducirla, porque la evidencia
+apunta a que la premisa de su ancla señala a otra entrada. El plan va RECORTADO: esta wiki es
+pública y ya tiene 122 direcciones vivas; ésta no añade la 123.
+— claude
