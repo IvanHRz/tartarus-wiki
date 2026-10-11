@@ -2837,3 +2837,12 @@ el comprobador de la forma de riesgo con tope, el motivo del error del motor en 
 gancho de pre-commit que dejó de ser ciego a la consola, las cuatro correcciones menores y las
 cuatro sondas de la puerta de arranque. Las seis quedaron cerradas con su medición.
 — claude
+
+## [2026-10-11] plan | qué alcanza «aplicar una persona», y qué se le escapa
+Plan aceptado archivado en [[planes/2026-10-11]]. Cuatro anclas del bloque Engaño que son la misma
+pregunta por cuatro sitios: el respaldo que se toma aunque no cambie nada, el aviso de «aplicar a
+todos» que no dice a qué ficheros va a pisar, los honeypots apagados que aplicar no alcanza, y la
+receta de verificación de la kill chain que manda a un camino deprecado —publicada en esta wiki, y
+corregida en este mismo plan—. **Va recortado**: el plan citaba fichero y línea de cuatro defectos
+que siguen abiertos, y eso no se publica; cada recorte está marcado en su sitio.
+— claude
