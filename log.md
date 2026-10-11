@@ -2877,3 +2877,11 @@ mismo, de dos sesiones distintas, y nada lo vigila), leer las secciones del remo
 disco, y que la versión de Python del CI no pueda divergir de la de las imágenes. La entrada del CI
 ofrecía dos caminos y uno estaba mal: el CI pina 3.12 porque es lo que corre producción.
 — claude
+
+## [2026-10-11] plan | la válvula del enrolamiento (pendiente→aprobar)
+Plan aceptado archivado en [[planes/2026-10-11]]. Quinto plan del día, la mitad de seguridad que
+`token` spin-outeó: un aparato que entra con un token reusable nace `pendiente` y no cuenta ni se
+le atribuyen sus sucesos hasta que el manager de ese cliente lo aprueba. La trampa del diseño es
+que cuatro escritores ponen `status='active'` y pisarían `pendiente`: el seguro es un CASE en SQL y
+un AND en el vigía; sólo aprobar promueve. Recortado: wiki pública.
+— claude
