@@ -2820,3 +2820,13 @@ firma que llega vacío, y el catálogo de trampas vacío— y detrás de las tre
 compose base no declara seis variables que los overlays sí. Tres sesiones han tropezado con tres de
 ellas en tres semanas sin ver que era lo mismo.
 — claude
+
+## [2026-10-11] plan | los cuatro P1 que no piden la Raspberry
+Plan aceptado archivado en [[planes/2026-10-11]]. Cuatro P1 de DESPLIEGUE elegidos porque ninguno
+pide la Raspberry ni toca un fichero de la otra sesión viva: la puerta del secreto de firma, la
+suplantación de inventario por el latido, que un catálogo vacío deje de leerse como «aquí no hay
+honeypots» y el borrado de fábrica de una tarjeta de campo. Al remedir las cuatro premisas, tres se
+sostuvieron y una está contradicha por una corrección abierta del propio ROADMAP; y salió un agujero
+nuevo, más grande que el que pedía el ancla, que queda fuera de alcance por pedir la Pi. El plan va
+RECORTADO en tres sitios porque esta wiki es pública: cada recorte lleva su marca.
+— claude
