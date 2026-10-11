@@ -2858,3 +2858,13 @@ hubiera hecho. Después, la IP real del atacante — empezando por reproducirla,
 apunta a que la premisa de su ancla señala a otra entrada. El plan va RECORTADO: esta wiki es
 pública y ya tiene 122 direcciones vivas; ésta no añade la 123.
 — claude
+
+## [2026-10-11] plan | el token que vuelve (enrolamiento de campo)
+Plan aceptado archivado en [[planes/2026-10-11]]. Cuarto plan del dia. Con la Pi conectada, el
+siguiente hueco de campo: hoy un aparato se enrola con un token de un solo uso que caduca en 1 h,
+asi que re-grabar la tarjeta o reasignarla a otro cliente lo deja sin camino de vuelta. Se hace el
+token reusable por cliente, persistido y revocable (con hash, no en claro), con su UI; la cola de
+aprobacion de «pendientes» queda como ancla nueva con el riesgo escrito. Se verifica de punta a
+punta re-enrolando la Raspberry de verdad. Recortado: wiki publica, sin direcciones ni el texto de
+ningun token.
+— claude
