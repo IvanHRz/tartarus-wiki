@@ -44,10 +44,13 @@ El arco, en tres actos, en orden de fases MITRE ascendentes:
 
 **El eje que hace que esto funcione, y hay que respetarlo:**
 
-- **La kill chain sólo se dispara con ≥2 protocolos distintos de la misma IP en 60 min**
-  (`engine/engine/kill_chain_tracer.py:217`). Los tres actos se lanzan desde el Mac, así que
-  comparten la IP de origen que ve Beelzebub → se correlacionan solos. **Pero primero hay que hacer
-  puesta a cero**, o la historia se mezcla con el ruido histórico de esa misma IP.
+- **La cadena se agrupa por IP de origen**, y los tres actos se lanzan desde el Mac, así que
+  comparten la que ve Beelzebub → se correlacionan solos. **Pero primero hay que hacer puesta a
+  cero**, o la historia se mezcla con el ruido histórico de esa misma IP.
+  **El «≥2 protocolos en 60 min» que decía esta línea era del rastreador DEPRECADO** y ya no es
+  el criterio: desde el 15-sep-2026 la cadena se compone al vuelo desde las tácticas MITRE de los
+  sucesos, y la severidad sale del riesgo medido, no de cuántos protocolos se tocaron. Lo que hay
+  que verificar es lo que enseña la consola, con el `curl` de más abajo.
 - **El disparo de reúso va por el honeytoken del MCP, no por el árbol SSH.** `get-credentials` del
   MCP (`engine/engine/mcp_honeypot_router.py:234`) genera la credencial **en código** y la registra
   como honey-cred con su regla Sigma de reúso. El acto 3 **captura** la `AKIA…` que devolvió el acto
@@ -150,8 +153,14 @@ AUTO=1 bash scripts/demo/lab_incidente.sh
 # 2. que la historia se contó como UNA (sustituye la IP por la del host que ves en los eventos)
 docker exec tartarus-postgres psql -U tartarus -d tartarus -c \
   "SELECT protocol, count(*) FROM events WHERE created_at > NOW()-INTERVAL '1 hour' GROUP BY protocol;"   # HTTP, MCP y SSH
-docker exec tartarus-postgres psql -U tartarus -d tartarus -c \
-  "SELECT array_length(sources,1) AS protos, kill_chain_stage, severity FROM kill_chain_traces ORDER BY last_seen DESC LIMIT 3;"  # 1 traza, ≥2 protos
+# OJO: la kill chain NO se comprueba contra la tabla `kill_chain_traces`. Ésa es el camino
+# DEPRECADO desde el 15-sep-2026 y da otros números: medido el 11-oct, 5 filas cuya más reciente
+# era del 6-oct mientras el endpoint vivo veía el tráfico de ese mismo día. Quien copie una SQL
+# contra esa tabla verá que no cuadra y **creerá que la demo falló**. Se comprueba por donde mira
+# la consola, que compone la cadena al vuelo desde `events.mitre_tactic`:
+curl -s -b /tmp/tj 'http://localhost:9001/kill-chain/traces?hours=1' | python3 -m json.tool
+#   → 1 traza · sources con los tres protocolos · severity alta · las etapas MITRE de la cadena
+#   (`/tmp/tj` es la cookie de sesión; `docs/DEMO_CASO_DE_USO.md` lo explica entero)
 docker exec tartarus-postgres psql -U tartarus -d tartarus -c \
   "SELECT rule_id, level FROM detections WHERE rule_id LIKE 'decoy_reuse%' OR rule_id LIKE '%credential%';"  # reúso + robo MCP
 
