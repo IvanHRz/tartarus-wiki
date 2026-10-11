@@ -2830,3 +2830,10 @@ sostuvieron y una está contradicha por una corrección abierta del propio ROADM
 nuevo, más grande que el que pedía el ancla, que queda fuera de alcance por pedir la Pi. El plan va
 RECORTADO en tres sitios porque esta wiki es pública: cada recorte lleva su marca.
 — claude
+
+## [2026-10-11] plan | las cinco de Asana del 9-oct
+Plan aceptado archivado en [[planes/2026-10-11]]. Las cinco tareas con fecha 9-oct más la sexta:
+el comprobador de la forma de riesgo con tope, el motivo del error del motor en la consola, el
+gancho de pre-commit que dejó de ser ciego a la consola, las cuatro correcciones menores y las
+cuatro sondas de la puerta de arranque. Las seis quedaron cerradas con su medición.
+— claude
