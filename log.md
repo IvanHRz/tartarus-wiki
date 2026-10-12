@@ -2892,3 +2892,10 @@ Raspberry no estaba acotado por su límite del compose —que no se aplicaba— 
 agua, y había que apagar el plugin de gestión de la forma soportada y encender el cgroup de
 memoria del kernel. Recortado para la wiki pública.
 — claude
+
+## [2026-10-12] plan | el techo de ingesta y el tope de la cola
+Plan aceptado archivado en [[planes/2026-10-12]]. Remedir el techo de `{#ingesta-limitada-por-el-consumer}`,
+cuyo titular («~70 sucesos/s») es de hace quince días y cuyo propio cuerpo documenta cuatro tandas
+de mejora posteriores que nadie subió al titular; y acotar la cola de ingesta, que es lo único de
+su «Cómo» que sigue sin hacerse. Recortado para la wiki pública en tres sitios.
+— claude
