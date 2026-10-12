@@ -1,7 +1,7 @@
 ---
 tipo: estado
 creado: 2026-08-07
-actualizado: 2026-08-07
+actualizado: 2026-10-12  # sólo la nota de cabecera; las tablas siguen siendo del 7-ago
 commit_ref: PR#12 (rama feature/tier0-deployment-readiness)
 ---
 
@@ -19,6 +19,30 @@ commit_ref: PR#12 (rama feature/tier0-deployment-readiness)
 > **Quedan 2**: **#13b** dashboard de prompts de persona (reescribir el disfraz del honeypot; **L**, en
 > curso) y **#9** validación E2E de cebos+alertas (**bloqueada** por credenciales: Twilio SMS + Gmail App
 > Password). Nuevo forward: **TF-14** Session Correlation asistida por IA (a planear).
+
+> ## ⚠️ Al 12 de octubre de 2026: **lo de abajo es del 7 de agosto** y hay dos meses de por medio
+>
+> Se pone esta nota en vez de reescribir las tablas: actualizar de memoria lo que no se ha vuelto a
+> medir es exactamente el error que más caro ha salido en este proyecto. Lo que sigue abajo vale
+> como historia, **no como estado**. Lo que sí está medido hoy:
+>
+> | | al 7-ago-2026 | medido el 12-oct-2026 |
+> |---|---|---|
+> | pruebas automáticas | 904 | **4.416** (y 4.133 con el intérprete de producción) |
+> | pendiente inventariado | «12 de 13 brechas» | **162 entradas abiertas**, ~1.100 h estimadas |
+> | aparato de campo | una llave compartida con toda la flota | llave propia, y **llama a la consola por un nombre estable**, no por una dirección |
+> | imagen del honeypot | sólo en un portátil | publicada en un **registro privado**, dos arquitecturas, huella verificable |
+>
+> **Las dos cosas que condicionan la presentación del 23 de octubre**, y las dos están anotadas con
+> su medición: el alta de un cliente en la red privada desde la propia consola (hoy se hace a mano),
+> y que nadie ha arrancado todavía la imagen en un servidor de la arquitectura más común de cliente
+> —sólo se ha comprobado emulada—.
+>
+> **Y un aviso de método que vale más que cualquier cifra de aquí:** el 12 de octubre se midió que
+> varias notas internas afirmaban cosas sobre otros documentos que nadie comprobaba, y una de ellas
+> daba por inexistente un requisito que llevaba 25 días escrito. Desde entonces hay tres
+> comprobaciones automáticas que lo impiden. Si una cifra de esta página no trae fecha, trátala
+> como caduca.
 
 ## 1. Qué tenemos hecho (y verificado)
 

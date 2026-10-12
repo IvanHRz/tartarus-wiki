@@ -829,6 +829,58 @@ vez, manteniendo los datos de cada uno separados de los demás.
 - **Qué queda.** Trabajo normal, todo anotado con su medición: pulir la pantalla de señuelos,
   reducir lo que cuesta arrancar una sesión, y un puñado de mejoras de herramientas internas.
 
+### Del 7 al 12 de octubre de 2026 — El aparato de campo deja de depender de la red del cliente, y la trampa que servía cuatro puertas sin avisar de ninguna
+
+- **El hallazgo más caro, y es el que un cliente habría visto.** La trampa que imita servicios de
+  Windows y bases de datos llevaba **desde que existe** atendiendo cuatro puertas como un servidor
+  real y **sin registrar ni un aviso**. Atacarla funcionaba —contestaba igual que el servicio de
+  verdad— y en la consola no aparecía nada. Eran **cuatro** averías encadenadas, no una, y dos de
+  ellas convertían en mentira el criterio con el que la propia nota interna decía cómo comprobarlo.
+  Arreglado y verificado con el aparato delante: se ataca y los avisos aparecen en **16 segundos**,
+  con su puerta, su protocolo y su riesgo bien puestos.
+- **Y el panel de salud daba por bueno un sensor que no reportaba nada.** Preguntaba «¿contesta?» y
+  contestaba, así que lo pintaba sano. Ahora distingue **«sirve pero no reporta»**, que es
+  exactamente el estado en el que estaba. La distinción no es cosmética: un sensor mudo en casa de
+  un cliente es una trampa que no protege y nadie lo sabría.
+- **El aparato de campo ya no depende de la dirección de la red donde esté.** Era la avería más
+  repetida del proyecto: la dirección de la consola estaba escrita a mano en cuatro sitios
+  distintos y **cada arreglo fue la causa del siguiente**. La última vez el aparato estuvo **24
+  días mudo** —vivo, intentándolo cada 33 segundos contra una dirección que el router había
+  movido—. Desde el 12 de octubre el aparato llama a la consola **por un nombre estable** (red
+  privada tipo Tailscale), no por una dirección. Verificado de la forma que de verdad importa: la
+  dirección del portátil **cambió sola a mitad de la prueba** y el aparato **no se enteró** —siguió
+  reportando sin pausa—. Eso es lo que convierte «funciona en nuestro laboratorio» en «funciona en
+  la red de un cliente».
+- **Y la imagen del honeypot ya se puede entregar.** Hasta ahora sólo existía en el portátil de
+  Iván: un cliente no tenía de dónde bajarla, y una instalación nueva se descargaba por defecto
+  **la versión sin nuestras modificaciones** —la que se delata sola, porque su identidad cambia en
+  cada reinicio—. Ahora está publicada en un **registro privado**, para las dos arquitecturas, con
+  su huella verificable y **comprobado que es privada**: pública enseñaría cómo está construido el
+  disfraz. Eso desbloquea los dos caminos de instalación que llevaban semanas parados.
+- **Qué problema apareció, y es el patrón de la semana.** Varias notas internas **afirmaban cosas
+  sobre otros documentos** —«esto no está escrito en ninguna parte», «esta dependencia ya está
+  puesta en los seis sitios»— y **nadie comprobaba esas afirmaciones**. Resultado medido: un
+  requisito que llevaba **25 días escrito** se daba por inexistente; cuatro de seis caminos de
+  instalación no llevaban una dependencia que otra nota decía haberles puesto; y el inventario de
+  pendientes **veía 314 entradas cuando había 323** —nueve eran invisibles por un detalle de
+  formato, y cuatro de ellas ya estaban terminadas—. Nada de eso rompe el producto; lo que rompe
+  es la planificación, y se paga en sesiones enteras trabajando en lo que ya estaba hecho.
+- **Cómo se resolvió.** Tres comprobaciones automáticas nuevas, cada una vista **en rojo** contra su
+  propio defecto antes de darla por buena, y las tres con tolerancia **cero**: una afirmación sobre
+  otro documento ya no puede quedarse sin verificar. Una de ellas cazó el mismo defecto **en el
+  trabajo de otra persona a los veinte minutos** de existir.
+- **Y tres errores propios que conviene contar, porque son la mejor parte.** Al ejecutar por primera
+  vez el procedimiento recién escrito para el aparato, **tres de sus pasos eran falsos**: pedía
+  instalar algo que ya estaba instalado, nombraba mal un servicio del sistema, y —el peor— yo usé
+  «el registro no dice nada» como señal de que el aparato estaba parado, cuando ese registro sólo
+  escribe si hay novedades. Diagnostiqué como averiado un aparato que funcionaba perfectamente.
+  Los tres quedaron corregidos **en el propio procedimiento**, con lo medido al lado. La diferencia
+  entre una receta y un procedimiento es que el procedimiento alguien lo ha ejecutado.
+- **Qué queda.** Las pruebas automáticas están en verde (**4.416**, y **4.133** con el intérprete
+  que usa producción). Queda el alta de un cliente en la red privada desde la propia consola, y
+  arrancar la imagen en un servidor de la arquitectura más común de cliente —hasta ahora sólo se ha
+  comprobado emulada—. Las dos están anotadas con su medición.
+
 
 ## Riesgos y pendientes de seguridad conocidos (sin alarmismo)
 
