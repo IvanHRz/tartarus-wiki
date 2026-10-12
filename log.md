@@ -2885,3 +2885,10 @@ le atribuyen sus sucesos hasta que el manager de ese cliente lo aprueba. La tram
 que cuatro escritores ponen `status='active'` y pisarían `pendiente`: el seguro es un CASE en SQL y
 un AND en el vigía; sólo aprobar promueve. Recortado: wiki pública.
 — claude
+
+## [2026-10-11] plan | presupuesto de 8 GB del aparato de campo
+Plan aceptado archivado en [[planes/2026-10-11]]. Cerrar `#presupuesto-8gb`: el broker de la
+Raspberry no estaba acotado por su límite del compose —que no se aplicaba— sino por su marca de
+agua, y había que apagar el plugin de gestión de la forma soportada y encender el cgroup de
+memoria del kernel. Recortado para la wiki pública.
+— claude
