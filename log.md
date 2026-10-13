@@ -2947,3 +2947,9 @@ Plan aceptado archivado en [[planes/2026-10-13]]. Los labs que no cubríamos era
 números sin orden ni motivo; ahora son datos con familia, orden y porqué, y el primero de esa lista
 ya tiene detección propia —escrita contra un suceso real, no contra la documentación—.
 — claude
+
+## [2026-10-13] plan | el ruido propio del aparato de campo
+Plan aceptado archivado en [[planes/2026-10-13]]. El filtro de infraestructura deja de enumerar
+contenedores por nombre y acota por red, y las pantallas dejan de contar las 19.485 filas del
+propio puente del aparato sin borrar ni una (los informes las siguen viendo).
+— claude
