@@ -706,6 +706,43 @@ vez, manteniendo los datos de cada uno separados de los demás.
   llave fuerte, o el sistema no arranca y lo dice con claridad. Es una mejora de seguridad que no
   pide nada al cliente y no cambia nada de lo que ya funciona.
 
+### 13 de octubre de 2026 (madrugada) — Que las llaves no viajen, que un cliente no toque lo de otro, y elegir con criterio
+
+- **Qué se logró, en cuatro cosas.**
+  1. **El equipo que preparamos para un cliente ya no se lleva las llaves de la plataforma.** El
+     guion que monta una tarjeta de campo copiaba **el proyecto entero**: con él viajaban la llave
+     con la que se firma el tráfico de **toda** la flota, la contraseña de la base, la clave del
+     proveedor de inteligencia artificial, los certificados y —lo más delicado— **la memoria de
+     sesiones de atacantes de clientes reales**. Ahora sólo viaja lo que está versionado, que por
+     construcción no incluye nada de eso, y la tarjeta **genera sus propias claves al montarse**.
+  2. **El equipo que ya está en servicio tampoco las lleva.** Se le dio una llave propia, y se
+     comprobó con la prueba que de verdad vale: **la llave antigua ya no le abre** —el equipo la
+     rechaza— mientras sigue reportando sin un minuto de corte.
+  3. **Un cliente ya no puede tocar las plantillas de otro.** Quedaban diez pantallas por las que,
+     sabiendo el nombre interno de una plantilla ajena, se podía **leerla, probarla, reescribirla y
+     hasta aplicarla a un honeypot**. Están cerradas, y una comprobación automática impide que
+     vuelva a abrirse por una pantalla nueva.
+  4. **Detectamos una familia de ataque más**, de las que el fabricante del honeypot publica: la
+     que entra por una vulnerabilidad reciente de WordPress. Queda a falta de **poner en servicio
+     un honeypot de ese tipo**, que es una decisión de despliegue y no de programación.
+
+- **Qué problema apareció, y es el más útil de contar.** Al revisar nuestras propias afirmaciones
+  salió que **dos de ellas estaban exageradas** — las había escrito nosotros mismos horas antes.
+  Una decía que el equipo de campo podía «firmar como cualquier sensor de cualquier cliente»: al
+  medirlo, los equipos que de verdad firman ya tenían su propia llave y el alcance era mucho menor.
+  La otra atribuía al equipo una clave del proveedor de inteligencia artificial que, medida, **era
+  un valor de ejemplo**. Las dos quedaron corregidas **con el número al lado**, y se añadió una
+  comprobación automática que impide marcar algo como urgente cuando la prueba que lo confirmaría
+  **todavía no se ha hecho**.
+
+- **Impacto para el cliente.** Un equipo que se queda en sus instalaciones ya no lleva encima nada
+  que sirva contra los demás clientes, y eso se puede **demostrar**, no sólo afirmar. La separación
+  entre clientes dentro de la consola cubre ahora también las plantillas de engaño. Y la lista de
+  lo que todavía no cubrimos dejó de ser una impresión: está **ordenada por lo que un cliente
+  mexicano tiene de verdad** —correo y herramientas de administración remota por delante— con el
+  motivo escrito de cada posición, y diciendo en voz alta que hay cuatro casos que **no se cierran
+  programando**: dependen de estar expuestos a internet.
+
 ## Estado actual (en lenguaje llano)
 
 - Los cebos se crean, reparten y **avisan de verdad** cuando alguien los abre o los usa; y la
