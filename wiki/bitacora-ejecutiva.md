@@ -1,8 +1,8 @@
 ---
 tipo: estado
 creado: 2026-08-10
-actualizado: 2026-10-06
-commit_ref: 6c158e8 (rama feature/tier0-deployment-readiness; CI en verde los seis trabajos)
+actualizado: 2026-10-12
+commit_ref: 59ec0e6 (rama feature/tier0-deployment-readiness)
 tags: [ejecutivo, seguridad, flocks, cebos]
 ---
 
@@ -683,6 +683,28 @@ vez, manteniendo los datos de cada uno separados de los demás.
   instalación «de manual» quedaba con la consola sin contraseña (ya las trae, con su explicación);
   dos funciones de la interfaz de programación **daban error siempre** y nadie lo había notado; y
   una tercera **nunca llegaba a consultar al modelo**, aunque la pantalla dijera que sí.
+
+### 12 de octubre de 2026 — Que una contraseña interna demasiado corta no pueda poner en marcha el sistema
+
+- **Qué se logró.** El sistema usa dos "llaves" internas para firmar las sesiones de quien
+  entra a la consola y el tráfico de los sensores que avisan desde casa del cliente. Hasta hoy
+  el arranque rechazaba una llave que viniera escrita en el propio código (un valor de ejemplo),
+  pero **no miraba si era demasiado corta**. Una llave corta se puede adivinar a la fuerza con una
+  sola muestra, así que era un flanco abierto. Desde hoy, **el sistema se niega a arrancar si
+  cualquiera de las dos llaves tiene menos de 32 caracteres**, y lo hace en cualquier modo de
+  instalación —también en el de un solo paso, que es el que llega al cliente—.
+- **Qué problema apareció al medirlo.** Al cerrar esto quedaba una duda honesta: ¿y los equipos
+  que ya están desplegados, como la Raspberry de campo? Si alguno tuviera una llave corta, con el
+  cambio dejaría de encender.
+- **Cómo se resolvió.** Se comprobó la Raspberry de campo directamente: sus dos llaves miden 64
+  caracteres, o sea que **sigue arrancando sin problema**. Y para la "imagen de campo" —el paquete
+  con el que se preparan equipos nuevos— se cerró de raíz: como corre exactamente el mismo
+  programa, **la misma comprobación de arranque la protege**, sin necesidad de tener un equipo
+  delante. Además se añadió una red de seguridad automática que vigila que ninguna parte del
+  sistema pueda volver a generar una llave corta por descuido.
+- **Impacto para el cliente.** Un despliegue nunca nace con una llave débil: o se configura una
+  llave fuerte, o el sistema no arranca y lo dice con claridad. Es una mejora de seguridad que no
+  pide nada al cliente y no cambia nada de lo que ya funciona.
 
 ## Estado actual (en lenguaje llano)
 
