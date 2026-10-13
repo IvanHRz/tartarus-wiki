@@ -59,10 +59,12 @@ número al lado. Un `--ancla` no es un diagnóstico: es la última vez que algui
   guardarraíl del aislamiento ya mira también lo que vive en **ficheros**
   (`#el-trinquete-no-ve-los-ficheros`) y los labs sin cubrir tienen **orden y motivo**
   (`#labs-ir-mas-alla`).
-- **🔴 Hay una copia viva sin declararse: `Tartarus-ruido`**, con **8 ficheros sin commitear** y
-  **1 commit fuera de toda rama**. Por el nombre, lo más probable es que esté en
-  `#pi-ruido-propio` (el nº 3 de la lista). **No cojas ese ancla sin hablar con ella**, y si la
-  copia aparece abandonada, trae su commit antes de que se pierda: `git merge <ese commit>`.
+- **🔴 Hay una copia viva sin declararse: `Tartarus-ruido`**, y a las 05:30 llevaba **2 commits
+  fuera de toda rama** (iba por 1 veinte minutos antes, o sea que está trabajando). Por el nombre,
+  lo más probable es que esté en `#pi-ruido-propio`, el nº 3 de la lista: **no cojas ese ancla sin
+  mirar antes su sección**. Si la copia aparece abandonada, trae su trabajo **antes** de que se
+  pierda — `python3 scripts/revisar_sesiones.py` imprime el commit exacto y el `git merge` que toca
+  (no lo copies de aquí: cambia cada vez que commitea).
 - **El stack está libre** (motor · base · Beelzebub · Raspberry). Se pide por turno, en tu sección.
 - **Pendientes nuevos que dejó la madrugada, por si buscas algo corto:** que el motor central deje
   de aceptar la llave compartida para los sensores que no firman nunca; que la consola **avise**
