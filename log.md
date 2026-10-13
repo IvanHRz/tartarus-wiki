@@ -2915,3 +2915,10 @@ escribirlo dos veces. Se eligió este bloque porque el encargo del prompt de rel
 cogido por una sesión viva** — el tercer prompt de traspaso que caduca en una tarde. Va
 **redactado**: describía un agujero que seguía abierto al escribirse.
 — claude
+
+## [2026-10-12] plan | cerrar la imagen de campo de raíz
+Plan aceptado archivado en [[planes/2026-10-12]]. Cerrar `{#secretos-de-campo-sin-medir}` sin
+hardware: el motor de campo es la misma imagen que cualquier motor, así que la misma puerta de hoy
+lo cubre; se añade un guardarraíl que ata los generadores de secreto de firma al umbral de la
+puerta y se cierra la entrada por cobertura estructural.
+— claude
