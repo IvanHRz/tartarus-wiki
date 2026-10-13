@@ -2941,3 +2941,9 @@ Plan aceptado archivado en [[planes/2026-10-13]]. El aparato de campo llevaba en
 la que se firma el tráfico de toda la plataforma; ahora tiene una propia, y la vieja ya no le abre
 —comprobado con un rechazo, no con que todo siguiera andando—.
 — claude
+
+## [2026-10-13] plan | ir más allá, con el primero de la lista de labs
+Plan aceptado archivado en [[planes/2026-10-13]]. Los labs que no cubríamos eran una lista de
+números sin orden ni motivo; ahora son datos con familia, orden y porqué, y el primero de esa lista
+ya tiene detección propia —escrita contra un suceso real, no contra la documentación—.
+— claude
