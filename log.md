@@ -2906,3 +2906,12 @@ Plan aceptado archivado en [[planes/2026-10-12]]. Cerrar `{#ingesta-limitada-por
 tablero y dejar el relevo. Lo que de verdad salió: las dos entradas que yo mismo había abierto por
 la mañana quedaron DESMENTIDAS al correr sus experimentos (`L-080`).
 — claude
+
+## [2026-10-12] plan | las dos puertas no miran la longitud del secreto
+Plan aceptado archivado en [[planes/2026-10-12]]. Cerrar `{#jwt-secreto-corto}` y
+`{#comentario-huerfano-de-mutacion}`: las dos puertas de arranque rechazan un secreto escrito en
+el repo pero ninguna mira cuántos caracteres tiene, y el criterio se reusa en las dos en vez de
+escribirlo dos veces. Se eligió este bloque porque el encargo del prompt de relevo **ya estaba
+cogido por una sesión viva** — el tercer prompt de traspaso que caduca en una tarde. Va
+**redactado**: describía un agujero que seguía abierto al escribirse.
+— claude
