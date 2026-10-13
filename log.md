@@ -2929,3 +2929,9 @@ elegía a quién vigilar buscando SQL, así que una familia de datos respaldada 
 existía para él: se le añadió una tercera dimensión, con su pareja falsable, y se recortaron las
 diez rutas que resolvían la persona de un cliente por id sin mirar de quién era.
 — claude
+
+## [2026-10-13] plan | al aparato de campo sólo viaja lo versionado
+Plan aceptado archivado en [[planes/2026-10-13]]. Los guiones que montan una tarjeta de campo
+copiaban el repositorio entero, y con él seis clases de material que no puede salir del
+laboratorio; ahora copian sólo lo que el repositorio versiona, que las excluye por construcción.
+— claude
