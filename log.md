@@ -2961,3 +2961,9 @@ saber ni debe fingirlo: el veredicto pasa a calcularse en el sensor —que sí c
 a viajar con el suceso, como **código** con lista blanca para que la prosa tenga una sola copia.
 Cerrado el mismo día; la mitad de despliegue (reinstalar el agente del aparato) queda anotada.
 — claude
+
+## [2026-10-13] plan | el aparato de campo ya corre el motor que acota
+Plan aceptado archivado en [[planes/2026-10-13]]. El panel del equipo de campo pasó de 19.635
+sucesos a 150 sin borrar ni una fila, y el procedimiento de empujarle un árbol —hecho a mano tres
+veces— quedó en un guion con ensayo en seco.
+— claude
