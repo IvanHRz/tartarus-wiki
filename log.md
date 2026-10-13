@@ -2922,3 +2922,10 @@ hardware: el motor de campo es la misma imagen que cualquier motor, así que la 
 lo cubre; se añade un guardarraíl que ata los generadores de secreto de firma al umbral de la
 puerta y se cierra la entrada por cobertura estructural.
 — claude
+
+## [2026-10-12] plan | el trinquete que no mira donde no hay SQL
+Plan aceptado archivado en [[planes/2026-10-12]]. El guardarraíl del aislamiento entre clientes
+elegía a quién vigilar buscando SQL, así que una familia de datos respaldada por ficheros no
+existía para él: se le añadió una tercera dimensión, con su pareja falsable, y se recortaron las
+diez rutas que resolvían la persona de un cliente por id sin mirar de quién era.
+— claude
