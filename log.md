@@ -2899,3 +2899,10 @@ cuyo titular («~70 sucesos/s») es de hace quince días y cuyo propio cuerpo do
 de mejora posteriores que nadie subió al titular; y acotar la cola de ingesta, que es lo único de
 su «Cómo» que sigue sin hacerse. Recortado para la wiki pública en tres sitios.
 — claude
+
+## [2026-10-12] plan | 2.ª tanda del techo de ingesta: me desmiento
+Plan aceptado archivado en [[planes/2026-10-12]]. Cerrar `{#ingesta-limitada-por-el-consumer}`
+—las tres partes de su «Cómo» resueltas, 12 h de P1 liberadas—, limpiar la base, republicar el
+tablero y dejar el relevo. Lo que de verdad salió: las dos entradas que yo mismo había abierto por
+la mañana quedaron DESMENTIDAS al correr sus experimentos (`L-080`).
+— claude
