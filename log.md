@@ -2953,3 +2953,11 @@ Plan aceptado archivado en [[planes/2026-10-13]]. El filtro de infraestructura d
 contenedores por nombre y acota por red, y las pantallas dejan de contar las 19.485 filas del
 propio puente del aparato sin borrar ni una (los informes las siguen viendo).
 — claude
+
+## [2026-10-13] plan | federación: el veredicto de enmascarado viaja con el suceso
+Plan aceptado archivado en [[planes/2026-10-13]]. Un suceso federado desde un equipo de campo
+puede venir enmascarado por la red Docker **de aquel equipo**, y el motor central no lo puede
+saber ni debe fingirlo: el veredicto pasa a calcularse en el sensor —que sí conoce sus puentes— y
+a viajar con el suceso, como **código** con lista blanca para que la prosa tenga una sola copia.
+Cerrado el mismo día; la mitad de despliegue (reinstalar el agente del aparato) queda anotada.
+— claude
