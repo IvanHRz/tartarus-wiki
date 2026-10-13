@@ -101,7 +101,7 @@ Es la familia más numerosa y donde está el hueco grande.
 |---|---|---|---|
 | 6 | [RedTail: primera evidencia contra la API de Docker](https://beelzebub.ai/blog/redtail-cryptominer-first-evidence-of-docker-api-targeting/) | **API de Docker en el 2375** | ✅ **Sí (10-sep-2026).** Familia `docker` con errores en JSON (un daemon no habla HTML), estáticas para las tres rutas con las que un bot decide si sigue, servicio en `:2375` y regla Sigma propia con **0 falsos positivos** sobre 25.402 eventos. En vivo: `POST /containers/create` con `Binds: ["/:/host"]` devuelve 201 **y deja su cuerpo retenido como artefacto** |
 | 7 | [RedTail evoluciona: entrega por SSH](https://beelzebub.ai/blog/redtail-docker-api-campaign-evolves/) | La misma, con entrega multi-etapa por SCP con reserva HTTPS | 🟡 **Parcial (10-sep-2026).** La superficie de Docker ya está, y una descarga por SSH deja hito (`T1105`) y artefacto con su URL y host. Falta la entrega multi-etapa por SCP |
-| 8 | [wp2shell: RCE de WordPress sin autenticar](https://beelzebub.ai/blog/catching-wp2shell-in-the-wild/) | WordPress | **No** |
+| 8 | [wp2shell: RCE de WordPress sin autenticar](https://beelzebub.ai/blog/catching-wp2shell-in-the-wild/) | WordPress | 🟡 **Parcial (13-oct-2026).** La mitad que depende de nosotros está: **detección propia** del encadenado —el salto de permisos del REST batch (CVE-2026-63030) y la inyección por `author_exclude` (CVE-2026-60137)— escrita contra el payload **real** de un suceso capturado, con 13 pruebas y sus controles de «no dispara» (el endpoint del batch es legítimo del núcleo: la ruta sola no acusa); y la fachada de WordPress lo declara, así que el honeypot lo contesta igual dos veces en vez de improvisarlo. **Lo que falta no es código: es desplegar una persona WordPress** en algún honeypot para capturarlo en vivo |
 | 9 | [Operation PCPcat: robacredenciales de Next.js](https://beelzebub.ai/blog/threat-huntinga-analysis-of-a-nextjs-exploit-campaign/) | Next.js (59 000 servidores) | **No** |
 | 10 | [CVE-2026-24423 en SmarterMail](https://beelzebub.ai/blog/watching-cve-2026-24423-hit-the-wire/) | Servidor de correo | **No** |
 | 11 | [Kubernetes: detectar movimiento lateral](https://beelzebub.ai/blog/deploy-beelzebub-honeypot-on-kubernetes/) | Kubernetes | **No** |
@@ -153,7 +153,7 @@ La familia más nueva y donde su ventaja es más frágil.
 | 28 | [Cómo atacan los ciberdelincuentes](https://beelzebub.ai/blog/how-cybercriminals-attacks-your-company/) | Divulgación | **No aplica** |
 | **29** | [One Tool Named E: un robacredenciales de LiteLLM (CVE-2026-42271)](https://beelzebub.ai/blog/one-tool-named-e-litellm-cve-2026-42271/) — **NUEVO, 1-sep-2026** | Endpoints MCP de una pasarela LiteLLM que aceptaban JSON-RPC. El atacante manda un robacredenciales disfrazado de servidor MCP. **Retienen el cuerpo de la petición como código fuente, sin ejecutarlo**: 15 variantes, de 1.513 a 66.901 bytes, de 7 secretos vigilados a 72. 2.048 intentos desde 103 IPs | ✅ **Sí (10-sep-2026).** Valida nuestra postura de «guardar sin ejecutar», y el material **ya nos llega**: medido, **240 eventos con `payload.Body` no vacío**. `artefactos` lo retiene como código fuente, sin ejecutarlo, con huella del CONTENIDO y dedup: el mismo cuerpo dos veces es **un artefacto con dos apariciones**, que es la señal del lab. Comprobado con el `POST /containers/create` del señuelo de Docker |
 
-<!-- recuento-maquina: 7/3/14/5 — del todo / parcial / no / no aplica.
+<!-- recuento-maquina: 7/4/13/5 — del todo / parcial / no / no aplica.
      Lo lee `scripts/verificar_labs.py` del repo TARTARUS. Si cambias un veredicto en la
      tabla, cambia esta línea: es el contrato entre la wiki y el guion, y una frase en
      prosa no se puede parsear sin romperse a la primera reescritura. -->
@@ -171,9 +171,19 @@ sigue en «Sí» a propósito —la capacidad está escrita y es correcta— per
 hasta que se cablee, y está en el ROADMAP como `#cebo-corrupto-sin-cablear`.
 
 Los del todo son: **6, 18, 20, 26, 27, 29** y el **17** (con la salvedad de arriba). Parciales:
-**1, 7, 22**. No aplican (investigación de campaña, no capacidad de honeypot): **5, 16, 21, 24, 28**.
-El resto —**14**— no los cubrimos, y el orden para atacarlos está en `#labs-ir-mas-alla`: no el del
-blog, sino el de lo que el cliente tiene de verdad.
+**1, 7, 22** y, desde el 13-oct-2026, el **8** (wp2shell: detección y fachada hechas, falta
+desplegar una persona WordPress). No aplican (investigación de campaña, no capacidad de honeypot):
+**5, 16, 21, 24, 28**. El resto —**13**— no los cubrimos.
+
+**Y ese resto ya no es una impresión: es una lista con orden y motivo**, en
+`scripts/verificar_labs.py` (`NO_CUBIERTOS`), que es lo que `#labs-ir-mas-alla` pedía. El criterio
+no es el del blog: es **qué tiene de verdad el cliente**. Por delante van el **correo** (10) y las
+herramientas de administración remota (**13**), que son las dos vías de entrada del tejido de PyME
+mexicano; detrás la web moderna (**9**), Kubernetes (**11**) y Kong (**12**); luego el trazado de
+agentes (**19**), que es otra capacidad y no una fachada; y al final el análisis de artefacto (**2,
+3, 4**), que pediría un laboratorio de malware que no tenemos. Los cuatro de **días cero en vivo**
+(**14, 15, 23, 25**) van **sin orden a propósito**: esa brecha no se cierra con código, se cierra
+con exposición a internet — decirlo ahorra planificar contra un muro.
 
 Cómo se movió en un solo día, desde el 3/3/16 del 30 de agosto:
 
