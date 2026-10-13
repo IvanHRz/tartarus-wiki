@@ -2935,3 +2935,9 @@ Plan aceptado archivado en [[planes/2026-10-13]]. Los guiones que montan una tar
 copiaban el repositorio entero, y con él seis clases de material que no puede salir del
 laboratorio; ahora copian sólo lo que el repositorio versiona, que las excluye por construcción.
 — claude
+
+## [2026-10-13] plan | la llave de la flota sale del aparato de campo
+Plan aceptado archivado en [[planes/2026-10-13]]. El aparato de campo llevaba encima la llave con
+la que se firma el tráfico de toda la plataforma; ahora tiene una propia, y la vieja ya no le abre
+—comprobado con un rechazo, no con que todo siguiera andando—.
+— claude
